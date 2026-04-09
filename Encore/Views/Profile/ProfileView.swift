@@ -20,16 +20,18 @@ struct ProfileView: View {
                                     .font(.system(size: 24))
                                     .foregroundColor(.appAccent)
                             )
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Your Name")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(.appTextPrimary)
-                            Button("Edit Profile") {}
-                                .font(.system(size: 13))
-                                .foregroundColor(.appAccent)
-                        }
+                        Text("Your Name")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.appTextPrimary)
                     }
                     .padding(.vertical, 6)
+                }
+                .listRowBackground(Color.appSurface)
+
+                Section("Account") {
+                    Button("Edit Profile") {}
+                        .font(.system(size: 13))
+                        .foregroundColor(.appAccent)
                 }
                 .listRowBackground(Color.appSurface)
 
