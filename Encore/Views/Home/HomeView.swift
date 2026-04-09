@@ -15,14 +15,14 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: DS.Spacing.cardGap) {
                     festivalHeader
                     groupCard
                     tripCard
                     lineupButton
                     scheduleSection
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, DS.Spacing.pageMargin)
                 .padding(.top, 8)
                 .padding(.bottom, 40)
             }
@@ -53,10 +53,10 @@ struct HomeView: View {
     private var festivalHeader: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text("Bonnaroo '25")
-                .font(.system(size: 28, weight: .heavy))
+                .font(DS.Font.hero)
                 .foregroundColor(.appCTA)
             Text("June 12–15  ·  Manchester, TN")
-                .font(.system(size: 13))
+                .font(DS.Font.metadata)
                 .foregroundColor(.appTextMuted)
         }
         .padding(.top, 4)
@@ -74,55 +74,55 @@ struct HomeView: View {
     }
 
     private var noCrewCardView: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             Text("FESTIVAL GROUP")
-                .font(.system(size: 10, weight: .bold))
+                .font(DS.Font.caps)
                 .foregroundColor(.appTextMuted)
                 .tracking(0.6)
             Text("No group yet")
-                .font(.system(size: 15, weight: .semibold))
+                .font(DS.Font.cardTitle)
                 .foregroundColor(.appTextPrimary)
             HStack(spacing: 10) {
                 Button("Start a Group") {}
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(DS.Font.listItem)
                     .padding(.horizontal, 14).padding(.vertical, 8)
                     .background(Color.appCTA.opacity(0.15))
                     .foregroundColor(.appCTA)
                     .clipShape(Capsule())
                 Button("Join with Code") {}
-                    .font(.system(size: 13))
+                    .font(DS.Font.metadata)
                     .padding(.horizontal, 14).padding(.vertical, 8)
                     .background(Color.appSurface)
                     .foregroundColor(.appTextMuted)
                     .clipShape(Capsule())
             }
         }
-        .padding(14)
+        .padding(DS.Spacing.cardPadding)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14)
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+        .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
             .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
     }
 
     private func crewCardView(crew: Crew) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             HStack {
-                VStack(alignment: .leading, spacing: 1) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text("FESTIVAL GROUP")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(DS.Font.caps)
                         .foregroundColor(.appTextMuted)
                         .tracking(0.6)
                     Text(crew.name)
-                        .font(.system(size: 15, weight: .bold))
+                        .font(DS.Font.cardTitle)
                         .foregroundColor(.appTextPrimary)
                 }
                 Spacer()
                 Button(action: {}) {
                     Text("+ Invite")
-                        .font(.system(size: 11, weight: .medium))
+                        .font(DS.Font.label)
                         .foregroundColor(.appAccent)
                         .padding(.horizontal, 10).padding(.vertical, 4)
-                        .overlay(RoundedRectangle(cornerRadius: 7)
+                        .overlay(RoundedRectangle(cornerRadius: DS.Radius.chip)
                             .stroke(Color.appAccent.opacity(0.3), lineWidth: 1))
                 }
                 .buttonStyle(.plain)
@@ -133,10 +133,10 @@ struct HomeView: View {
                 }
             }
         }
-        .padding(14)
+        .padding(DS.Spacing.cardPadding)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14)
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+        .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
             .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
     }
 
@@ -157,7 +157,7 @@ struct HomeView: View {
                     .overlay(Circle().stroke(Color.appSurface, lineWidth: 1.5))
             }
             Text(member.name)
-                .font(.system(size: 9))
+                .font(DS.Font.caps)
                 .foregroundColor(.appTextMuted)
         }
     }
@@ -166,20 +166,20 @@ struct HomeView: View {
 
     private var tripCard: some View {
         HStack(spacing: 0) {
-            tripColumn(icon: "airplane",          label: "Travel",   detail: "Fri 8 AM")
+            tripColumn(icon: "airplane",         label: "Travel",   detail: "Fri 8 AM")
             Rectangle()
                 .fill(Color.appAccent.opacity(0.25))
                 .frame(width: 1, height: 36)
-            tripColumn(icon: "backpack",           label: "Packing",  detail: "0 / 0")
+            tripColumn(icon: "backpack",          label: "Packing",  detail: "0 / 0")
             Rectangle()
                 .fill(Color.appAccent.opacity(0.25))
                 .frame(width: 1, height: 36)
-            tripColumn(icon: "dollarsign.circle",  label: "Expenses", detail: "$0 / person")
+            tripColumn(icon: "dollarsign.circle", label: "Expenses", detail: "$0 / person")
         }
-        .padding(.vertical, 12)
+        .padding(.vertical, DS.Spacing.cardPadding)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14)
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+        .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
             .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
     }
 
@@ -190,10 +190,10 @@ struct HomeView: View {
                     .font(.system(size: 15))
                     .foregroundColor(.appAccent)
                 Text(label)
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(DS.Font.label)
                     .foregroundColor(.appTextPrimary)
                 Text(detail)
-                    .font(.system(size: 10))
+                    .font(DS.Font.caps)
                     .foregroundColor(.appTextMuted)
             }
             .frame(maxWidth: .infinity)
@@ -208,10 +208,10 @@ struct HomeView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Browse Full Lineup")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(DS.Font.listItem)
                         .foregroundColor(.appCTA)
                     Text("\(lineupStore.allSets.count) artists")
-                        .font(.system(size: 12))
+                        .font(DS.Font.metadata)
                         .foregroundColor(.appTextMuted)
                 }
                 Spacer()
@@ -219,10 +219,10 @@ struct HomeView: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(.appCTA)
             }
-            .padding(14)
+            .padding(DS.Spacing.cardPadding)
             .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
                 .stroke(Color.appCTA.opacity(0.2), lineWidth: 1))
         }
         .buttonStyle(.plain)
@@ -231,10 +231,10 @@ struct HomeView: View {
     // MARK: - Schedule Section
 
     private var scheduleSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             HStack {
                 Text("MY SCHEDULE")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(DS.Font.caps)
                     .foregroundColor(.appTextMuted)
                     .tracking(0.8)
                 Spacer()
@@ -261,7 +261,7 @@ struct HomeView: View {
             ForEach(FestivalDay.allCases) { day in
                 Button(action: { selectedDay = day }) {
                     Text(day.rawValue)
-                        .font(.system(size: 11, weight: selectedDay == day ? .bold : .regular))
+                        .font(selectedDay == day ? DS.Font.label : DS.Font.metadata)
                         .foregroundColor(selectedDay == day ? .appCTA : .appTextMuted)
                         .padding(.horizontal, 8).padding(.vertical, 4)
                         .background(selectedDay == day
@@ -280,16 +280,16 @@ struct HomeView: View {
                 Image(systemName: "exclamationmark.triangle")
                     .foregroundColor(.orange)
                 Text("\(conflicts.count) conflict\(conflicts.count == 1 ? "" : "s") — tap to resolve")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(DS.Font.listItem)
                     .foregroundColor(.appTextPrimary)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 12))
+                    .font(DS.Font.metadata)
                     .foregroundColor(.appTextMuted)
             }
-            .padding(.horizontal, 14).padding(.vertical, 10)
+            .padding(.horizontal, DS.Spacing.cardPadding).padding(.vertical, 10)
             .background(Color.orange.opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
         }
         .buttonStyle(.plain)
     }
@@ -302,24 +302,24 @@ struct HomeView: View {
             HStack(spacing: 12) {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(timeLabel(set.startTime))
-                        .font(.system(size: 11, weight: .medium))
+                        .font(DS.Font.label)
                         .foregroundColor(.appTextMuted)
                     Text(timeLabel(set.endTime))
-                        .font(.system(size: 10))
+                        .font(DS.Font.caps)
                         .foregroundColor(Color.appTextMuted.opacity(0.6))
                 }
                 .frame(width: 44, alignment: .trailing)
 
                 RoundedRectangle(cornerRadius: 2)
                     .fill(isConflicted ? Color(UIColor(appHex: "F59E0B")) : Color.appCTA)
-                    .frame(width: 3, height: 44)
+                    .frame(width: 3)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(set.artist.name)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(DS.Font.listItem)
                         .foregroundColor(.appTextPrimary)
                     Text(set.stageName)
-                        .font(.system(size: 12))
+                        .font(DS.Font.metadata)
                         .foregroundColor(.appTextMuted)
                 }
                 Spacer()
@@ -337,25 +337,26 @@ struct HomeView: View {
                 }
                 .buttonStyle(.plain)
             }
-            .padding(.horizontal, 13).padding(.vertical, 11)
+            .frame(minHeight: DS.RowHeight.schedule)
+            .padding(.horizontal, DS.Spacing.cardPadding)
             .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
+            .overlay(RoundedRectangle(cornerRadius: DS.Radius.chip)
                 .stroke(isConflicted ? Color.orange.opacity(0.4) : Color.clear, lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
 
     private var emptySchedule: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: DS.Spacing.sectionGap) {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 32))
                 .foregroundColor(Color.appTextMuted.opacity(0.4))
             Text("Nothing scheduled for \(selectedDay.fullName)")
-                .font(.system(size: 14, weight: .medium))
+                .font(DS.Font.listItem)
                 .foregroundColor(.appTextMuted)
             Text("Browse the lineup to add sets")
-                .font(.system(size: 12))
+                .font(DS.Font.metadata)
                 .foregroundColor(Color.appTextMuted.opacity(0.6))
         }
         .frame(maxWidth: .infinity)

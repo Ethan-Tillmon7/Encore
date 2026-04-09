@@ -22,9 +22,10 @@ struct ConflictResolverView: View {
                     .font(.system(size: 28))
                     .foregroundColor(.orange)
                 Text("Schedule Conflict")
-                    .font(.system(size: 20, weight: .bold))
+                    .font(DS.Font.cardTitle)
+                    .foregroundColor(.appTextPrimary)
                 Text("These two sets overlap by \(conflict.overlapMinutes) min. Pick one.")
-                    .font(.system(size: 14))
+                    .font(DS.Font.listItem)
                     .foregroundColor(.appTextMuted)
                     .multilineTextAlignment(.center)
             }
@@ -75,10 +76,10 @@ struct ConflictResolverView: View {
 
     private func conflictCard(set: FestivalSet) -> some View {
         let artist = set.artist
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             // Tier indicator
             Text(artist.matchTier.rawValue)
-                .font(.system(size: 11, weight: .semibold))
+                .font(DS.Font.label)
                 .foregroundColor(artist.matchTier.color)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
@@ -86,31 +87,31 @@ struct ConflictResolverView: View {
                 .clipShape(Capsule())
 
             Text(artist.name)
-                .font(.system(size: 16, weight: .bold))
+                .font(DS.Font.cardTitle)
                 .foregroundColor(.appTextPrimary)
 
             VStack(alignment: .leading, spacing: 4) {
                 Label(set.stageName, systemImage: "location.fill")
-                    .font(.system(size: 12))
+                    .font(DS.Font.metadata)
                     .foregroundColor(.appTextMuted)
                 Label(set.timeRangeLabel, systemImage: "clock")
-                    .font(.system(size: 12))
+                    .font(DS.Font.metadata)
                     .foregroundColor(.appTextMuted)
             }
 
             if let label = artist.spotifyLabel {
                 Text(label)
-                    .font(.system(size: 11))
+                    .font(DS.Font.label)
                     .foregroundColor(artist.matchTier.color)
                     .padding(.top, 2)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
+        .padding(DS.Spacing.cardPadding)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: DS.Radius.card)
                 .stroke(Color.orange.opacity(0.4), lineWidth: 1)
         )
     }
@@ -121,7 +122,7 @@ struct ConflictResolverView: View {
 
     private func actionButton(label: String, style: ActionStyle) -> some View {
         Text(label)
-            .font(.system(size: 16, weight: style == .keep ? .semibold : .regular))
+            .font(style == .keep ? DS.Font.cardTitle : DS.Font.listItem)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
             .background(
@@ -130,7 +131,7 @@ struct ConflictResolverView: View {
                     : Color.appSurface
             )
             .foregroundColor(style == .keep ? Color.appBackground : .appTextMuted)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
     }
 }
 

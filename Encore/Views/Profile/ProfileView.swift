@@ -21,7 +21,7 @@ struct ProfileView: View {
                                     .foregroundColor(.appAccent)
                             )
                         Text("Your Name")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(DS.Font.cardTitle)
                             .foregroundColor(.appTextPrimary)
                     }
                     .padding(.vertical, 6)
@@ -30,7 +30,7 @@ struct ProfileView: View {
 
                 Section("Account") {
                     Button("Edit Profile") {}
-                        .font(.system(size: 13))
+                        .font(DS.Font.listItem)
                         .foregroundColor(.appAccent)
                 }
                 .listRowBackground(Color.appSurface)

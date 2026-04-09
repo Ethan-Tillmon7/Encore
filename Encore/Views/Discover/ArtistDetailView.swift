@@ -34,7 +34,7 @@ struct ArtistDetailView: View {
                     setlistView
                     Spacer(minLength: 40)
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, DS.Spacing.pageMargin)
                 .padding(.top, 24)
             }
             .background(Color.appBackground)
@@ -58,29 +58,29 @@ struct ArtistDetailView: View {
     // MARK: - Hero
 
     private var heroHeader: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             Text(artist.matchTier.rawValue.uppercased())
-                .font(.system(size: 11, weight: .bold))
+                .font(DS.Font.label)
                 .foregroundColor(artist.matchTier.color)
                 .padding(.horizontal, 10).padding(.vertical, 4)
                 .background(artist.matchTier.backgroundColor)
                 .clipShape(Capsule())
 
             Text(artist.genres.joined(separator: "  ·  "))
-                .font(.system(size: 14))
+                .font(DS.Font.listItem)
                 .foregroundColor(.appTextMuted)
 
             if let label = artist.spotifyLabel {
                 Label(label, systemImage: "music.note")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(DS.Font.listItem)
                     .foregroundColor(artist.matchTier.color)
             } else if !artist.soundsLike.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Not in your library yet — sounds like:")
-                        .font(.system(size: 13))
+                        .font(DS.Font.metadata)
                         .foregroundColor(.appTextMuted)
                     Text(artist.soundsLike.joined(separator: ", "))
-                        .font(.system(size: 14, weight: .medium))
+                        .font(DS.Font.listItem)
                         .foregroundColor(.appTextPrimary)
                 }
             }
@@ -99,17 +99,17 @@ struct ArtistDetailView: View {
         }
         .padding(.vertical, 12)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
     }
 
     private func infoCell(label: String, value: String) -> some View {
         VStack(spacing: 3) {
             Text(label)
-                .font(.system(size: 11, weight: .medium))
+                .font(DS.Font.label)
                 .foregroundColor(.appTextMuted)
                 .textCase(.uppercase)
             Text(value)
-                .font(.system(size: 13, weight: .semibold))
+                .font(DS.Font.listItem)
                 .foregroundColor(.appTextPrimary)
                 .multilineTextAlignment(.center)
         }
@@ -129,7 +129,7 @@ struct ArtistDetailView: View {
                 }
             }
             Text("\(attendees.count) friend\(attendees.count == 1 ? "" : "s") going")
-                .font(.system(size: 14))
+                .font(DS.Font.listItem)
                 .foregroundColor(.appTextMuted)
             Spacer()
         }
@@ -143,11 +143,11 @@ struct ArtistDetailView: View {
             ForEach(Array(recentSetlist.enumerated()), id: \.offset) { index, song in
                 HStack {
                     Text("\(index + 1)")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(DS.Font.metadata)
                         .foregroundColor(.appTextMuted)
                         .frame(width: 24, alignment: .trailing)
                     Text(song)
-                        .font(.system(size: 14))
+                        .font(DS.Font.listItem)
                         .foregroundColor(.appTextPrimary)
                     Spacer()
                 }
@@ -172,7 +172,7 @@ struct ArtistDetailView: View {
                 .padding(.vertical, 16)
                 .background(isScheduled ? Color.appSurface : Color.appCTA)
                 .foregroundColor(isScheduled ? .appTextPrimary : Color.appBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
             }
 
             NavigationLink(destination:
@@ -188,22 +188,22 @@ struct ArtistDetailView: View {
                 .padding(.vertical, 14)
                 .background(Color.appSurface)
                 .foregroundColor(.appAccent)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, DS.Spacing.pageMargin)
         .padding(.vertical, 12)
         .background(Color.appBackground)
     }
 
     private func sectionLabel(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 11, weight: .semibold))
+            .font(DS.Font.label)
             .foregroundColor(.appTextMuted)
             .textCase(.uppercase)
             .tracking(0.8)
-            .padding(.bottom, 10)
+            .padding(.bottom, DS.Spacing.sectionGap)
     }
 }
 

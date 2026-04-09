@@ -26,7 +26,7 @@ struct LineupView: View {
     var body: some View {
         VStack(spacing: 0) {
             dayPicker
-                .padding(.horizontal, 16)
+                .padding(.horizontal, DS.Spacing.pageMargin)
                 .padding(.vertical, 10)
                 .background(Color.appBackground)
 
@@ -63,20 +63,20 @@ struct LineupView: View {
             ForEach(FestivalDay.allCases) { day in
                 Button(action: { selectedDay = day }) {
                     Text(day.fullName)
-                        .font(.system(size: 13, weight: selectedDay == day ? .bold : .regular))
+                        .font(selectedDay == day ? DS.Font.label : DS.Font.metadata)
                         .foregroundColor(selectedDay == day ? .appCTA : .appTextMuted)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
+                        .frame(height: DS.RowHeight.dayPicker)
                         .background(selectedDay == day
                             ? Color.appCTA.opacity(0.12) : Color.clear)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
                 }
                 .buttonStyle(.plain)
             }
         }
         .padding(3)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
     }
 }
 
