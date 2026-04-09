@@ -114,7 +114,7 @@ struct HomeView: View {
                         .tracking(0.6)
                     Text(crew.name)
                         .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(.appCTA)
+                        .foregroundColor(.appTextPrimary)
                 }
                 Spacer()
                 Button(action: {}) {
@@ -152,7 +152,7 @@ struct HomeView: View {
                             .foregroundColor(Color.appBackground)
                     )
                 Circle()
-                    .fill(member.isOnline ? Color.appCTA : Color.appTextMuted.opacity(0.4))
+                    .fill(member.isOnline ? Color.appCTA : Color.appSurface)
                     .frame(width: 10, height: 10)
                     .overlay(Circle().stroke(Color.appSurface, lineWidth: 1.5))
             }
@@ -167,9 +167,13 @@ struct HomeView: View {
     private var tripCard: some View {
         HStack(spacing: 0) {
             tripColumn(icon: "airplane",          label: "Travel",   detail: "Fri 8 AM")
-            Divider().frame(height: 36)
+            Rectangle()
+                .fill(Color.appAccent.opacity(0.25))
+                .frame(width: 1, height: 36)
             tripColumn(icon: "backpack",           label: "Packing",  detail: "0 / 0")
-            Divider().frame(height: 36)
+            Rectangle()
+                .fill(Color.appAccent.opacity(0.25))
+                .frame(width: 1, height: 36)
             tripColumn(icon: "dollarsign.circle",  label: "Expenses", detail: "$0 / person")
         }
         .padding(.vertical, 12)
@@ -273,7 +277,7 @@ struct HomeView: View {
         let conflicts = scheduleStore.conflicts
         return Button(action: { activeConflict = conflicts.first }) {
             HStack(spacing: 10) {
-                Image(systemName: "exclamationmark.triangle.fill")
+                Image(systemName: "exclamationmark.triangle")
                     .foregroundColor(.orange)
                 Text("\(conflicts.count) conflict\(conflicts.count == 1 ? "" : "s") — tap to resolve")
                     .font(.system(size: 13, weight: .medium))
@@ -307,7 +311,7 @@ struct HomeView: View {
                 .frame(width: 44, alignment: .trailing)
 
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(isConflicted ? Color.orange : set.artist.matchTier.color)
+                    .fill(isConflicted ? Color(UIColor(appHex: "F59E0B")) : Color.appCTA)
                     .frame(width: 3, height: 44)
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -321,7 +325,7 @@ struct HomeView: View {
                 Spacer()
 
                 if isConflicted {
-                    Image(systemName: "exclamationmark.triangle.fill")
+                    Image(systemName: "exclamationmark.triangle")
                         .foregroundColor(.orange)
                         .font(.system(size: 15))
                 }
