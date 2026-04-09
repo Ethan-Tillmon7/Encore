@@ -20,11 +20,10 @@ enum MatchTier: String, CaseIterable, Codable, Identifiable {
         }
     }
 
-    var backgroundColor: Color {
-        color.opacity(0.18)
-    }
+    // Used for badge/pill backgrounds in detail and conflict views
+    var backgroundColor: Color { color.opacity(0.18) }
 
-    // New: used by timetable grid set blocks
+    // Used for timetable grid set blocks (same value, distinct semantic purpose)
     var blockFill: Color   { color.opacity(0.18) }
     var blockBorder: Color { color.opacity(0.32) }
 }
