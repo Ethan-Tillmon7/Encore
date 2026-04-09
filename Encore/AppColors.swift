@@ -33,7 +33,13 @@ extension UIColor {
     static let appTextMuted   = UIColor(appHex: "A8BFB2")
 
     convenience init(appHex: String) {
-        let val = UInt64(appHex, radix: 16) ?? 0
+        var hex = appHex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hex = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        guard hex.count == 6, let val = UInt64(hex, radix: 16) else {
+            assertionFailure("Invalid hex color: \(appHex)")
+            self.init(red: 0, green: 0, blue: 0, alpha: 1)
+            return
+        }
         let r = CGFloat((val & 0xFF0000) >> 16) / 255
         let g = CGFloat((val & 0x00FF00) >> 8)  / 255
         let b = CGFloat(val & 0x0000FF)          / 255
