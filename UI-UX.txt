@@ -1,0 +1,106 @@
+Apple-Style UX/UI Checklist
+1. Purpose & Focus
+ Can I describe this screen’s purpose in one sentence?
+ Is there one clear primary action?
+ Did I remove anything that doesn’t support that action?
+
+👉 If multiple things compete for attention, you already lost.
+
+2. Clarity (zero confusion)
+ Would a first-time user understand this in < 3 seconds?
+ Are labels plain and obvious (no clever wording)?
+ Are icons either standard or paired with text?
+
+👉 If you need onboarding to explain it, fix the UI instead.
+
+3. Visual Hierarchy (what matters pops)
+ Is the most important element the most visually dominant?
+ Are secondary actions visually quieter?
+ Is spacing used to group related elements?
+
+👉 Users shouldn’t “search” the screen.
+
+4. Simplicity (cut aggressively)
+ Can I remove 20–30% of elements without breaking the experience?
+ Are there any redundant buttons, text, or decorations?
+ Is each screen doing only one job?
+
+👉 Complexity is usually self-inflicted.
+
+5. Consistency (no surprises)
+ Does this match platform patterns (iOS/Android/web)?
+ Are buttons, colors, and interactions reused consistently?
+ Do similar actions behave the same everywhere?
+
+👉 Inconsistency = friction.
+
+6. Feedback & Responsiveness
+ Does every action have immediate feedback (tap → response)?
+ Are loading states clear and fast-feeling?
+ Do animations explain what just happened?
+
+👉 No feedback = broken UX.
+
+7. Navigation & Flow
+ Can users always tell where they are?
+ Is it obvious how to go back?
+ Does each step logically lead to the next?
+
+👉 Users shouldn’t feel lost—ever.
+
+8. Touch & Interaction (real-world use)
+ Are tap targets big enough (≈44px minimum)?
+ Is the primary action reachable by thumb?
+ Are gestures obvious or standard?
+
+👉 Design for hands, not cursors.
+
+9. Content First
+ Is the content the focus—not the UI?
+ Did I reduce visual noise around key content?
+ Does the UI step back when content matters?
+
+👉 If the UI is louder than the content, it’s wrong.
+
+10. Typography & Readability
+ Is all text readable at a glance?
+ Is there clear hierarchy (title → subtitle → body)?
+ Does it work with larger text settings?
+
+👉 Bad typography quietly kills UX.
+
+11. Accessibility (baseline quality)
+ Sufficient color contrast?
+ Works with screen readers / voice tools?
+ Not dependent on color alone?
+
+👉 If some users can’t use it, it’s broken.
+
+12. Micro-Interactions (polish level)
+ Do transitions feel smooth and purposeful?
+ Do animations reinforce cause → effect?
+ Does the UI feel responsive and alive?
+
+👉 This is where “good” becomes “premium.”
+
+13. Error Handling (real-world resilience)
+ Are errors explained in plain language?
+ Do users know how to fix the problem?
+ Are destructive actions confirmed or reversible?
+
+👉 Good UX assumes users will mess up.
+
+14. Performance Perception
+ Does the app feel fast—even when it’s not?
+ Are delays masked with skeleton/loading states?
+ Are transitions smooth (no jank)?
+
+👉 Perceived speed > actual speed.
+
+⚡ Final Gut Check (most important)
+
+Before shipping, ask:
+
+ “Would I be proud if this felt like a native Apple app?”
+ “Is anything here making the user think unnecessarily?”
+ “Can I simplify this one more time?”

@@ -1,0 +1,458 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0EA88D7E443B53F5B51DFF3D /* TimetableGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104C8F8D267B7C8DBF48B2C4 /* TimetableGridView.swift */; };
+		1DA82E73E85651B894CDCF8D /* FestivalSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7B85AD9AC81797A21BC46D /* FestivalSet.swift */; };
+		24AC6F0C2B35775B3203A3F2 /* ConflictResolverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E7F1D2F59F53DC1957CEC7 /* ConflictResolverView.swift */; };
+		25AFF9A72F28C87C430E1244 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE59DB1AEC1042602104C01 /* RootView.swift */; };
+		63A8631F96CAB6C8521F6D9E /* ArtistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07B3C4CBF1E7640B142E9E /* ArtistDetailView.swift */; };
+		6E21FC014F41629055DAC70E /* EncoreApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE701D4B42C9948FD164AB /* EncoreApp.swift */; };
+		78BBA8B29C668B07C4958122 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B03DF5C06A9D22178BA6976E /* ProfileView.swift */; };
+		87E16F269859CA5CD75D1661 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A11CDD29394920DB746CB1 /* HomeView.swift */; };
+		9D7E9BFC4C233D2A7E8D1A47 /* LineupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4C4272B65E46E90693FABA /* LineupStore.swift */; };
+		B12529B436AE7B5C1A843FAC /* SetBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48FFC90C22476AB2AAA8035 /* SetBlockView.swift */; };
+		B7CB3FD62E466E8E29327265 /* CrewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87734C51392AA5C1FD01E4EB /* CrewStore.swift */; };
+		BA9D6D7CBBE8F440E7CFD7BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EA90E983A71D5A2E63EF2AF /* Assets.xcassets */; };
+		BE0C2651DB583E0D773E641E /* Crew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB2DB23E52493D1141533C /* Crew.swift */; };
+		C33F910655984D814014E0C1 /* LineupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB17FAC1272BE5FA11F7D2EE /* LineupView.swift */; };
+		C705410C69BCB39C11D47216 /* ScheduleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */; };
+		C83EBDF58C3576A6C1D8A77A /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096FAA414233C8D5C2F3494E /* MockData.swift */; };
+		CDBFCC9BFE2D97BE748CFA39 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE1223EBBDF2F9F597C3D3F /* AppColors.swift */; };
+		D3D9059E71BD256BFC5481B1 /* ArtistCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6867B834266598ECA0E7CD /* ArtistCardView.swift */; };
+		D7EA413FF7683E09A774C5D4 /* FestivalMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357C7622F999A235F840F034 /* FestivalMapView.swift */; };
+		E6F2044B3694ABD7AE7F9CAE /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9F1ADB1F5E205566D56FB0 /* Artist.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		096FAA414233C8D5C2F3494E /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+		0CFADA0032C34118FBF0FA12 /* Encore.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Encore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		104C8F8D267B7C8DBF48B2C4 /* TimetableGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableGridView.swift; sourceTree = "<group>"; };
+		357C7622F999A235F840F034 /* FestivalMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalMapView.swift; sourceTree = "<group>"; };
+		3C07B3C4CBF1E7640B142E9E /* ArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistDetailView.swift; sourceTree = "<group>"; };
+		4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleStore.swift; sourceTree = "<group>"; };
+		5A7B85AD9AC81797A21BC46D /* FestivalSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalSet.swift; sourceTree = "<group>"; };
+		67CE701D4B42C9948FD164AB /* EncoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncoreApp.swift; sourceTree = "<group>"; };
+		6DE1223EBBDF2F9F597C3D3F /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		6EA90E983A71D5A2E63EF2AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7F9F1ADB1F5E205566D56FB0 /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		7FA01B1207F67F10F2F9B2CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		87734C51392AA5C1FD01E4EB /* CrewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStore.swift; sourceTree = "<group>"; };
+		8DE59DB1AEC1042602104C01 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		98E7F1D2F59F53DC1957CEC7 /* ConflictResolverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConflictResolverView.swift; sourceTree = "<group>"; };
+		A48FFC90C22476AB2AAA8035 /* SetBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetBlockView.swift; sourceTree = "<group>"; };
+		AA6867B834266598ECA0E7CD /* ArtistCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistCardView.swift; sourceTree = "<group>"; };
+		B03DF5C06A9D22178BA6976E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		B2CB2DB23E52493D1141533C /* Crew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crew.swift; sourceTree = "<group>"; };
+		BB4C4272B65E46E90693FABA /* LineupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineupStore.swift; sourceTree = "<group>"; };
+		CB17FAC1272BE5FA11F7D2EE /* LineupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineupView.swift; sourceTree = "<group>"; };
+		D9A11CDD29394920DB746CB1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		079D3E89B43998CA6D4C1297 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7F9F1ADB1F5E205566D56FB0 /* Artist.swift */,
+				B2CB2DB23E52493D1141533C /* Crew.swift */,
+				5A7B85AD9AC81797A21BC46D /* FestivalSet.swift */,
+				096FAA414233C8D5C2F3494E /* MockData.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1253FEF1DFC1D16E6D3A5919 /* Discover */ = {
+			isa = PBXGroup;
+			children = (
+				AA6867B834266598ECA0E7CD /* ArtistCardView.swift */,
+				3C07B3C4CBF1E7640B142E9E /* ArtistDetailView.swift */,
+			);
+			path = Discover;
+			sourceTree = "<group>";
+		};
+		35D6C906490EC5D0AD6A063D /* Lineup */ = {
+			isa = PBXGroup;
+			children = (
+				CB17FAC1272BE5FA11F7D2EE /* LineupView.swift */,
+				A48FFC90C22476AB2AAA8035 /* SetBlockView.swift */,
+				104C8F8D267B7C8DBF48B2C4 /* TimetableGridView.swift */,
+			);
+			path = Lineup;
+			sourceTree = "<group>";
+		};
+		462B7D1E1AE8F46876DC6FCA /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				D9A11CDD29394920DB746CB1 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		502D3CE5FBA38791A02E0C41 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8DE59DB1AEC1042602104C01 /* RootView.swift */,
+				1253FEF1DFC1D16E6D3A5919 /* Discover */,
+				462B7D1E1AE8F46876DC6FCA /* Home */,
+				35D6C906490EC5D0AD6A063D /* Lineup */,
+				D767B2707623A2792AC34A8B /* Map */,
+				ADEA3A5665D46035D7F5AF0D /* Profile */,
+				52D404C44D1DBBFB7681AB34 /* Schedule */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		52D404C44D1DBBFB7681AB34 /* Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				98E7F1D2F59F53DC1957CEC7 /* ConflictResolverView.swift */,
+			);
+			path = Schedule;
+			sourceTree = "<group>";
+		};
+		9D3D3B8EA95EF92661F69CEC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6EA90E983A71D5A2E63EF2AF /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		ADEA3A5665D46035D7F5AF0D /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				B03DF5C06A9D22178BA6976E /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		AFEC833D11883790D786AB1B = {
+			isa = PBXGroup;
+			children = (
+				C2F7ED5F69ACFC06E782C40B /* Encore */,
+				C3474C5C54BF2E11EE4D4459 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C2F7ED5F69ACFC06E782C40B /* Encore */ = {
+			isa = PBXGroup;
+			children = (
+				6DE1223EBBDF2F9F597C3D3F /* AppColors.swift */,
+				67CE701D4B42C9948FD164AB /* EncoreApp.swift */,
+				7FA01B1207F67F10F2F9B2CA /* Info.plist */,
+				079D3E89B43998CA6D4C1297 /* Models */,
+				9D3D3B8EA95EF92661F69CEC /* Resources */,
+				EE5E6EDC2D0009A98EEE7379 /* Stores */,
+				502D3CE5FBA38791A02E0C41 /* Views */,
+			);
+			path = Encore;
+			sourceTree = "<group>";
+		};
+		C3474C5C54BF2E11EE4D4459 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0CFADA0032C34118FBF0FA12 /* Encore.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D767B2707623A2792AC34A8B /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				357C7622F999A235F840F034 /* FestivalMapView.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		EE5E6EDC2D0009A98EEE7379 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				87734C51392AA5C1FD01E4EB /* CrewStore.swift */,
+				BB4C4272B65E46E90693FABA /* LineupStore.swift */,
+				4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EAA55DCDFA2FD9949C431719 /* Encore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2986732DD6B642E8ABD76CCB /* Build configuration list for PBXNativeTarget "Encore" */;
+			buildPhases = (
+				A2FBD7A01A37E88E8F8EFF4F /* Sources */,
+				99FB8F3F9B3B5D23D8A41BD4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Encore;
+			packageProductDependencies = (
+			);
+			productName = Encore;
+			productReference = 0CFADA0032C34118FBF0FA12 /* Encore.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B23BCAB4BB9E79232D1D07D9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					EAA55DCDFA2FD9949C431719 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A3BA67D442C9B23D93F4838E /* Build configuration list for PBXProject "Encore" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = AFEC833D11883790D786AB1B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C3474C5C54BF2E11EE4D4459 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EAA55DCDFA2FD9949C431719 /* Encore */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		99FB8F3F9B3B5D23D8A41BD4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA9D6D7CBBE8F440E7CFD7BE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A2FBD7A01A37E88E8F8EFF4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDBFCC9BFE2D97BE748CFA39 /* AppColors.swift in Sources */,
+				E6F2044B3694ABD7AE7F9CAE /* Artist.swift in Sources */,
+				D3D9059E71BD256BFC5481B1 /* ArtistCardView.swift in Sources */,
+				63A8631F96CAB6C8521F6D9E /* ArtistDetailView.swift in Sources */,
+				24AC6F0C2B35775B3203A3F2 /* ConflictResolverView.swift in Sources */,
+				BE0C2651DB583E0D773E641E /* Crew.swift in Sources */,
+				B7CB3FD62E466E8E29327265 /* CrewStore.swift in Sources */,
+				6E21FC014F41629055DAC70E /* EncoreApp.swift in Sources */,
+				D7EA413FF7683E09A774C5D4 /* FestivalMapView.swift in Sources */,
+				1DA82E73E85651B894CDCF8D /* FestivalSet.swift in Sources */,
+				87E16F269859CA5CD75D1661 /* HomeView.swift in Sources */,
+				9D7E9BFC4C233D2A7E8D1A47 /* LineupStore.swift in Sources */,
+				C33F910655984D814014E0C1 /* LineupView.swift in Sources */,
+				C83EBDF58C3576A6C1D8A77A /* MockData.swift in Sources */,
+				78BBA8B29C668B07C4958122 /* ProfileView.swift in Sources */,
+				25AFF9A72F28C87C430E1244 /* RootView.swift in Sources */,
+				C705410C69BCB39C11D47216 /* ScheduleStore.swift in Sources */,
+				B12529B436AE7B5C1A843FAC /* SetBlockView.swift in Sources */,
+				0EA88D7E443B53F5B51DFF3D /* TimetableGridView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1AB39BC92391010497D5D12D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		378028BBD2D26DC5478CB775 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Encore/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.encore.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		40C125EE1AE1C528EE558F9E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		F0F50DB3C57ACB6E904079F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Encore/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.encore.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2986732DD6B642E8ABD76CCB /* Build configuration list for PBXNativeTarget "Encore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0F50DB3C57ACB6E904079F4 /* Debug */,
+				378028BBD2D26DC5478CB775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A3BA67D442C9B23D93F4838E /* Build configuration list for PBXProject "Encore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40C125EE1AE1C528EE558F9E /* Debug */,
+				1AB39BC92391010497D5D12D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B23BCAB4BB9E79232D1D07D9 /* Project object */;
+}

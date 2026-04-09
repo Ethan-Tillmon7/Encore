@@ -1,0 +1,35 @@
+name: Encore
+options:
+  bundleIdPrefix: com.encore
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  Encore:
+    type: application
+    platform: iOS
+    sources:
+      - path: Encore
+    resources:
+      - path: Encore/Resources
+    settings:
+      base:
+        INFOPLIST_FILE: Encore/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.encore.app
+        CODE_SIGN_STYLE: Automatic
+        # Set your Team ID: Xcode → Settings → Accounts
+        # DEVELOPMENT_TEAM: YOUR_TEAM_ID
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    dependencies: []
+    # Add SPM packages here when needed:
+    # packages:
+    #   Supabase:
+    #     url: https://github.com/supabase/supabase-swift
+    #     from: "2.0.0"

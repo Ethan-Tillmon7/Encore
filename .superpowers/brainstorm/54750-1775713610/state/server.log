@@ -1,0 +1,45 @@
+{"type":"server-started","port":57970,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:57970","screen_dir":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content","state_dir":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/state"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-structure.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-structure.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-structure.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-structure.html"}
+{"source":"user-event","type":"click","text":"B\n    \n      Home · Lineup · Map\n      Home = dashboard + your personal schedule lives here too (below the cards)\n         Lineup = day-by-day browse of all artists, tap to add to schedule\n         Map = stage map\n      Crew and Schedule collapse into Home. Most aggressive simplification. 3 tabs total.","choice":"b","id":null,"timestamp":1775713682178}
+{"source":"user-event","type":"click","text":"B\n    \n      Home · Lineup · Map\n      Home = dashboard + your personal schedule lives here too (below the cards)\n         Lineup = day-by-day browse of all artists, tap to add to schedule\n         Map = stage map\n      Crew and Schedule collapse into Home. Most aggressive simplification. 3 tabs total.","choice":"b","id":null,"timestamp":1775713699562}
+{"source":"user-event","type":"click","text":"B\n    \n      Home · Lineup · Map\n      Home = dashboard + your personal schedule lives here too (below the cards)\n         Lineup = day-by-day browse of all artists, tap to add to schedule\n         Map = stage map\n      Crew and Schedule collapse into Home. Most aggressive simplification. 3 tabs total.","choice":"b","id":null,"timestamp":1775713699761}
+{"source":"user-event","type":"click","text":"B\n    \n      Home · Lineup · Map\n      Home = dashboard + your personal schedule lives here too (below the cards)\n         Lineup = day-by-day browse of all artists, tap to add to schedule\n         Map = stage map\n      Crew and Schedule collapse into Home. Most aggressive simplification. 3 tabs total.","choice":"b","id":null,"timestamp":1775713700438}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout.html"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v2.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v2.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v2.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v2.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v2.html"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v3.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v3.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v3.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v3.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/home-layout-v3.html"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-layout.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-layout.html"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-grid.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-grid.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-grid.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-grid.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/lineup-grid.html"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-2tab.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-2tab.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-2tab.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-2tab.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/nav-2tab.html"}
+{"type":"screen-added","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/waiting-1.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/waiting-1.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/waiting-1.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/waiting-1.html"}
+{"type":"screen-updated","file":"/Users/ethantillmon/Desktop/Encore/.superpowers/brainstorm/54750-1775713610/content/waiting-1.html"}
+{"type":"server-stopped","reason":"idle timeout"}
