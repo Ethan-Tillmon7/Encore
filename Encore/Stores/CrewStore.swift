@@ -4,8 +4,6 @@ import Combine
 class CrewStore: ObservableObject {
 
     @Published var crew: Crew? = Crew.mockCrew  // nil until user creates/joins
-    @Published var meetupPins: [MeetupPin] = []
-    @Published var isLocationSharingEnabled: Bool = false
 
     // MARK: - Crew management
 
@@ -24,24 +22,11 @@ class CrewStore: ObservableObject {
 
     func joinCrew(code: String) {
         // TODO: Fetch crew from Supabase by invite code
-        // For now, just set the mock crew
         crew = Crew.mockCrew
     }
 
     func leaveCrew() {
         crew = nil
-    }
-
-    // MARK: - Meetup pins
-
-    func dropPin(label: String, lat: Double, lng: Double, createdBy: UUID) {
-        let pin = MeetupPin(id: UUID(), label: label,
-                            latitude: lat, longitude: lng, createdBy: createdBy)
-        meetupPins.append(pin)
-    }
-
-    func removePin(_ pin: MeetupPin) {
-        meetupPins.removeAll { $0.id == pin.id }
     }
 
     // MARK: - Merged timeline helpers

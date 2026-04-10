@@ -1,6 +1,15 @@
 import Foundation
 import Combine
 
+struct WalkTimeWarning: Identifiable {
+    let id = UUID()
+    let setA: FestivalSet
+    let setB: FestivalSet
+    let gapMinutes: Int
+    let walkMinutes: Int
+    let shortfall: Int
+}
+
 class ScheduleStore: ObservableObject {
 
     @Published var scheduledSets: [FestivalSet] = []
@@ -55,5 +64,29 @@ class ScheduleStore: ObservableObject {
     func resolveConflict(_ conflict: SetConflict, keep: FestivalSet) {
         let drop = conflict.setA.id == keep.id ? conflict.setB : conflict.setA
         remove(drop)
+    }
+
+    // MARK: - Walk time warnings
+
+    func walkTimeWarnings(for day: FestivalDay) -> [WalkTimeWarning] {
+        let sorted = sets(for: day)
+        var warnings: [WalkTimeWarning] = []
+        for i in 0..<(sorted.count - 1) {
+            let a = sorted[i]
+            let b = sorted[i + 1]
+            guard a.stageName != b.stageName else { continue }
+            let gapMinutes = Int(b.startTime.timeIntervalSince(a.endTime) / 60)
+            guard let walk = StageWalkTime.minutes(from: a.stageName, to: b.stageName) else { continue }
+            if gapMinutes < walk + 5 {
+                let shortfall = max(0, walk - gapMinutes)
+                warnings.append(WalkTimeWarning(
+                    setA: a, setB: b,
+                    gapMinutes: gapMinutes,
+                    walkMinutes: walk,
+                    shortfall: shortfall
+                ))
+            }
+        }
+        return warnings
     }
 }

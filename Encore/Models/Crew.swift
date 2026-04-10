@@ -37,13 +37,14 @@ struct Crew: Identifiable, Codable {
 }
 
 // MARK: - Meetup Pin
+// FUTURE: restore when map feature is re-added
 
 struct MeetupPin: Identifiable, Codable {
     let id: UUID
-    var label: String             // e.g. "Meet us here after LCD!"
+    var label: String
     var latitude: Double
     var longitude: Double
-    var createdBy: UUID           // CrewMember.id
+    var createdBy: UUID
 }
 
 // MARK: - Color hex helper

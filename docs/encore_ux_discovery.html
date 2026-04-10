@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encore — UX Discovery & Design Audit</title>
+<style>
+  :root {
+    --bg: #111714;
+    --surface: #1a231e;
+    --surface2: #212e28;
+    --border: rgba(168,191,178,0.15);
+    --border2: rgba(168,191,178,0.28);
+    --cta: #E8F7D0;
+    --teal: #D4ECEC;
+    --accent: #A8BFB2;
+    --text: #EAEAEF;
+    --muted: #7a9488;
+    --warn: #f0a840;
+    --danger: #e05555;
+    --info: #7ec8e3;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .app { max-width: 900px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  .app-header { margin-bottom: 28px; }
+  .app-header h1 { font-size: 22px; font-weight: 600; color: var(--cta); letter-spacing: -0.3px; }
+  .app-header p { font-size: 13px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+
+  .nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 0.5px solid var(--border); }
+  .nav-btn { font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 99px; border: 0.5px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: var(--font); }
+  .nav-btn:hover { background: var(--surface); color: var(--text); }
+  .nav-btn.active { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  h2 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+  p { font-size: 13px; line-height: 1.65; color: var(--muted); margin-bottom: 12px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
+  .card-accent { border-left: 2px solid; }
+  .card-accent.green { border-left-color: #5DCAA5; }
+  .card-accent.amber { border-left-color: #EF9F27; }
+  .card-accent.red { border-left-color: #F09595; }
+  .card-accent.blue { border-left-color: #85B7EB; }
+  .card-accent.purple { border-left-color: #AFA9EC; }
+
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; letter-spacing: 0.02em; }
+  .tag-green { background: rgba(15,110,86,0.25); color: #5DCAA5; }
+  .tag-amber { background: rgba(133,80,11,0.25); color: #EF9F27; }
+  .tag-red { background: rgba(163,45,45,0.25); color: #F09595; }
+  .tag-blue { background: rgba(24,95,165,0.25); color: #85B7EB; }
+  .tag-gray { background: var(--surface2); color: var(--muted); border: 0.5px solid var(--border); }
+  .tag-purple { background: rgba(83,74,183,0.25); color: #AFA9EC; }
+
+  .screen-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .screen-header { padding: 13px 16px; border-bottom: 0.5px solid transparent; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.12s; }
+  .screen-header:hover { background: var(--surface2); }
+  .screen-header.open { border-bottom-color: var(--border); }
+  .screen-title { font-size: 14px; font-weight: 600; }
+  .screen-body { padding: 16px; display: none; }
+  .screen-body.open { display: block; }
+
+  .flow-item { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 0.5px solid var(--border); }
+  .flow-item:last-child { border-bottom: none; }
+  .flow-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .flow-dot.green { background: #5DCAA5; }
+  .flow-dot.amber { background: #EF9F27; }
+  .flow-dot.red { background: #F09595; }
+  .flow-dot.blue { background: #85B7EB; }
+  .flow-label { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .flow-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .audit-row { display: grid; grid-template-columns: 160px 1fr 100px; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .audit-row:last-child { border-bottom: none; }
+  .audit-row.header { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .audit-label { color: var(--muted); font-weight: 500; }
+  .audit-note { color: var(--text); line-height: 1.5; }
+
+  .priority-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .priority-box { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
+  .priority-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; color: var(--muted); }
+  .priority-item { font-size: 13px; color: var(--text); padding: 5px 0; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 6px; line-height: 1.4; }
+  .priority-item:last-child { border-bottom: none; }
+
+  .new-view-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 12px; }
+  .new-view-header { background: var(--surface); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .new-view-body { padding: 14px 16px; font-size: 13px; color: var(--muted); line-height: 1.7; background: var(--bg); }
+  .new-view-body ul { padding-left: 18px; }
+  .new-view-body li { margin-bottom: 5px; }
+  .new-view-body strong { color: var(--text); font-weight: 600; }
+
+  .phase-strip { display: flex; gap: 6px; }
+  .phase-pill { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px; letter-spacing: 0.02em; }
+  .phase-0 { background: rgba(15,110,86,0.2); color: #5DCAA5; }
+  .phase-1 { background: rgba(24,95,165,0.2); color: #85B7EB; }
+  .phase-2 { background: rgba(83,74,183,0.2); color: #AFA9EC; }
+  .phase-3 { background: rgba(133,80,11,0.2); color: #EF9F27; }
+
+  .sep { border: none; border-top: 0.5px solid var(--border); margin: 16px 0; }
+
+  .ux-finding { background: var(--surface); border-radius: var(--radius-md); padding: 11px 14px; margin-bottom: 7px; display: flex; gap: 10px; align-items: flex-start; border: 0.5px solid var(--border); }
+  .ux-finding.p0 { border-left: 2px solid #F09595; }
+  .ux-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .ux-text { font-size: 13px; color: var(--text); line-height: 1.55; }
+  .ux-text b { color: var(--text); font-weight: 600; }
+  .ux-text span { color: var(--muted); }
+
+  .chevron { transition: transform 0.2s; display: inline-block; font-size: 10px; color: var(--muted); }
+  .chevron.open { transform: rotate(90deg); }
+
+  .section-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+
+  .screens-stack { display: flex; flex-direction: column; gap: 8px; }
+
+  code { font-family: var(--font-mono); font-size: 12px; color: var(--cta); background: rgba(232,247,208,0.08); padding: 1px 5px; border-radius: 4px; }
+
+  .mono-block { font-family: var(--font-mono); font-size: 12px; line-height: 2.1; color: var(--muted); }
+  .mono-block .hi { color: #5DCAA5; }
+
+  @media (max-width: 620px) {
+    .grid-2, .grid-4, .priority-grid { grid-template-columns: 1fr; }
+    .audit-row { grid-template-columns: 1fr; }
+    .audit-row.header { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="app-header">
+    <h1>Encore — UX Discovery & Design Audit</h1>
+    <p>Full analysis of current views, navigation flows, UX gaps, and the complete feature map through Phase 3. Living design document.</p>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="switchTab('overview', this)">Overview</button>
+    <button class="nav-btn" onclick="switchTab('screens', this)">Screen Audit</button>
+    <button class="nav-btn" onclick="switchTab('ux-gaps', this)">UX Gaps</button>
+    <button class="nav-btn" onclick="switchTab('new-views', this)">New Views</button>
+    <button class="nav-btn" onclick="switchTab('nav-arch', this)">Navigation</button>
+    <button class="nav-btn" onclick="switchTab('roadmap', this)">Roadmap</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview" class="section active">
+    <h3>App pillars</h3>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="card card-accent green">
+        <div class="tag tag-green">Pillar 1</div>
+        <div style="font-size:14px;font-weight:600;margin-top:8px;margin-bottom:4px">Discover</div>
+        <div style="font-size:12px;color:var(--muted)">Lineup browse, Spotify matching, artist deep-dives</div>
+      </div>
+      <div class="card card-accent blue">
+        <div class="tag tag-blue">Pillar 2</div>
+        <div style="font-size:14px;font-weight:600;margin-top:8px;margin-bottom:4px">Schedule</div>
+        <div style="font-size:12px;color:var(--muted)">Personal timetable, conflict resolution, day planning</div>
+      </div>
+      <div class="card card-accent purple">
+        <div class="tag tag-purple">Pillar 3</div>
+        <div style="font-size:14px;font-weight:600;margin-top:8px;margin-bottom:4px">Crew</div>
+        <div style="font-size:12px;color:var(--muted)">Group coordination, shared schedule, live presence</div>
+      </div>
+      <div class="card card-accent amber">
+        <div class="tag tag-amber">Pillar 4</div>
+        <div style="font-size:14px;font-weight:600;margin-top:8px;margin-bottom:4px">Navigate</div>
+        <div style="font-size:12px;color:var(--muted)">Venue map, stage routing, amenity discovery</div>
+      </div>
+    </div>
+
+    <h3>Current view inventory</h3>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div>
+        <div class="section-label">Exists today</div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">HomeView</div><div class="flow-sub">Festival hub — group, trip, schedule entry</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">LineupView + TimetableGridView</div><div class="flow-sub">Day-by-day timetable grid</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">ArtistDetailView</div><div class="flow-sub">Full artist sheet with set info + actions</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">ArtistCardView</div><div class="flow-sub">List card — orphaned, no parent screen</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">ConflictResolverView</div><div class="flow-sub">Side-by-side conflict picker</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">FestivalMapView</div><div class="flow-sub">MapKit with stages + amenity toggles</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">ProfileView</div><div class="flow-sub">Theme, notifications, account settings</div></div></div>
+      </div>
+      <div>
+        <div class="section-label">Missing / stubs</div>
+        <div class="flow-item"><div class="flow-dot red"></div><div><div class="flow-label">DiscoverView</div><div class="flow-sub">Removed — ArtistCardView is orphaned</div></div></div>
+        <div class="flow-item"><div class="flow-dot red"></div><div><div class="flow-label">CrewView</div><div class="flow-sub">No dedicated crew management screen</div></div></div>
+        <div class="flow-item"><div class="flow-dot red"></div><div><div class="flow-label">TripView</div><div class="flow-sub">Travel / Packing / Expenses — all stubs</div></div></div>
+        <div class="flow-item"><div class="flow-dot amber"></div><div><div class="flow-label">OnboardingView</div><div class="flow-sub">No first-launch or Spotify connect flow</div></div></div>
+        <div class="flow-item"><div class="flow-dot amber"></div><div><div class="flow-label">CrewInviteView</div><div class="flow-sub">+ Invite is a stub; join flow missing</div></div></div>
+        <div class="flow-item"><div class="flow-dot amber"></div><div><div class="flow-label">NotificationsView</div><div class="flow-sub">Label only, no settings sheet</div></div></div>
+        <div class="flow-item"><div class="flow-dot amber"></div><div><div class="flow-label">EditProfileView</div><div class="flow-sub">Button stub only</div></div></div>
+      </div>
+    </div>
+
+    <h3>Tab structure assessment</h3>
+    <div class="grid-2">
+      <div class="card card-accent amber">
+        <div style="font-size:12px;font-weight:600;color:#EF9F27;margin-bottom:10px">Current — 2 tabs</div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">Home</div><div class="flow-sub">Everything crammed here</div></div></div>
+        <div class="flow-item"><div class="flow-dot amber"></div><div><div class="flow-label">Profile</div><div class="flow-sub">Settings only</div></div></div>
+        <div style="margin-top:10px;font-size:12px;color:var(--muted)">Problem: Home is doing too much. Map, Crew, Schedule, and Lineup all live under a single tab with no dedicated entry points.</div>
+      </div>
+      <div class="card card-accent green">
+        <div style="font-size:12px;font-weight:600;color:#5DCAA5;margin-bottom:10px">Recommended — 5 tabs</div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">Home</div><div class="flow-sub">Festival context + quick actions</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">Lineup</div><div class="flow-sub">Timetable grid + discover</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">Map</div><div class="flow-sub">Always-accessible venue navigation</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">Crew</div><div class="flow-sub">Group coordination hub</div></div></div>
+        <div class="flow-item"><div class="flow-dot green"></div><div><div class="flow-label">Profile</div><div class="flow-sub">Account + preferences</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN AUDIT -->
+  <div id="tab-screens" class="section">
+    <h3 style="margin-bottom:4px">Detailed screen-by-screen audit</h3>
+    <p style="margin-bottom:16px">Click any screen to expand its full UX analysis.</p>
+    <div class="screens-stack">
+
+      <div class="screen-card">
+        <div class="screen-header" onclick="toggleScreen('home')">
+          <div><div class="screen-title">HomeView — Festival Hub</div><div style="margin-top:4px"><span class="tag tag-green">exists</span><span class="tag tag-amber">overloaded</span></div></div>
+          <span class="chevron" id="chev-home">▶</span>
+        </div>
+        <div class="screen-body" id="body-home">
+          <div class="grid-2">
+            <div>
+              <div class="section-label">What it does well</div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Single-screen festival context — crew, trip, schedule at a glance</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Day picker for schedule is a strong pattern</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Conflict banner surfaced inline is smart</div></div>
+            </div>
+            <div>
+              <div class="section-label">Problems to fix</div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">No single dominant action — the screen tries to be everything</div></div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">Trip card taps to nothing — stubs without affordance hurt trust</div></div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">No onboarding hook — new users see empty crew and schedule</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Festival header is static — no countdown, no live context</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Lineup entry is a single row — discovery deserves its own tab</div></div>
+            </div>
+          </div>
+          <hr class="sep">
+          <div class="section-label">Recommended changes</div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add live countdown to festival header.</b> <span>"3 days, 14 hours until gates open" transforms a static label into a meaningful signal.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Replace "Browse Lineup" row with a "Next up" card.</b> <span>Show the user's next scheduled set prominently — the most relevant piece of info during the festival.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Make Trip card stubs visible as "coming soon" with disabled state.</b> <span>Or remove until implemented — dead taps undermine confidence.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add empty states with CTAs.</b> <span>Empty crew: "Invite your squad →". Empty schedule: "Browse the lineup →". These guide new users toward the right action.</span></div></div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-header" onclick="toggleScreen('lineup')">
+          <div><div class="screen-title">LineupView — Timetable Grid</div><div style="margin-top:4px"><span class="tag tag-green">exists</span><span class="tag tag-blue">core feature</span></div></div>
+          <span class="chevron" id="chev-lineup">▶</span>
+        </div>
+        <div class="screen-body" id="body-lineup">
+          <div class="grid-2">
+            <div>
+              <div class="section-label">What it does well</div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">2-axis scroll timetable is the right pattern for a festival lineup</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Absolute positioning by time is more accurate than a list</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Day picker + stage columns maps to real-world mental model</div></div>
+            </div>
+            <div>
+              <div class="section-label">Problems to fix</div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">No search or filter entry point in this view</div></div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">No "now" indicator — critical during the festival</div></div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">No way to see your scheduled sets highlighted in the grid</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">No toggle between grid and list view for accessibility</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Crew overlap on blocks not visible in grid</div></div>
+            </div>
+          </div>
+          <hr class="sep">
+          <div class="section-label">Recommended changes</div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add a "now" line.</b> <span>A horizontal rule at the current time that auto-scrolls into view on load. Table stakes for any live schedule app.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Highlight user's scheduled sets in the grid.</b> <span>A filled border or checkmark overlay on blocks that are in the user's schedule.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Show crew avatar stacks on set blocks.</b> <span>Tiny crew member initials on a block tell the user at a glance "your crew is watching this."</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add search bar + tier filter chips to LineupView toolbar.</b> <span>MatchTier pills and search exist in LineupStore but have no UI in LineupView.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add a list view toggle.</b> <span>Grid is powerful but hard to scan alphabetically. List mode is where ArtistCardView finally gets used.</span></div></div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-header" onclick="toggleScreen('artist')">
+          <div><div class="screen-title">ArtistDetailView — Artist Sheet</div><div style="margin-top:4px"><span class="tag tag-green">exists</span><span class="tag tag-green">solid foundation</span></div></div>
+          <span class="chevron" id="chev-artist">▶</span>
+        </div>
+        <div class="screen-body" id="body-artist">
+          <div class="grid-2">
+            <div>
+              <div class="section-label">What it does well</div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Clear info hierarchy: tier → set info → crew → setlist → CTA</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">safeAreaInset bottom actions keep CTAs always visible</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Crew attendance section is a strong social hook</div></div>
+            </div>
+            <div>
+              <div class="section-label">Problems to fix</div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">No artist image / visual hero — text-only top feels sparse</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Setlist is 7 hardcoded songs — no source attribution</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Sounds-like list has no interactivity — could link to similar artists</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">No pre-conflict warning before the user adds a set</div></div>
+            </div>
+          </div>
+          <hr class="sep">
+          <div class="section-label">Recommended changes</div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add a visual hero area.</b> <span>Gradient bleed from tier color + artist name in large type. Tier-colored gradient + genre tags makes the top half feel designed, not empty.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add "Similar artists in lineup" row.</b> <span>soundsLike values mapped to real artists in MockData. Tapping opens that artist's detail sheet — serendipitous discovery.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Make conflict state visible before adding.</b> <span>If this set conflicts with one already scheduled, show a warning inside the detail sheet before the user taps "Add."</span></div></div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-header" onclick="toggleScreen('map')">
+          <div><div class="screen-title">FestivalMapView — Venue Map</div><div style="margin-top:4px"><span class="tag tag-green">exists</span><span class="tag tag-red">buried</span></div></div>
+          <span class="chevron" id="chev-map">▶</span>
+        </div>
+        <div class="screen-body" id="body-map">
+          <div class="grid-2">
+            <div>
+              <div class="section-label">What it does well</div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">initialStage parameter for direct deep-linking from artist detail</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Slide-up stage card with current/next act is a great pattern</div></div>
+              <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Amenity toggles (water/medical/charging) are useful</div></div>
+            </div>
+            <div>
+              <div class="section-label">Critical problems</div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">Map is NOT in the tab bar — only reachable via lineup</div></div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">Location sharing toggle does nothing (CoreLocation not wired)</div></div>
+              <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">Walk time is hardcoded "~8 min" regardless of position</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">No meetup pin UI — MeetupPin model exists but has no view</div></div>
+              <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">No crew member locations shown on map</div></div>
+            </div>
+          </div>
+          <hr class="sep">
+          <div class="section-label">Recommended changes</div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Map must be a top-level tab.</b> <span>During a festival, navigation is a primary use case. Burying the map 3 taps deep is a critical UX failure for real-world usage.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add meetup pin UI.</b> <span>MeetupPin model and CrewStore.dropPin/removePin exist. The map needs a long-press gesture to drop a pin and a pin management sheet.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Design crew location layer now.</b> <span>Even as a stub, the map should show placeholder crew avatars so the UI is ready for Phase 2 CoreLocation data.</span></div></div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-header" onclick="toggleScreen('conflict')">
+          <div><div class="screen-title">ConflictResolverView — Conflict Modal</div><div style="margin-top:4px"><span class="tag tag-green">exists</span><span class="tag tag-blue">well-scoped</span></div></div>
+          <span class="chevron" id="chev-conflict">▶</span>
+        </div>
+        <div class="screen-body" id="body-conflict">
+          <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Side-by-side with Keep A / Keep B / Decide Later is clear and decisive</div></div>
+          <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">.medium detent is correct — doesn't need full screen</div></div>
+          <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">No crew context — crew attendance should influence the choice</div></div>
+          <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">"Decide Later" accumulates unresolved conflicts with no follow-up</div></div>
+          <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Only resolves one conflict at a time — no batch review</div></div>
+          <hr class="sep">
+          <div class="section-label">Recommended changes</div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add crew attendance to each side.</b> <span>Show crew member avatars under each set card. Knowing "Marcus + Zoe are seeing Set A" is the most useful signal for the decision.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add a conflict queue indicator.</b> <span>If there are 3 conflicts, show "1 of 3" and allow stepping through all of them in one session.</span></div></div>
+        </div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-header" onclick="toggleScreen('profile')">
+          <div><div class="screen-title">ProfileView — Settings</div><div style="margin-top:4px"><span class="tag tag-green">exists</span><span class="tag tag-amber">incomplete</span></div></div>
+          <span class="chevron" id="chev-profile">▶</span>
+        </div>
+        <div class="screen-body" id="body-profile">
+          <div class="flow-item"><div class="flow-dot green"></div><div class="flow-label">Theme picker → @AppStorage → preferredColorScheme works correctly</div></div>
+          <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">Edit Profile is a stub — tapping does nothing</div></div>
+          <div class="flow-item"><div class="flow-dot red"></div><div class="flow-label">Notifications is a label with no action sheet</div></div>
+          <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">No Spotify connection status shown (only accessible via LineupStore)</div></div>
+          <div class="flow-item"><div class="flow-dot amber"></div><div class="flow-label">Sign Out doesn't do anything meaningful with no backend</div></div>
+          <hr class="sep">
+          <div class="section-label">Recommended changes</div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Add Spotify connection card.</b> <span>Profile is the natural home for "Connected services." Show Spotify connection state, match score summary, and a connect/disconnect CTA.</span></div></div>
+          <div class="ux-finding"><div class="ux-icon">→</div><div class="ux-text"><b>Build NotificationsView sheet.</b> <span>Toggles for: set reminders (15/30/60 min before), crew alerts, and schedule change notifications.</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- UX GAPS -->
+  <div id="tab-ux-gaps" class="section">
+    <h3 style="margin-bottom:4px">Critical UX gaps</h3>
+    <p>Issues that would cause real confusion or friction for an actual festival attendee.</p>
+
+    <div style="margin-bottom:22px">
+      <div class="section-label" style="color:#F09595">P0 — Must fix before any real usage</div>
+      <div class="ux-finding p0"><div class="ux-icon">🔴</div><div class="ux-text"><b>Map is not tab-accessible.</b> <span>During a festival, attendees need the map constantly — not buried 3 taps into the Home tab. This is the single most impactful navigation fix.</span></div></div>
+      <div class="ux-finding p0"><div class="ux-icon">🔴</div><div class="ux-text"><b>No onboarding or first-launch state.</b> <span>A new user opens the app and sees empty crew, empty schedule, no Spotify match scores. There's no guidance on what to do first.</span></div></div>
+      <div class="ux-finding p0"><div class="ux-icon">🔴</div><div class="ux-text"><b>No "now" time indicator in timetable.</b> <span>Without a current-time line in the grid, users cannot quickly orient to what's happening right now. Essential for real festival use.</span></div></div>
+      <div class="ux-finding p0"><div class="ux-icon">🔴</div><div class="ux-text"><b>Dead taps everywhere.</b> <span>Trip card (Travel/Packing/Expenses), Crew Invite, Edit Profile, Notifications — 6+ interactive elements that do nothing. These erode trust immediately.</span></div></div>
+    </div>
+
+    <div style="margin-bottom:22px">
+      <div class="section-label" style="color:#EF9F27">P1 — Fix before launch</div>
+      <div class="ux-finding"><div class="ux-icon">🟡</div><div class="ux-text"><b>Crew has no dedicated space.</b> <span>CrewStore has rich data (schedules, online status, last seen stage) but it's only surfaced in a small card on HomeView and a section in ArtistDetailView.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🟡</div><div class="ux-text"><b>ArtistCardView is orphaned.</b> <span>Built for a DiscoverView that was removed. Needs a home — either inside LineupView as a list-mode toggle, or in a restored DiscoverView.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🟡</div><div class="ux-text"><b>Scheduled sets have no visual feedback in the timetable.</b> <span>After adding a set, the block looks identical. A checkmark or filled border on scheduled blocks is critical feedback.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🟡</div><div class="ux-text"><b>No pre-conflict warning.</b> <span>The conflict is only surfaced after adding a set. ArtistDetailView should check for conflicts before the user taps "Add" and warn them inline.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🟡</div><div class="ux-text"><b>Schedule persistence is in-memory only.</b> <span>Every app launch resets the schedule. UserDefaults encoding of scheduledSets is a Phase 1 must.</span></div></div>
+    </div>
+
+    <div>
+      <div class="section-label" style="color:#85B7EB">P2 — Quality improvements</div>
+      <div class="ux-finding"><div class="ux-icon">🔵</div><div class="ux-text"><b>Crew overlap not visible in timetable blocks.</b> <span>The timetable grid should show crew member initials on set blocks where crew members are attending — a key feature differentiator.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🔵</div><div class="ux-text"><b>No haptic feedback patterns defined.</b> <span>Adding a set, resolving a conflict, dropping a map pin — all warrant haptic feedback via UIImpactFeedbackGenerator.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🔵</div><div class="ux-text"><b>HomeView festival header is static.</b> <span>Pre-festival: show a countdown. During festival: show "Day 2 of 4." Post-festival: show a recap prompt. Header should be context-aware.</span></div></div>
+      <div class="ux-finding"><div class="ux-icon">🔵</div><div class="ux-text"><b>No artist image strategy.</b> <span>A placeholder gradient strategy (derived from tier color + name hash) would make the app feel far more polished without requiring real artist images.</span></div></div>
+    </div>
+  </div>
+
+  <!-- NEW VIEWS -->
+  <div id="tab-new-views" class="section">
+    <h3 style="margin-bottom:4px">Views to build</h3>
+    <p style="margin-bottom:18px">New screens required to complete the app's feature surface, ordered by priority.</p>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-red">P0</span><span style="font-size:14px;font-weight:600;margin-left:6px">OnboardingView</span></div><div class="phase-strip"><span class="phase-pill phase-0">Current phase</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Get the user set up with Spotify (optional), a display name, and their first crew — before they see the empty home screen.<br><br><ul><li><strong>Screen 1:</strong> Welcome — festival name + dates, "Let's get you ready" CTA</li><li><strong>Screen 2:</strong> Connect Spotify (skip option) — explains match scoring, shows preview tier distribution</li><li><strong>Screen 3:</strong> Your name — text field for display name used in crew</li><li><strong>Screen 4:</strong> Find your crew — "Create crew" or "Join with code" options, or "Go solo" skip</li><li><strong>Screen 5:</strong> Done — deep-link to lineup with "Start adding sets"</li></ul><br>Only shown on first launch. Store completion flag in UserDefaults.</div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-red">P0</span><span style="font-size:14px;font-weight:600;margin-left:6px">CrewView — Crew Hub</span></div><div class="phase-strip"><span class="phase-pill phase-0">Current phase</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Full crew management and coordination in one place.<br><br><ul><li><strong>Header:</strong> Crew name + member count + invite code</li><li><strong>Members section:</strong> Each member card — avatar, name, online indicator, last seen stage, their schedule (expandable)</li><li><strong>Shared schedule:</strong> Timeline of all sets any crew member is attending, with member overlap indicators</li><li><strong>Meetup pins:</strong> List of active map pins with creator + coordinates → tap to open map</li><li><strong>Group chat:</strong> Phase 2, design stub now</li></ul><br>Lives as its own tab. The Group Card in HomeView becomes a compressed preview that deep-links here.</div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-red">P0</span><span style="font-size:14px;font-weight:600;margin-left:6px">CrewInviteView</span></div><div class="phase-strip"><span class="phase-pill phase-0">Current phase</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Create a crew or join an existing one via invite code.<br><br><ul><li><strong>Mode A — Create:</strong> Text field for crew name → generates 6-char invite code → share sheet with code + QR (Phase 2)</li><li><strong>Mode B — Join:</strong> 6-field code entry (one char per box) → validates → joins crew</li><li>Presented as a sheet from HomeView Group Card or from CrewView empty state</li><li>Shows an error state when code is invalid</li></ul></div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-amber">P1</span><span style="font-size:14px;font-weight:600;margin-left:6px">DiscoverView — Artist Browse</span></div><div class="phase-strip"><span class="phase-pill phase-1">Phase 1</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Browse and search the full lineup by tier, genre, or stage — without the timetable grid.<br><br><ul><li><strong>Toolbar:</strong> Search bar + tier filter chips (Must-see / Worth checking / Explore / All)</li><li><strong>Sort modes:</strong> By tier (default), by name, by stage, by day</li><li><strong>List:</strong> ArtistCardView rows — this is where the orphaned component finally lives</li><li><strong>Empty state:</strong> "No artists match this filter" with reset button</li></ul><br>Restores the removed DiscoverView with a cleaner filter model using LineupStore.filteredSets.</div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-amber">P1</span><span style="font-size:14px;font-weight:600;margin-left:6px">TripDetailViews — Travel, Packing, Expenses</span></div><div class="phase-strip"><span class="phase-pill phase-1">Phase 1</span></div></div>
+      <div class="new-view-body"><strong>Three sheets</strong> presented from the Trip Card on HomeView:<br><br><ul><li><strong>TravelView:</strong> Arrival/departure info, campsite location, car/transit details. Simple form + save to UserDefaults.</li><li><strong>PackingView:</strong> Checklist-style packing list with Bonnaroo-specific preloaded defaults.</li><li><strong>ExpensesView:</strong> Simple ledger — add line items with amount + description, running total, optional per-person split.</li></ul></div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-amber">P1</span><span style="font-size:14px;font-weight:600;margin-left:6px">NotificationsView</span></div><div class="phase-strip"><span class="phase-pill phase-1">Phase 1</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Configure which alerts the user wants to receive.<br><br><ul><li>Set reminders: toggle + time picker (15 / 30 / 60 min before)</li><li>Conflict alerts: notify when a newly added set conflicts</li><li>Crew alerts: when a crew member changes their schedule</li><li>UNUserNotificationCenter permission request on first toggle</li><li>Presented as a sheet from ProfileView Notifications row</li></ul></div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-amber">P1</span><span style="font-size:14px;font-weight:600;margin-left:6px">EditProfileView</span></div><div class="phase-strip"><span class="phase-pill phase-1">Phase 1</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Edit display name and avatar color used in crew.<br><br><ul><li>Name text field (used as CrewMember.name)</li><li>Color picker — grid of preset hex colors matching the avatar color system</li><li>Initials preview that updates live as name changes</li><li>Save → updates CrewStore and UserDefaults</li></ul></div>
+    </div>
+
+    <div class="new-view-card">
+      <div class="new-view-header"><div><span class="tag tag-blue">P2</span><span style="font-size:14px;font-weight:600;margin-left:6px">GroupChatView</span></div><div class="phase-strip"><span class="phase-pill phase-2">Phase 2</span></div></div>
+      <div class="new-view-body"><strong>One job:</strong> Real-time text chat within a crew via Supabase Realtime.<br><br><ul><li>Standard chat bubble layout — sent right, received left</li><li>System messages: "Marcus added Hozier to their schedule"</li><li>Deep-link previews: set block previews inside chat when a set is shared</li><li>Design stub can be built now; wire up in Phase 2</li></ul></div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div id="tab-nav-arch" class="section">
+    <h3 style="margin-bottom:4px">Navigation architecture</h3>
+    <p style="margin-bottom:18px">Current vs. recommended. The core change is moving from 2 tabs to 5 tabs, giving Map and Crew top-level access, and clarifying which flows are push vs. sheet.</p>
+
+    <div class="grid-2" style="margin-bottom:24px">
+      <div>
+        <div class="section-label">Current</div>
+        <div class="card">
+          <div class="mono-block">
+            RootView (2 tabs)<br>
+            ├── <span class="hi">Home</span> (NavigationStack)<br>
+            │&nbsp;&nbsp;&nbsp;├── push → LineupView<br>
+            │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── push → FestivalMapView<br>
+            │&nbsp;&nbsp;&nbsp;├── sheet ↑ ArtistDetailView<br>
+            │&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── push → FestivalMapView<br>
+            │&nbsp;&nbsp;&nbsp;└── sheet ↑ ConflictResolverView<br>
+            └── <span class="hi">Profile</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ProfileView
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Recommended</div>
+        <div class="card">
+          <div class="mono-block">
+            RootView (5 tabs)<br>
+            ├── <span class="hi">Home</span> — festival context<br>
+            │&nbsp;&nbsp;&nbsp;├── sheet ↑ ArtistDetailView<br>
+            │&nbsp;&nbsp;&nbsp;└── sheet ↑ ConflictResolverView<br>
+            ├── <span class="hi">Lineup</span> (NavigationStack)<br>
+            │&nbsp;&nbsp;&nbsp;├── TimetableGridView / DiscoverView<br>
+            │&nbsp;&nbsp;&nbsp;└── sheet ↑ ArtistDetailView<br>
+            ├── <span class="hi">Map</span> — FestivalMapView<br>
+            │&nbsp;&nbsp;&nbsp;└── sheet ↑ StageDetailView<br>
+            ├── <span class="hi">Crew</span> (NavigationStack)<br>
+            │&nbsp;&nbsp;&nbsp;├── CrewView<br>
+            │&nbsp;&nbsp;&nbsp;└── sheet ↑ CrewInviteView<br>
+            └── <span class="hi">Profile</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── sheet ↑ EditProfileView<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── sheet ↑ NotificationsView
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:10px">Sheet vs. push rules</h3>
+    <div class="audit-row header"><div>Pattern</div><div>When to use</div><div>Examples</div></div>
+    <div class="audit-row"><div class="audit-label">Push (navigationPath)</div><div class="audit-note">Drilling into a sub-context that is still part of the same task. User needs Back.</div><div><span class="tag tag-blue">map</span></div></div>
+    <div class="audit-row"><div class="audit-label">Sheet (.medium)</div><div class="audit-note">Focused decision or detail that doesn't change the underlying screen. Dismissable with swipe.</div><div><span class="tag tag-green">artist</span><span class="tag tag-green">conflict</span></div></div>
+    <div class="audit-row"><div class="audit-label">Full sheet</div><div class="audit-note">Content requiring the user's full attention and has its own navigation.</div><div><span class="tag tag-purple">onboarding</span></div></div>
+    <div class="audit-row"><div class="audit-label">Inline detent</div><div class="audit-note">Contextual overlay over a map or visual canvas. User can see background.</div><div><span class="tag tag-amber">stage card</span></div></div>
+
+    <hr class="sep">
+    <h3 style="margin-bottom:10px">Deep link paths needed</h3>
+    <div class="grid-2">
+      <div>
+        <div class="flow-item"><div class="flow-dot blue"></div><div><div class="flow-label"><code>artist/{id}</code></div><div class="flow-sub">Open ArtistDetailView — from notifications</div></div></div>
+        <div class="flow-item"><div class="flow-dot blue"></div><div><div class="flow-label"><code>map/{stage}</code></div><div class="flow-sub">Open map centered on a specific stage</div></div></div>
+        <div class="flow-item"><div class="flow-dot blue"></div><div><div class="flow-label"><code>crew/join/{code}</code></div><div class="flow-sub">Open CrewInviteView pre-filled with a code</div></div></div>
+      </div>
+      <div>
+        <div class="flow-item"><div class="flow-dot blue"></div><div><div class="flow-label"><code>schedule/conflict</code></div><div class="flow-sub">Open ConflictResolverView — from push notification</div></div></div>
+        <div class="flow-item"><div class="flow-dot blue"></div><div><div class="flow-label"><code>lineup/day/{day}</code></div><div class="flow-sub">Open timetable on a specific day</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div id="tab-roadmap" class="section">
+    <h3 style="margin-bottom:4px">Feature roadmap — full view map</h3>
+    <p style="margin-bottom:18px">Every view, every feature, phased by dependency and complexity.</p>
+
+    <div style="margin-bottom:24px">
+      <div class="section-label" style="color:#5DCAA5">Phase 0 — Complete the current skeleton</div>
+      <div class="priority-grid">
+        <div class="priority-box">
+          <div class="priority-label">Build now</div>
+          <div class="priority-item"><span class="tag tag-red" style="flex-shrink:0">view</span> OnboardingView (5 screens)</div>
+          <div class="priority-item"><span class="tag tag-red" style="flex-shrink:0">view</span> CrewView (dedicated tab)</div>
+          <div class="priority-item"><span class="tag tag-red" style="flex-shrink:0">view</span> CrewInviteView (sheet)</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> Map → top-level tab</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> "Now" line in timetable</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> Scheduled block state in grid</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> Pre-conflict warning in detail</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> Remove / stub dead taps</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> Crew avatar stacks on grid blocks</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">fix</span> Empty states with action CTAs</div>
+        </div>
+        <div class="priority-box">
+          <div class="priority-label">Design enhancements</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Festival header → live countdown</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Gradient hero in ArtistDetailView</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Haptic feedback at key moments</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Conflict queue (1 of N) in resolver</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Crew context in conflict resolver</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Similar artists in detail sheet</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> Meetup pin UI on map</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">UX</span> List-mode toggle in LineupView</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div class="section-label" style="color:#85B7EB">Phase 1 — Real data, local device</div>
+      <div class="priority-grid">
+        <div class="priority-box">
+          <div class="priority-label">New views</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> DiscoverView (list browse)</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> TravelView (trip logistics)</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> PackingView (checklist)</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> ExpensesView (ledger)</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> NotificationsView (sheet)</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> EditProfileView (sheet)</div>
+          <div class="priority-item"><span class="tag tag-blue" style="flex-shrink:0">view</span> SpotifyConnectView (OAuth sheet)</div>
+        </div>
+        <div class="priority-box">
+          <div class="priority-label">Backend / data</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Spotify OAuth + match scores</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Real Bonnaroo lineup (Supabase)</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> scheduledSets → UserDefaults</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> setlist.fm API in artist detail</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Offline map tile caching</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> UNNotification scheduling</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Trip data → UserDefaults</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div class="section-label" style="color:#AFA9EC">Phase 2 — Realtime & social</div>
+      <div class="priority-grid">
+        <div class="priority-box">
+          <div class="priority-label">New views</div>
+          <div class="priority-item"><span class="tag tag-purple" style="flex-shrink:0">view</span> GroupChatView</div>
+          <div class="priority-item"><span class="tag tag-purple" style="flex-shrink:0">view</span> QRCodeInviteView</div>
+          <div class="priority-item"><span class="tag tag-purple" style="flex-shrink:0">view</span> LiveCrewMapLayer</div>
+          <div class="priority-item"><span class="tag tag-purple" style="flex-shrink:0">view</span> ScheduleChangeNotificationView</div>
+        </div>
+        <div class="priority-box">
+          <div class="priority-label">Backend / data</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Supabase Realtime crew sync</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> CoreLocation + presence</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Push notifications (APNs)</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Supabase Realtime chat channels</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label" style="color:#EF9F27">Phase 3 — Personalization</div>
+      <div class="priority-grid">
+        <div class="priority-box">
+          <div class="priority-label">New views</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">view</span> RecommendationsView</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">view</span> FestivalSwitcherView</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">view</span> SocialDiscoveryView</div>
+          <div class="priority-item"><span class="tag tag-amber" style="flex-shrink:0">view</span> PostFestivalRecapView</div>
+        </div>
+        <div class="priority-box">
+          <div class="priority-label">Backend / data</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Recommendation engine (Spotify graph)</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Multi-festival data model</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Social graph (friends outside crew)</div>
+          <div class="priority-item"><span class="tag tag-gray" style="flex-shrink:0">data</span> Recap data aggregation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleScreen(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  const header = chev.closest('.screen-header');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.screen-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.screen-header').forEach(h => h.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    chev.classList.add('open');
+    header.classList.add('open');
+  }
+}
+</script>
+</body>
+</html>

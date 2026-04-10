@@ -10,6 +10,8 @@ extension Color {
     static let appTeal        = Color(uiColor: .appTeal)
     static let appTextPrimary = Color(uiColor: .appTextPrimary)
     static let appTextMuted   = Color(uiColor: .appTextMuted)
+    static let appDanger      = Color(uiColor: .appDanger)
+    static let appWarn        = Color(uiColor: .appWarn)
 }
 
 // MARK: - UIColor adaptive tokens
@@ -31,6 +33,14 @@ extension UIColor {
             ? UIColor(appHex: "EAEAEF") : UIColor(appHex: "202030")
     }
     static let appTextMuted   = UIColor(appHex: "A8BFB2")
+    static let appDanger      = UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(appHex: "E05555") : UIColor(appHex: "C03030")
+    }
+    static let appWarn        = UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(appHex: "F0A840") : UIColor(appHex: "C07800")
+    }
 
     convenience init(appHex: String) {
         var hex = appHex.trimmingCharacters(in: .whitespacesAndNewlines)

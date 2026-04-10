@@ -63,3 +63,109 @@ extension Crew {
         ]
     )
 }
+
+extension Festival {
+    private static func date(year: Int, month: Int, day: Int) -> Date {
+        var c = DateComponents()
+        c.year = year; c.month = month; c.day = day
+        return Calendar.current.date(from: c) ?? Date()
+    }
+
+    static let mockFestivals: [Festival] = [
+        Festival(
+            id: UUID(),
+            name: "Bonnaroo 2023",
+            location: "Manchester, TN",
+            startDate: date(year: 2023, month: 6, day: 15),
+            endDate:   date(year: 2023, month: 6, day: 18),
+            status: .past,
+            genres: ["Rock", "Electronic", "Folk", "Hip-Hop"],
+            imageColorHex: "FF6B35",
+            lineup: [],
+            sets: []
+        ),
+        Festival(
+            id: UUID(),
+            name: "Bonnaroo 2025",
+            location: "Manchester, TN",
+            startDate: date(year: 2025, month: 6, day: 12),
+            endDate:   date(year: 2025, month: 6, day: 15),
+            status: .active,
+            genres: ["Rock", "Electronic", "Folk", "Soul"],
+            imageColorHex: "8B5CF6",
+            lineup: Artist.mockLineup,
+            sets: FestivalSet.mockSets
+        ),
+        Festival(
+            id: UUID(),
+            name: "Bonnaroo 2026",
+            location: "Manchester, TN",
+            startDate: date(year: 2026, month: 6, day: 11),
+            endDate:   date(year: 2026, month: 6, day: 14),
+            status: .upcoming,
+            genres: ["Rock", "Electronic", "Pop", "Indie"],
+            imageColorHex: "10B981",
+            lineup: [],
+            sets: []
+        )
+    ]
+}
+
+extension JournalEntry {
+    private static func date2023(month: Int, day: Int, hour: Int = 20) -> Date {
+        var c = DateComponents()
+        c.year = 2023; c.month = month; c.day = day; c.hour = hour
+        return Calendar.current.date(from: c) ?? Date()
+    }
+
+    static let mockEntries: [JournalEntry] = [
+        JournalEntry(
+            id: UUID(),
+            artistID: Artist.mockLineup[1].id,   // Hozier
+            festivalID: Festival.mockFestivals[0].id,
+            setID: UUID(),
+            dateAttended: date2023(month: 6, day: 16, hour: 22),
+            rating: 5,
+            notes: "Absolutely transcendent. The crowd was electric from the first note of Work Song. Cherry Wine as an encore had people in tears.",
+            highlights: ["Best energy", "Emotional moment", "Perfect setlist"],
+            wouldSeeAgain: .yes
+        ),
+        JournalEntry(
+            id: UUID(),
+            artistID: Artist.mockLineup[3].id,   // Japanese Breakfast
+            festivalID: Festival.mockFestivals[0].id,
+            setID: UUID(),
+            dateAttended: date2023(month: 6, day: 17, hour: 20),
+            rating: 4,
+            notes: "Michelle Zauner was in peak form. Loved the Soft Sounds era material. Crowd was smaller but super attentive.",
+            highlights: ["Great crowd", "Discovered a new fave"],
+            wouldSeeAgain: .yes
+        ),
+        JournalEntry(
+            id: UUID(),
+            artistID: Artist.mockLineup[0].id,   // LCD Soundsystem
+            festivalID: Festival.mockFestivals[0].id,
+            setID: UUID(),
+            dateAttended: date2023(month: 6, day: 18, hour: 23),
+            rating: 5,
+            notes: "Dance Yrself Clean opening was a religious experience. Set went for almost 2 hours. Daft Punk Is Playing At My House had the whole field losing it.",
+            highlights: ["Best energy", "Surprise guest", "Perfect setlist"],
+            wouldSeeAgain: .yes
+        )
+    ]
+}
+
+extension PackingItem {
+    static let bonnarooDefaults: [PackingItem] = [
+        PackingItem(id: UUID(), name: "Sunscreen", isPacked: false, category: "Gear"),
+        PackingItem(id: UUID(), name: "Rain poncho", isPacked: false, category: "Clothing"),
+        PackingItem(id: UUID(), name: "Portable charger", isPacked: false, category: "Gear"),
+        PackingItem(id: UUID(), name: "Reusable water bottle", isPacked: false, category: "Gear"),
+        PackingItem(id: UUID(), name: "Earplugs", isPacked: false, category: "Gear"),
+        PackingItem(id: UUID(), name: "Comfortable shoes", isPacked: false, category: "Clothing"),
+        PackingItem(id: UUID(), name: "Cash", isPacked: false, category: "Docs"),
+        PackingItem(id: UUID(), name: "ID + ticket", isPacked: false, category: "Docs"),
+        PackingItem(id: UUID(), name: "Tent + sleeping bag", isPacked: false, category: "Gear"),
+        PackingItem(id: UUID(), name: "Headlamp", isPacked: false, category: "Gear"),
+    ]
+}

@@ -1,4 +1,4 @@
-// Encore/EncoreApp.swift
+// Encore/App/EncoreApp.swift
 import SwiftUI
 
 @main
@@ -7,6 +7,8 @@ struct EncoreApp: App {
     @StateObject private var scheduleStore = ScheduleStore()
     @StateObject private var lineupStore   = LineupStore()
     @StateObject private var crewStore     = CrewStore()
+    @StateObject private var festivalStore = FestivalStore()
+    @StateObject private var journalStore  = JournalStore()
 
     @AppStorage("appTheme") private var appTheme: String = "system"
 
@@ -14,7 +16,7 @@ struct EncoreApp: App {
         switch appTheme {
         case "light": return .light
         case "dark":  return .dark
-        default:      return nil   // system
+        default:      return nil
         }
     }
 
@@ -24,6 +26,8 @@ struct EncoreApp: App {
                 .environmentObject(scheduleStore)
                 .environmentObject(lineupStore)
                 .environmentObject(crewStore)
+                .environmentObject(festivalStore)
+                .environmentObject(journalStore)
                 .preferredColorScheme(preferredColorScheme)
         }
     }

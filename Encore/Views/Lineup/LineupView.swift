@@ -7,9 +7,11 @@ struct LineupView: View {
     @EnvironmentObject var scheduleStore: ScheduleStore
     @EnvironmentObject var crewStore:     CrewStore
 
-    @State private var selectedDay:   FestivalDay = .thursday
-    @State private var selectedSet:   FestivalSet? = nil
-    @State private var selectedStage: String?      = nil
+    @State private var selectedDay: FestivalDay = .thursday
+    @State private var selectedSet: FestivalSet? = nil
+    @State private var walkSetA: FestivalSet? = nil
+    @State private var walkSetB: FestivalSet? = nil
+    private var showWalkTime: Bool { walkSetA != nil && walkSetB != nil }
 
     private var stages: [String] {
         Array(Set(lineupStore.allSets.map { $0.stageName })).sorted()
@@ -34,8 +36,8 @@ struct LineupView: View {
                 sets: setsForDay,
                 stages: stages,
                 scheduledSetIDs: scheduledIDs,
-                onSetTap:   { selectedSet   = $0 },
-                onStageTap: { selectedStage = $0 }
+                onSetTap:  { selectedSet = $0 },
+                onWalkTap: { a, b in walkSetA = a; walkSetB = b }
             )
         }
         .background(Color.appBackground)
@@ -46,15 +48,14 @@ struct LineupView: View {
                 .environmentObject(scheduleStore)
                 .environmentObject(crewStore)
         }
-        .navigationDestination(
-            isPresented: Binding(
-                get: { selectedStage != nil },
-                set: { if !$0 { selectedStage = nil } }
-            )
-        ) {
-            FestivalMapView(initialStage: selectedStage)
-                .environmentObject(scheduleStore)
-                .environmentObject(crewStore)
+        .sheet(isPresented: Binding(
+            get: { showWalkTime },
+            set: { if !$0 { walkSetA = nil; walkSetB = nil } }
+        )) {
+            if let a = walkSetA, let b = walkSetB {
+                WalkTimeView(setA: a, setB: b)
+                    .presentationDetents([.medium, .large])
+            }
         }
     }
 

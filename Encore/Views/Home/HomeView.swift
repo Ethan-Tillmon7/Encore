@@ -3,14 +3,17 @@ import SwiftUI
 
 struct HomeView: View {
 
-    @EnvironmentObject var scheduleStore: ScheduleStore
-    @EnvironmentObject var lineupStore:   LineupStore
-    @EnvironmentObject var crewStore:     CrewStore
+    @EnvironmentObject var scheduleStore:  ScheduleStore
+    @EnvironmentObject var lineupStore:    LineupStore
+    @EnvironmentObject var crewStore:      CrewStore
+    @EnvironmentObject var festivalStore:  FestivalStore
 
     @State private var selectedDay:    FestivalDay  = .thursday
     @State private var activeConflict: SetConflict? = nil
     @State private var selectedSet:    FestivalSet? = nil
     @State private var navigationPath = NavigationPath()
+    @State private var showCrewInvite:    Bool = false
+    @State private var showTravelDetails: Bool = false
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -44,6 +47,16 @@ struct HomeView: View {
                 ConflictResolverView(conflict: conflict)
                     .environmentObject(scheduleStore)
                     .presentationDetents([.medium])
+            }
+            .sheet(isPresented: $showCrewInvite) {
+                CrewInviteView()
+            }
+            .sheet(isPresented: $showTravelDetails) {
+                if let festivalID = festivalStore.selectedFestival?.id {
+                    TravelDetailsView(festivalID: festivalID)
+                } else {
+                    TravelDetailsView(festivalID: UUID())
+                }
             }
         }
     }
@@ -79,17 +92,20 @@ struct HomeView: View {
                 .font(DS.Font.caps)
                 .foregroundColor(.appTextMuted)
                 .tracking(0.6)
-            Text("No group yet")
+            Text("Planning with friends?")
                 .font(DS.Font.cardTitle)
                 .foregroundColor(.appTextPrimary)
+            Text("Create or join a crew to coordinate schedules.")
+                .font(DS.Font.metadata)
+                .foregroundColor(.appTextMuted)
             HStack(spacing: 10) {
-                Button("Start a Group") {}
+                Button("Create a Crew") { showCrewInvite = true }
                     .font(DS.Font.listItem)
                     .padding(.horizontal, 14).padding(.vertical, 8)
                     .background(Color.appCTA.opacity(0.15))
                     .foregroundColor(.appCTA)
                     .clipShape(Capsule())
-                Button("Join with Code") {}
+                Button("Join with Code") { showCrewInvite = true }
                     .font(DS.Font.metadata)
                     .padding(.horizontal, 14).padding(.vertical, 8)
                     .background(Color.appSurface)
@@ -117,7 +133,7 @@ struct HomeView: View {
                         .foregroundColor(.appTextPrimary)
                 }
                 Spacer()
-                Button(action: {}) {
+                Button(action: { showCrewInvite = true }) {
                     Text("+ Invite")
                         .font(DS.Font.label)
                         .foregroundColor(.appAccent)
@@ -165,38 +181,29 @@ struct HomeView: View {
     // MARK: - Trip Card
 
     private var tripCard: some View {
-        HStack(spacing: 0) {
-            tripColumn(icon: "airplane",         label: "Travel",   detail: "Fri 8 AM")
-            Rectangle()
-                .fill(Color.appAccent.opacity(0.25))
-                .frame(width: 1, height: 36)
-            tripColumn(icon: "backpack",          label: "Packing",  detail: "0 / 0")
-            Rectangle()
-                .fill(Color.appAccent.opacity(0.25))
-                .frame(width: 1, height: 36)
-            tripColumn(icon: "dollarsign.circle", label: "Expenses", detail: "$0 / person")
-        }
-        .padding(.vertical, DS.Spacing.cardPadding)
-        .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
-        .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
-            .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
-    }
-
-    private func tripColumn(icon: String, label: String, detail: String) -> some View {
-        Button(action: {}) {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 15))
+        Button(action: { showTravelDetails = true }) {
+            HStack(spacing: 12) {
+                Image(systemName: "suitcase")
+                    .font(.system(size: 18))
                     .foregroundColor(.appAccent)
-                Text(label)
-                    .font(DS.Font.label)
-                    .foregroundColor(.appTextPrimary)
-                Text(detail)
-                    .font(DS.Font.caps)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Travel Details")
+                        .font(DS.Font.listItem)
+                        .foregroundColor(.appTextPrimary)
+                    Text("Fri arrival · Tent camping")
+                        .font(DS.Font.metadata)
+                        .foregroundColor(.appTextMuted)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .medium))
                     .foregroundColor(.appTextMuted)
             }
-            .frame(maxWidth: .infinity)
+            .padding(DS.Spacing.cardPadding)
+            .background(Color.appSurface)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
+                .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
@@ -352,12 +359,14 @@ struct HomeView: View {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 32))
                 .foregroundColor(Color.appTextMuted.opacity(0.4))
-            Text("Nothing scheduled for \(selectedDay.fullName)")
+            Text("Nothing scheduled for \(selectedDay.fullName).")
                 .font(DS.Font.listItem)
                 .foregroundColor(.appTextMuted)
-            Text("Browse the lineup to add sets")
-                .font(DS.Font.metadata)
-                .foregroundColor(Color.appTextMuted.opacity(0.6))
+            Button("Browse the lineup →") {
+                navigationPath.append("lineup")
+            }
+            .font(DS.Font.metadata)
+            .foregroundColor(.appCTA)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 32)
@@ -378,5 +387,6 @@ struct HomeView: View {
         .environmentObject(schedule)
         .environmentObject(LineupStore())
         .environmentObject(CrewStore())
+        .environmentObject(FestivalStore())
         .preferredColorScheme(.dark)
 }

@@ -7,7 +7,7 @@ struct TimetableGridView: View {
     let stages: [String]
     let scheduledSetIDs: Set<UUID>
     var onSetTap: (FestivalSet) -> Void
-    var onStageTap: (String) -> Void
+    var onWalkTap: ((FestivalSet, FestivalSet) -> Void)? = nil
 
     // Layout constants
     private let rowHeight:       CGFloat = 44   // per 30-min slot
@@ -46,69 +46,136 @@ struct TimetableGridView: View {
     // MARK: - Body
 
     var body: some View {
-        ScrollView([.horizontal, .vertical], showsIndicators: false) {
-            ZStack(alignment: .topLeading) {
-                // Canvas background
-                Color.appBackground
-                    .frame(width: totalWidth, height: totalHeight)
+        ScrollViewReader { proxy in
+            ScrollView([.horizontal, .vertical], showsIndicators: false) {
+                ZStack(alignment: .topLeading) {
+                    // Canvas background
+                    Color.appBackground
+                        .frame(width: totalWidth, height: totalHeight)
 
-                // Horizontal grid lines (one per 30-min row)
-                ForEach(0 ..< rowCount, id: \.self) { row in
-                    Rectangle()
-                        .fill(Color.appAccent.opacity(row % 2 == 0 ? 0.08 : 0.04))
-                        .frame(width: totalWidth, height: 1)
-                        .offset(y: headerHeight + CGFloat(row) * rowHeight)
-                }
+                    // Horizontal grid lines (one per 30-min row)
+                    ForEach(0 ..< rowCount, id: \.self) { row in
+                        Rectangle()
+                            .fill(Color.appAccent.opacity(row % 2 == 0 ? 0.08 : 0.04))
+                            .frame(width: totalWidth, height: 1)
+                            .offset(y: headerHeight + CGFloat(row) * rowHeight)
+                    }
 
-                // Vertical stage dividers
-                ForEach(0 ..< stages.count, id: \.self) { col in
-                    Rectangle()
-                        .fill(Color.appAccent.opacity(0.08))
-                        .frame(width: 1, height: totalHeight)
-                        .offset(x: timeColumnWidth + CGFloat(col) * columnWidth)
-                }
+                    // Vertical stage dividers
+                    ForEach(0 ..< stages.count, id: \.self) { col in
+                        Rectangle()
+                            .fill(Color.appAccent.opacity(0.08))
+                            .frame(width: 1, height: totalHeight)
+                            .offset(x: timeColumnWidth + CGFloat(col) * columnWidth)
+                    }
 
-                // Stage column headers (tappable → map)
-                ForEach(Array(stages.enumerated()), id: \.offset) { idx, stage in
-                    Button(action: { onStageTap(stage) }) {
+                    // Stage column headers
+                    ForEach(Array(stages.enumerated()), id: \.offset) { idx, stage in
                         Text(stage)
                             .font(.system(size: 9, weight: .bold))
                             .foregroundColor(.appCTA)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                             .frame(width: columnWidth, height: headerHeight)
+                            .offset(x: timeColumnWidth + CGFloat(idx) * columnWidth)
                     }
-                    .buttonStyle(.plain)
-                    .offset(x: timeColumnWidth + CGFloat(idx) * columnWidth)
+
+                    // Time labels (every hour)
+                    ForEach(0 ..< rowCount, id: \.self) { row in
+                        if row % 2 == 0 {
+                            Text(hourLabel(minuteOffset: row * 30))
+                                .font(.system(size: 8))
+                                .foregroundColor(.appTextMuted)
+                                .frame(width: timeColumnWidth - 4, alignment: .trailing)
+                                .offset(x: 0,
+                                        y: headerHeight + CGFloat(row) * rowHeight - 6)
+                        }
+                    }
+
+                    // Set blocks
+                    ForEach(sets) { set in
+                        let pos = blockOrigin(for: set)
+                        let h   = blockHeight(for: set)
+                        let added = scheduledSetIDs.contains(set.id)
+
+                        Button(action: { onSetTap(set) }) {
+                            SetBlockView(set: set, height: h, isAdded: added)
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: columnWidth - 4)
+                        .offset(x: pos.x + 2, y: pos.y + 2)
+                    }
+
+                    // Walk-time gap pills (between consecutive scheduled sets on different stages)
+                    let scheduledSorted = sets.filter { scheduledSetIDs.contains($0.id) }
+                                              .sorted { $0.startTime < $1.startTime }
+                    if scheduledSorted.count >= 2 {
+                        ForEach(0..<(scheduledSorted.count - 1), id: \.self) { idx in
+                            let setA = scheduledSorted[idx]
+                            let setB = scheduledSorted[idx + 1]
+                            if setA.stageName != setB.stageName && setB.startTime > setA.endTime {
+                                let gapMins = Int(setB.startTime.timeIntervalSince(setA.endTime) / 60)
+                                let walk = StageWalkTime.minutes(from: setA.stageName, to: setB.stageName)
+                                let severity: Color = {
+                                    guard let w = walk else { return DS.WalkSeverity.safe }
+                                    if gapMins >= w { return gapMins - w <= 5 ? DS.WalkSeverity.close : DS.WalkSeverity.safe }
+                                    return DS.WalkSeverity.tight
+                                }()
+                                let midMinOffset = Int(setA.endTime.timeIntervalSince(dayStart) / 60) + gapMins / 2
+                                let yPos = headerHeight + CGFloat(midMinOffset) / 30.0 * rowHeight
+
+                                Button(action: { onWalkTap?(setA, setB) }) {
+                                    HStack(spacing: 3) {
+                                        Image(systemName: "figure.walk")
+                                            .font(.system(size: 8))
+                                        if let w = walk {
+                                            Text("→ \(w) min walk")
+                                                .font(.system(size: 8, weight: .medium))
+                                        } else {
+                                            Text("→ different stage")
+                                                .font(.system(size: 8, weight: .medium))
+                                        }
+                                    }
+                                    .foregroundColor(severity)
+                                    .padding(.horizontal, 6).padding(.vertical, 3)
+                                    .background(severity.opacity(0.15))
+                                    .clipShape(Capsule())
+                                }
+                                .buttonStyle(.plain)
+                                .offset(x: timeColumnWidth, y: yPos - 10)
+                            }
+                        }
+                    }
+
+                    // "Now" indicator — only when current time is within the day
+                    let now = Date()
+                    if now > dayStart && now < dayEnd {
+                        let minsFromStart = Int(now.timeIntervalSince(dayStart)) / 60
+                        let yPos = headerHeight + CGFloat(minsFromStart) / 30.0 * rowHeight
+                        ZStack(alignment: .leading) {
+                            Rectangle()
+                                .fill(Color.appCTA)
+                                .frame(width: totalWidth - timeColumnWidth, height: 1.5)
+                            Circle()
+                                .fill(Color.appCTA)
+                                .frame(width: 7, height: 7)
+                        }
+                        .id("now-line")
+                        .offset(x: timeColumnWidth - 3, y: yPos - 0.75)
+                    }
                 }
-
-                // Time labels (every hour)
-                ForEach(0 ..< rowCount, id: \.self) { row in
-                    if row % 2 == 0 {
-                        Text(hourLabel(minuteOffset: row * 30))
-                            .font(.system(size: 8))
-                            .foregroundColor(.appTextMuted)
-                            .frame(width: timeColumnWidth - 4, alignment: .trailing)
-                            .offset(x: 0,
-                                    y: headerHeight + CGFloat(row) * rowHeight - 6)
+                .frame(width: totalWidth, height: totalHeight)
+            }
+            .onAppear {
+                let now = Date()
+                if now > dayStart && now < dayEnd {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            proxy.scrollTo("now-line", anchor: .center)
+                        }
                     }
-                }
-
-                // Set blocks
-                ForEach(sets) { set in
-                    let pos = blockOrigin(for: set)
-                    let h   = blockHeight(for: set)
-                    let added = scheduledSetIDs.contains(set.id)
-
-                    Button(action: { onSetTap(set) }) {
-                        SetBlockView(set: set, height: h, isAdded: added)
-                    }
-                    .buttonStyle(.plain)
-                    .frame(width: columnWidth - 4)
-                    .offset(x: pos.x + 2, y: pos.y + 2)
                 }
             }
-            .frame(width: totalWidth, height: totalHeight)
         }
     }
 
@@ -141,8 +208,7 @@ struct TimetableGridView: View {
         sets: sets,
         stages: stages,
         scheduledSetIDs: [sets[0].id],
-        onSetTap: { _ in },
-        onStageTap: { _ in }
+        onSetTap: { _ in }
     )
     .frame(height: 500)
     .preferredColorScheme(.dark)

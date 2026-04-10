@@ -1,0 +1,517 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.75rem;
+}
+
+/* Hero */
+.hero {
+  margin-bottom: 1.75rem;
+}
+.hero-title { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+.hero-sub { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+/* Problem statement */
+.problem-banner {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 1.5rem;
+  border-left: 2px solid var(--color-border-primary);
+}
+.problem-label { font-size: 11px; color: var(--color-text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.problem-text { font-size: 14px; font-weight: 500; line-height: 1.6; }
+
+/* Pillars */
+.pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
+.pillar {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 16px;
+}
+.pillar.hero-pillar { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+.pillar-num { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 8px; font-weight: 500; }
+.pillar-title { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
+.pillar-sub { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+/* Loop */
+.loop-card {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 1rem;
+}
+.loop-steps { display: flex; align-items: stretch; gap: 0; margin-top: 10px; }
+.loop-step {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.loop-arrow { font-size: 11px; color: var(--color-text-tertiary); padding: 0 5px; display: flex; align-items: center; flex-shrink: 0; }
+
+/* Nav */
+.tab-bar { display: flex; gap: 8px; margin-bottom: 0.75rem; }
+.tab {
+  flex: 1;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 12px 8px 10px;
+  text-align: center;
+}
+.tab-icon { font-size: 16px; display: block; margin-bottom: 4px; }
+.tab-label { font-size: 11px; color: var(--color-text-secondary); font-weight: 500; }
+
+/* Screen cards */
+.screen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.screen-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.screen-card:hover { background: var(--color-background-secondary); }
+.screen-card.focus { border-color: var(--color-border-primary); }
+.screen-name { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.screen-items { display: flex; flex-direction: column; gap: 5px; }
+.screen-item { font-size: 11px; color: var(--color-text-secondary); padding-left: 10px; position: relative; line-height: 1.4; }
+.screen-item::before { content: '·'; position: absolute; left: 0; color: var(--color-text-tertiary); }
+
+/* Conflict resolver feature highlight */
+.feature-highlight {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.feature-highlight:hover { background: var(--color-background-secondary); }
+.fh-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.fh-title { font-size: 14px; font-weight: 500; }
+.fh-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+.fh-badge.key { background: #EEEDFE; color: #3C3489; }
+.fh-badge.social { background: #E1F5EE; color: #085041; }
+.fh-badge.data { background: #FAEEDA; color: #633806; }
+@media (prefers-color-scheme: dark) {
+  .fh-badge.key { background: #26215C; color: #CECBF6; }
+  .fh-badge.social { background: #04342C; color: #9FE1CB; }
+  .fh-badge.data { background: #412402; color: #FAC775; }
+}
+.fh-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.55; }
+.fh-detail { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+.fh-detail-item { font-size: 11px; color: var(--color-text-secondary); padding-left: 12px; position: relative; line-height: 1.4; }
+.fh-detail-item::before { content: '→'; position: absolute; left: 0; color: var(--color-text-tertiary); font-size: 10px; }
+
+/* Data sources */
+.data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.data-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 12px 14px;
+}
+.data-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.data-use { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; }
+.data-powers { font-size: 11px; color: var(--color-text-tertiary); margin-top: 6px; font-style: italic; }
+
+/* Stack */
+.stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stack-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 12px 14px;
+}
+.stack-layer { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; font-weight: 500; }
+.stack-value { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.stack-sub { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; }
+
+/* Phase bar */
+.phase-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.phase-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+}
+.phase-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 9px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.phase-badge.p1 { background: #EEEDFE; color: #3C3489; }
+.phase-badge.p2 { background: #E1F5EE; color: #085041; }
+.phase-badge.p3 { background: #FAEEDA; color: #633806; }
+@media (prefers-color-scheme: dark) {
+  .phase-badge.p1 { background: #26215C; color: #CECBF6; }
+  .phase-badge.p2 { background: #04342C; color: #9FE1CB; }
+  .phase-badge.p3 { background: #412402; color: #FAC775; }
+}
+.phase-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.phase-items { display: flex; flex-direction: column; gap: 4px; }
+.phase-item { font-size: 11px; color: var(--color-text-secondary); padding-left: 10px; position: relative; line-height: 1.4; }
+.phase-item::before { content: '·'; position: absolute; left: 0; color: var(--color-text-tertiary); }
+
+.principle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.p-card { border-left: 2px solid var(--color-border-secondary); padding: 10px 14px; }
+.p-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.p-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+</style>
+
+<div style="padding: 1.5rem 0 0;">
+
+  <div class="hero">
+    <div class="hero-title">Encore — Festival Planner</div>
+    <div class="hero-sub">The app your Bonnaroo crew actually uses during the weekend — not just before it.</div>
+  </div>
+
+  <div class="problem-banner">
+    <div class="problem-label">Problem we're solving</div>
+    <div class="problem-text">"My friend group always splits up and loses each other." At a festival like Bonnaroo — 13 stages, 150+ artists, 4 days — there's no app that handles scheduling, discovery, <em>and</em> group coordination in one place.</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Three pillars -->
+  <div class="section-label">Three pillars</div>
+  <div class="pillar-grid" style="margin-bottom: 1.5rem;">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-title">Build your schedule</div>
+      <div class="pillar-sub">Conflict-aware personal lineup. Import from Spotify to auto-rank artists you know.</div>
+    </div>
+    <div class="pillar hero-pillar">
+      <div class="pillar-num">02 — differentiator</div>
+      <div class="pillar-title">Coordinate your crew</div>
+      <div class="pillar-sub">Group schedule view. See exactly where friends are, who's seeing what together, and where conflicts happen.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-title">Discover the lineup</div>
+      <div class="pillar-sub">Surface artists you don't know yet but will love, ranked by taste match from your Spotify history.</div>
+    </div>
+  </div>
+
+  <!-- Core loop -->
+  <div class="loop-card">
+    <div style="font-size: 13px; font-weight: 500; margin-bottom: 2px;">The engagement loop</div>
+    <div style="font-size: 12px; color: var(--color-text-secondary);">Useful before the festival, essential during it.</div>
+    <div class="loop-steps" style="margin-top: 12px;">
+      <div class="loop-step">Connect Spotify</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">Get artist rankings</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">Build schedule</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">Invite your crew</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">Navigate weekend live</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Navigation -->
+  <div class="section-label">Navigation — 4 tabs</div>
+  <div class="tab-bar">
+    <div class="tab">
+      <span class="tab-icon">✦</span>
+      <div class="tab-label">Discover</div>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">🗓</span>
+      <div class="tab-label">My Schedule</div>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">👥</span>
+      <div class="tab-label">Crew</div>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">🗺</span>
+      <div class="tab-label">Map</div>
+    </div>
+  </div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">Profile and settings live behind an avatar tap in the top right — keeps prime navigation real estate for the four things users touch constantly during the festival weekend.</div>
+
+  <hr class="divider">
+
+  <!-- Key features -->
+  <div class="section-label">Key features</div>
+
+  <div class="feature-highlight" onclick="sendPrompt('Design the conflict resolver feature for Encore festival planner in detail')">
+    <div class="fh-header">
+      <div class="fh-title">Conflict resolver</div>
+      <span class="fh-badge key">Core feature</span>
+    </div>
+    <div class="fh-desc">When two artists you want to see overlap, the app surfaces the conflict, shows set times side by side, pulls your Spotify affinity score for each, and shows how many crew members are going to each — then lets you decide with one tap.</div>
+    <div class="fh-detail">
+      <div class="fh-detail-item">Visual timeline highlights overlapping blocks in amber</div>
+      <div class="fh-detail-item">Spotify match score shown per artist (e.g. "94% match · 38 plays last 6 months")</div>
+      <div class="fh-detail-item">Crew vote indicator: "3 friends going to LCD Soundsystem, 1 going to Odesza"</div>
+      <div class="fh-detail-item">One-tap resolve: pick one, or mark both as "want to split"</div>
+    </div>
+  </div>
+
+  <div class="feature-highlight" onclick="sendPrompt('Design the Crew tab and group coordination features for Encore festival planner')">
+    <div class="fh-header">
+      <div class="fh-title">Crew schedule overlay</div>
+      <span class="fh-badge social">Social core</span>
+    </div>
+    <div class="fh-desc">Invite your group into a shared crew. See a merged schedule view showing everyone's picks — shared sets highlighted in green, splits shown in split-color blocks. The single most useful screen during the actual festival weekend.</div>
+    <div class="fh-detail">
+      <div class="fh-detail-item">Crew invite via link or QR code — no account required to join</div>
+      <div class="fh-detail-item">Merged timeline: color-coded per person, shared sets show overlapping avatars</div>
+      <div class="fh-detail-item">Live status during festival: "At What Stage · Last seen 4 min ago"</div>
+      <div class="fh-detail-item">Meetup pin: drop a "meet us here after this set" marker on the map</div>
+      <div class="fh-detail-item">Group chat scoped to the festival weekend only</div>
+    </div>
+  </div>
+
+  <div class="feature-highlight" onclick="sendPrompt('Design the Discover tab for Encore festival planner — how does Spotify-powered artist ranking work?')">
+    <div class="fh-header">
+      <div class="fh-title">Spotify-powered lineup ranking</div>
+      <span class="fh-badge data">Data feature</span>
+    </div>
+    <div class="fh-desc">Connect Spotify once. Every artist on the Bonnaroo lineup gets ranked by your listening history — plays, recency, saves. Artists you've never heard get a "sounds like" tag based on your top genres. Surfaces hidden gems before you've done any research.</div>
+    <div class="fh-detail">
+      <div class="fh-detail-item">Tier labels: Must-see · Worth checking out · Explore · Unknown</div>
+      <div class="fh-detail-item">"Sounds like [artist you love]" tags powered by genre + audio feature matching</div>
+      <div class="fh-detail-item">One-tap add to schedule from the Discover card</div>
+      <div class="fh-detail-item">setlist.fm pull: show recent setlists so you know what to expect live</div>
+    </div>
+  </div>
+
+  <div class="feature-highlight" onclick="sendPrompt('Design the live Map tab for Encore festival planner during the festival weekend')">
+    <div class="fh-header">
+      <div class="fh-title">Live festival map</div>
+      <span class="fh-badge key">Weekend essential</span>
+    </div>
+    <div class="fh-desc">Official Bonnaroo stage map with your schedule overlaid. Stages light up when a set you've saved is happening. Crew member dots show where everyone is. Meetup pins visible to the whole group.</div>
+    <div class="fh-detail">
+      <div class="fh-detail-item">Stage markers show current + next act at a glance</div>
+      <div class="fh-detail-item">Walking time estimate between stages ("~8 min walk")</div>
+      <div class="fh-detail-item">Crew location dots — opt-in, active only during festival dates</div>
+      <div class="fh-detail-item">Amenity layer: bathrooms, water, medical, charging stations</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Screen inventory -->
+  <div class="section-label">Full screen inventory</div>
+  <div class="screen-grid" style="margin-bottom: 1.5rem;">
+    <div class="screen-card focus" onclick="sendPrompt('Walk me through the Discover screen in full detail for Encore')">
+      <div class="screen-name">✦ Discover</div>
+      <div class="screen-items">
+        <div class="screen-item">Ranked lineup list (Spotify-scored)</div>
+        <div class="screen-item">Artist detail card + setlist.fm history</div>
+        <div class="screen-item">Filter by stage, day, genre, match tier</div>
+        <div class="screen-item">Add to schedule from card</div>
+        <div class="screen-item">Crew overlap indicator per artist</div>
+      </div>
+    </div>
+    <div class="screen-card focus" onclick="sendPrompt('Walk me through the My Schedule screen in full detail for Encore')">
+      <div class="screen-name">🗓 My Schedule</div>
+      <div class="screen-items">
+        <div class="screen-item">Day-by-day timeline view</div>
+        <div class="screen-item">Conflict alerts (amber blocks)</div>
+        <div class="screen-item">Conflict resolver modal</div>
+        <div class="screen-item">Drag to reschedule or swap</div>
+        <div class="screen-item">Export / share my schedule</div>
+      </div>
+    </div>
+    <div class="screen-card focus" onclick="sendPrompt('Walk me through the Crew tab in full detail for Encore')">
+      <div class="screen-name">👥 Crew</div>
+      <div class="screen-items">
+        <div class="screen-item">Crew invite + join flow</div>
+        <div class="screen-item">Merged group timeline</div>
+        <div class="screen-item">Shared vs split set indicators</div>
+        <div class="screen-item">Live location status (opt-in)</div>
+        <div class="screen-item">Meetup pin drop + group chat</div>
+      </div>
+    </div>
+    <div class="screen-card" onclick="sendPrompt('Walk me through the Map screen in full detail for Encore')">
+      <div class="screen-name">🗺 Map</div>
+      <div class="screen-items">
+        <div class="screen-item">Bonnaroo stage map base layer</div>
+        <div class="screen-item">Active set indicators per stage</div>
+        <div class="screen-item">Crew location dots</div>
+        <div class="screen-item">Meetup pins</div>
+        <div class="screen-item">Amenities toggle layer</div>
+      </div>
+    </div>
+    <div class="screen-card" onclick="sendPrompt('Walk me through the Artist Detail screen for Encore')">
+      <div class="screen-name">🎤 Artist detail</div>
+      <div class="screen-items">
+        <div class="screen-item">Spotify match score + play count</div>
+        <div class="screen-item">Recent setlists from setlist.fm</div>
+        <div class="screen-item">Set time + stage info</div>
+        <div class="screen-item">Crew attendance ("4 friends going")</div>
+        <div class="screen-item">Add / remove from schedule</div>
+      </div>
+    </div>
+    <div class="screen-card" onclick="sendPrompt('Walk me through the onboarding flow for Encore festival planner')">
+      <div class="screen-name">👋 Onboarding</div>
+      <div class="screen-items">
+        <div class="screen-item">Select your festival (Bonnaroo)</div>
+        <div class="screen-item">Connect Spotify (or skip)</div>
+        <div class="screen-item">Auto-generate ranked lineup</div>
+        <div class="screen-item">Invite crew via link / QR</div>
+        <div class="screen-item">Land on Discover tab, ready to go</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Data sources -->
+  <div class="section-label">Data sources</div>
+  <div class="data-grid" style="margin-bottom: 1.5rem;">
+    <div class="data-card">
+      <div class="data-name">Spotify API</div>
+      <div class="data-use">Top artists, play counts, listening recency, audio features for genre matching</div>
+      <div class="data-powers">Powers: artist ranking, "sounds like" tags, conflict resolution scoring</div>
+    </div>
+    <div class="data-card">
+      <div class="data-name">Official lineup feed</div>
+      <div class="data-use">Bonnaroo artist roster, stage assignments, set times — scraped or via partner API</div>
+      <div class="data-powers">Powers: schedule builder, conflict detection, map stage labels</div>
+    </div>
+    <div class="data-card">
+      <div class="data-name">setlist.fm API</div>
+      <div class="data-use">Historical setlists per artist, typical set length, common openers</div>
+      <div class="data-powers">Powers: artist detail page, "expect to hear" section, set length estimates</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Tech stack -->
+  <div class="section-label">Tech stack</div>
+  <div class="stack-grid" style="margin-bottom: 10px;">
+    <div class="stack-card">
+      <div class="stack-layer">Mobile</div>
+      <div class="stack-value">React Native + Expo</div>
+      <div class="stack-sub">iOS + Android. Expo Go for fast iteration during build.</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-layer">Backend + Auth</div>
+      <div class="stack-value">Supabase</div>
+      <div class="stack-sub">Postgres, realtime for crew sync, auth, file storage for map assets.</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-layer">Realtime crew</div>
+      <div class="stack-value">Supabase Realtime</div>
+      <div class="stack-sub">Live location updates, meetup pins, group schedule sync.</div>
+    </div>
+  </div>
+  <div class="stack-grid" style="margin-bottom: 1.5rem;">
+    <div class="stack-card">
+      <div class="stack-layer">Maps</div>
+      <div class="stack-value">Mapbox GL</div>
+      <div class="stack-sub">Custom styled map, offline tile support for no-signal areas on the farm.</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-layer">Music data</div>
+      <div class="stack-value">Spotify + setlist.fm</div>
+      <div class="stack-sub">OAuth for Spotify. setlist.fm REST API for historical sets.</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-layer">State</div>
+      <div class="stack-value">Zustand + React Query</div>
+      <div class="stack-sub">Local schedule state + server sync. Offline-first for festival weekend.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Build phases -->
+  <div class="section-label">Build phases</div>
+  <div class="phase-row" style="margin-bottom: 1.5rem;">
+    <div class="phase-card">
+      <span class="phase-badge p1">Phase 1</span>
+      <div class="phase-title">Solo planner</div>
+      <div class="phase-items">
+        <div class="phase-item">Festival + lineup ingestion</div>
+        <div class="phase-item">Spotify connect + artist ranking</div>
+        <div class="phase-item">Schedule builder with conflict detection</div>
+        <div class="phase-item">Artist detail + setlist.fm pull</div>
+        <div class="phase-item">Static Bonnaroo map</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <span class="phase-badge p2">Phase 2</span>
+      <div class="phase-title">Crew coordination</div>
+      <div class="phase-items">
+        <div class="phase-item">Crew creation + invite flow</div>
+        <div class="phase-item">Merged group schedule view</div>
+        <div class="phase-item">Live location (opt-in)</div>
+        <div class="phase-item">Meetup pins + group chat</div>
+        <div class="phase-item">Conflict resolver with crew data</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <span class="phase-badge p3">Phase 3</span>
+      <div class="phase-title">Multi-festival + post-show</div>
+      <div class="phase-items">
+        <div class="phase-item">Support additional festivals</div>
+        <div class="phase-item">Post-show journal entry per set</div>
+        <div class="phase-item">Highlight reel and memories</div>
+        <div class="phase-item">Year-in-review stats</div>
+        <div class="phase-item">Artist alerts for future tours</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Design principles -->
+  <div class="section-label">Design principles</div>
+  <div class="principle-row">
+    <div class="p-card">
+      <div class="p-title">Offline-first</div>
+      <div class="p-desc">Bonnaroo cell service is notoriously bad. Schedules, maps, and crew data must work without a signal. Sync when connected, function when not.</div>
+    </div>
+    <div class="p-card">
+      <div class="p-title">Dark mode native</div>
+      <div class="p-desc">Festival apps are used at night in loud dark fields. High contrast, large tap targets, minimal reading required to get the key info fast.</div>
+    </div>
+    <div class="p-card">
+      <div class="p-title">Glanceable over detailed</div>
+      <div class="p-desc">You're between sets with 10 minutes to decide. Every key screen must communicate its core info in under 3 seconds.</div>
+    </div>
+    <div class="p-card">
+      <div class="p-title">Crew is the product</div>
+      <div class="p-desc">Solo users get a great scheduler. But the real value unlock is the group layer — that's the thing that makes people text the link to their whole friend group before Bonnaroo.</div>
+    </div>
+  </div>
+
+</div>
