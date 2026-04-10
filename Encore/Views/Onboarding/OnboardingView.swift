@@ -368,9 +368,9 @@ private struct OnboardingCrewStep: View {
                     .foregroundColor(.appDanger)
             }
             rowButton(label: "Join Crew") {
-                crewStore.joinCrew(code: joinCode) { success in
+                crewStore.joinCrew(code: joinCode, completion: { success in
                     if success { onFinish() } else { errorMessage = "Invalid or expired code." }
-                }
+                })
             }
             .disabled(joinCode.count != 6)
         }
