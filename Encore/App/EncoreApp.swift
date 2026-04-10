@@ -10,7 +10,8 @@ struct EncoreApp: App {
     @StateObject private var festivalStore = FestivalStore()
     @StateObject private var journalStore  = JournalStore()
 
-    @AppStorage("appTheme") private var appTheme: String = "system"
+    @AppStorage(StorageKey.appTheme)               private var appTheme: String = "system"
+    @AppStorage(StorageKey.hasCompletedOnboarding) private var hasCompletedOnboarding = false
 
     private var preferredColorScheme: ColorScheme? {
         switch appTheme {
@@ -29,6 +30,10 @@ struct EncoreApp: App {
                 .environmentObject(festivalStore)
                 .environmentObject(journalStore)
                 .preferredColorScheme(preferredColorScheme)
+                .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
+                    OnboardingView()
+                        .environmentObject(crewStore)
+                }
         }
     }
 }

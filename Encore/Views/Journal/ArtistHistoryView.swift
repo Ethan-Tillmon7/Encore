@@ -8,7 +8,7 @@ struct ArtistHistoryView: View {
     @EnvironmentObject var journalStore: JournalStore
 
     private var entries: [JournalEntry] {
-        journalStore.entries(for: artist.id)
+        journalStore.entries(forArtist: artist.id)
             .sorted { $0.dateAttended > $1.dateAttended }
     }
 

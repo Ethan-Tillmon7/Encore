@@ -12,7 +12,23 @@ struct WalkTimeWarning: Identifiable {
 
 class ScheduleStore: ObservableObject {
 
-    @Published var scheduledSets: [FestivalSet] = []
+    @Published var scheduledSets: [FestivalSet] = [] {
+        didSet { persistScheduledSets() }
+    }
+
+    init() {
+        if let data = UserDefaults.standard.data(forKey: StorageKey.scheduledSets),
+           let decoded = try? JSONDecoder().decode([FestivalSet].self, from: data) {
+            scheduledSets = decoded
+        }
+    }
+
+    // MARK: - Persistence
+
+    private func persistScheduledSets() {
+        guard let data = try? JSONEncoder().encode(scheduledSets) else { return }
+        UserDefaults.standard.set(data, forKey: StorageKey.scheduledSets)
+    }
 
     // MARK: - Schedule management
 
