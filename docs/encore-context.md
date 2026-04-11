@@ -6,13 +6,13 @@
 
 ## What Encore Is
 
-A festival companion app for iOS, targeting Bonnaroo. It helps attendees:
-1. **Discover** the lineup and build a personal schedule
+A multi-festival companion app for iOS. It helps attendees:
+1. **Discover** festivals and build a personal schedule
 2. **Coordinate** with their friend group (crew)
-3. **Navigate** the venue to stages and amenities
-4. **Manage** trip logistics (travel, packing, expenses — planned)
+3. **Log** the artists they've seen (journal)
+4. **Manage** trip logistics (travel, packing, expenses)
 
-The app is fully functional on mock data. No backend or real accounts exist yet.
+The app runs entirely on mock data. No backend or real accounts exist yet.
 
 ---
 
@@ -21,40 +21,70 @@ The app is fully functional on mock data. No backend or real accounts exist yet.
 ```
 Encore/
 ├── App/
-│   ├── EncoreApp.swift          — App entry point; instantiates stores, handles theme
-│   └── RootView.swift           — 2-tab TabView (Home, Profile)
+│   ├── EncoreApp.swift          — App entry point; stores, theme, onboarding gate
+│   └── RootView.swift           — 5-tab TabView (Home, Discover, Lineup, Journal, Profile)
 │
 ├── DesignSystem/
-│   ├── DesignSystem.swift       — DS.Spacing / DS.RowHeight / DS.Radius / DS.Font constants
-│   └── AppColors.swift          — Color token extensions (appBackground, appSurface, etc.)
+│   ├── DesignSystem.swift       — DS.Spacing / DS.RowHeight / DS.Radius / DS.Font / DS.WalkSeverity / DS.Journal
+│   └── AppColors.swift          — Adaptive UIColor + SwiftUI Color token extensions
 │
 ├── Models/
-│   ├── Artist.swift             — Artist struct + MatchTier enum
+│   ├── Artist.swift             — Artist, MatchTier
 │   ├── FestivalSet.swift        — FestivalSet, FestivalDay, SetConflict
-│   ├── Crew.swift               — Crew, CrewMember, MeetupPin + Color(hex:) extension
-│   └── MockData.swift           — 12 artists, 10 sets, 4 crew members (all Bonnaroo-themed)
+│   ├── Festival.swift           — Festival, FestivalStatus (+ isCamping, latitude, longitude)
+│   ├── GenreTaxonomy.swift      — GenreCategory, GenreTaxonomy (10 top-level buckets + subcategories)
+│   ├── JournalEntry.swift       — JournalEntry, WouldSeeAgain
+│   ├── TravelDetails.swift      — TravelDetails, PackingItem, ExpenseItem
+│   ├── Crew.swift               — Crew, CrewMember (MeetupPin retained for Phase 2 map)
+│   └── MockData.swift           — 9 mock festivals (3 Bonnaroo + 6 real), mock artists/sets/crew/journal/packing
 │
 ├── Stores/
-│   ├── ScheduleStore.swift      — User's personal schedule + conflict detection
+│   ├── ScheduleStore.swift      — User schedule, conflict detection, walk-time warnings, UserDefaults persistence
 │   ├── LineupStore.swift        — Full lineup, filters, Spotify connection state
-│   └── CrewStore.swift          — Crew membership, meetup pins, merged timeline helpers
+│   ├── CrewStore.swift          — Crew membership, merged timeline helpers
+│   ├── FestivalStore.swift      — Active festival context, travel details, UserDefaults persistence
+│   ├── FestivalDiscoveryStore.swift — Full festival catalog, all discovery filters (status/text/artist/genre/camping)
+│   └── JournalStore.swift       — Journal entries, UserDefaults persistence
+│
+├── Utilities/
+│   └── StorageKey.swift         — Typed UserDefaults key constants
 │
 └── Views/
     ├── Home/
-    │   └── HomeView.swift       — Festival hub (group, trip, schedule, lineup entry)
+    │   └── HomeView.swift
+    ├── Discover/
+    │   ├── FestivalListView.swift
+    │   ├── FestivalCardView.swift
+    │   ├── FestivalDetailView.swift
+    │   ├── ArtistSearchView.swift
+    │   └── DiscoveryFilterSheet.swift  — artist name + camping + genre filter sheet
     ├── Lineup/
-    │   ├── LineupView.swift     — Day picker + timetable grid shell
-    │   ├── TimetableGridView.swift — 2-axis scrollable timetable grid
-    │   └── SetBlockView.swift   — Individual set block rendered inside the grid
+    │   ├── LineupView.swift
+    │   ├── TimetableGridView.swift
+    │   ├── SetBlockView.swift
+    │   └── GroupPlannerView.swift
+    ├── Journal/
+    │   ├── SeenTrackerView.swift
+    │   ├── JournalEntryRowView.swift
+    │   ├── SetJournalEntryView.swift
+    │   └── ArtistHistoryView.swift
     ├── Artist/
-    │   ├── ArtistCardView.swift — List-item card (add/remove, tier bar, crew indicator)
-    │   └── ArtistDetailView.swift — Full artist detail sheet (set info, crew, setlist, CTA)
+    │   ├── ArtistCardView.swift
+    │   └── ArtistDetailView.swift
     ├── Schedule/
-    │   └── ConflictResolverView.swift — Side-by-side conflict resolver modal
-    ├── Map/
-    │   └── FestivalMapView.swift — MapKit map with stage and amenity markers
-    └── Profile/
-        └── ProfileView.swift    — Settings: theme, notifications, legal, sign out
+    │   ├── ConflictResolverView.swift
+    │   └── WalkTimeView.swift
+    ├── Onboarding/
+    │   └── OnboardingView.swift
+    ├── Profile/
+    │   ├── ProfileView.swift
+    │   ├── EditProfileView.swift
+    │   ├── NotificationsView.swift
+    │   ├── TravelDetailsView.swift
+    │   ├── CrewManageView.swift
+    │   └── CrewInviteView.swift
+    └── Components/
+        └── CrewAvatarBubble.swift
 ```
 
 **Build system:** XcodeGen (`project.yml` → `Encore.xcodeproj`). Run `xcodegen generate` after any structural change to `project.yml` or the file tree.
@@ -64,104 +94,255 @@ Encore/
 ## Navigation Architecture
 
 ```
-RootView (TabView)
-├── Tab: Home (house)
-│   └── HomeView (NavigationStack)
-│       ├── → LineupView (push via navigationPath.append("lineup"))
-│       │   └── TimetableGridView
-│       │       ├── → ArtistDetailView (sheet on set tap)
-│       │       │   └── → FestivalMapView (push via NavigationLink "Directions to Stage")
-│       │       └── → FestivalMapView (push on stage header tap)
-│       ├── ↑ ArtistDetailView (sheet from schedule row tap)
-│       └── ↑ ConflictResolverView (sheet from conflict banner tap)
-└── Tab: Profile (person.circle)
-    └── ProfileView
+EncoreApp
+├── .fullScreenCover  →  OnboardingView  (shown when hasCompletedOnboarding == false)
+│
+└── RootView (TabView, 5 tabs, .tint(.appCTA))
+    ├── Tab: Home (house.fill)
+    │   └── NavigationStack → HomeView
+    │       ├── ↑ TravelDetailsView (sheet)
+    │       └── ↑ CrewInviteView (sheet)
+    │
+    ├── Tab: Discover (safari.fill)
+    │   └── NavigationStack → FestivalListView
+    │       ├── → FestivalDetailView (NavigationLink)
+    │       │   └── ↑ TravelDetailsView (sheet)
+    │       └── ↑ ArtistSearchView (sheet, toolbar)
+    │           └── ↑ ArtistDetailView (sheet on artist tap)
+    │
+    ├── Tab: Lineup (calendar)
+    │   └── NavigationStack → LineupView
+    │       ├── TimetableGridView (grid mode)
+    │       │   ├── ↑ ArtistDetailView (sheet on set tap)
+    │       │   └── ↑ WalkTimeView (sheet on gap pill tap)
+    │       ├── ArtistCardView list (list mode)
+    │       │   └── ↑ ArtistDetailView (sheet on tap)
+    │       └── ↑ GroupPlannerView (sheet, toolbar)
+    │
+    ├── Tab: Journal (book.fill)
+    │   └── NavigationStack → SeenTrackerView
+    │       ├── → ArtistHistoryView (NavigationLink on entry tap)
+    │       └── ↑ SetJournalEntryView (sheet, "Log a Set" toolbar button)
+    │
+    └── Tab: Profile (person.circle.fill)
+        └── NavigationStack → ProfileView
+            ├── ↑ EditProfileView (sheet)
+            ├── ↑ NotificationsView (sheet)
+            ├── ↑ CrewManageView (sheet)
+            │   └── ↑ CrewInviteView (sheet)
+            └── ↑ TravelDetailsView (sheet)
 ```
 
 Key patterns:
-- `HomeView` owns a `NavigationStack` with `NavigationPath`. All push navigation for the Home flow goes through it.
-- Modal content (artist details, conflict resolver) uses `.sheet(item:)`.
-- `FestivalMapView` is always pushed (never presented as a sheet) and accepts `initialStage: String?` to auto-center on a stage.
-- `ArtistDetailView` is a sheet and wraps its own `NavigationView` to support the Directions → Map push internally.
+- Each tab is wrapped in its own `NavigationStack` in `RootView`.
+- Sheets use `.sheet(item:)` or `.sheet(isPresented:)`.
+- `ArtistDetailView` wraps its own `NavigationView` to support potential push navigation within the sheet.
 
 ---
 
 ## Screens
 
-### HomeView — Festival Hub
-**One job:** Show the user their full festival context at a glance.
+### OnboardingView — First-launch onboarding
+Shown as `.fullScreenCover` from `EncoreApp` when `@AppStorage(StorageKey.hasCompletedOnboarding) == false`. Setting this key to `true` on the Done step dismisses the cover.
 
-Sections (scrollable, no sticky headers):
+5 pages in a `TabView` with `.tabViewStyle(.page(indexDisplayMode: .never))`. Dot-style page indicator at bottom.
+
+| Page | Content |
+|------|---------|
+| 1 — Welcome | App name + tagline + "Get Started" CTA |
+| 2 — Spotify | Description + "Connect Spotify" (stub) + "Skip for now" |
+| 3 — Profile | Live avatar preview, display name TextField, 12-color avatar grid; writes to `@AppStorage` on Continue |
+| 4 — Crew | Create crew / Join crew / Skip; create shows invite code after success |
+| 5 — Done | Confirmation + "Let's Go" → sets `hasCompletedOnboarding = true` |
+
+---
+
+### HomeView — Festival Hub
+Shows the user's current festival context at a glance.
+
 | Section | Content |
 |---------|---------|
-| Festival Header | "Bonnaroo '25" + dates/location |
-| Group Card | Crew name, member bubbles with online indicators, "+ Invite" button |
-| Trip Card | 3 columns: Travel / Packing / Expenses (each tappable, sheets are stubs) |
-| Browse Lineup | Full-width row → pushes LineupView |
-| My Schedule | Day picker (Thu–Sun) + list of user's sets for selected day; conflict banner if applicable |
+| Festival Header | Selected festival name + dates/location |
+| Group Card | Crew name, member bubbles, "+ Invite" → `CrewInviteView` sheet |
+| Trip Card | "Travel Details" full-width row → `TravelDetailsView` sheet |
+| Browse Lineup | Full-width row → pushes `LineupView` (via NavigationPath) |
+| My Schedule | Day picker (day tabs) + list of user's sets; conflict banner if applicable |
 
-Empty state for schedule: shown when no sets are added for the selected day.
+---
+
+### FestivalListView — Discover Tab Root
+Browse all festivals.
+
+- Reads from `FestivalDiscoveryStore.filteredFestivals` (status, text, artist, genre, camping filters)
+- Status filter pills (All / Upcoming / Active / Past) bound to `discoveryStore.selectedStatus`
+- `LazyVStack` of `FestivalCardView` cells wrapped in `NavigationLink`
+- Toolbar: filter button (with active-count badge) → `DiscoveryFilterSheet`, magnifying glass → `ArtistSearchView`
+
+### FestivalCardView
+- 4pt colored left accent bar (from `festival.imageColorHex`)
+- Name + status badge (pulsing dot for `.active`, countdown for `.upcoming`)
+- Date range + location + horizontal genre chip scroll
+
+### FestivalDetailView
+- Hero: status pill, date/location, genre chips
+- "Set as my festival" CTA → `festivalStore.selectFestival(_:)`
+- Horizontal artist chip scroll (tappable when a `FestivalSet` exists)
+- Your History: stats from `journalStore.entries(for: festivalID)`
+- Travel Details row → `TravelDetailsView` sheet
+
+### DiscoveryFilterSheet
+
+Sheet presented from `FestivalListView` toolbar. Writes directly into `FestivalDiscoveryStore`.
+
+| Section | Control | Store property |
+| ------- | ------- | -------------- |
+| Find festivals featuring | `TextField` | `artistNameFilter` |
+| Type | 3 camping pills (Any / Camping / No Camping) | `campingFilter` |
+| Genre | Expandable category rows + sub-genre chip grid | `selectedGenres: Set<String>` |
+
+- Category row: tap name/icon = select entire top-level category; chevron = expand sub-genres
+- Sub-genre chip grid: `LazyVGrid` adaptive columns, each chip toggles individual sub-genre
+- Active selection shown as count badge (sub-genres) or checkmark (top-level only)
+- "Clear all" toolbar button → `discoveryStore.clearFilters()`
+
+### ArtistSearchView
+
+- Deduplicated artists sourced from `discoveryStore.allFestivals` (all 9 festivals)
+- De-duplication by artist name (same artist at multiple festivals = one row)
+- `.searchable` bound to search text
+- `MatchTier` filter chips
+- List rows: tier dot, "Seen" badge from `journalStore`, genre subtitle
+- Tapping a row → `ArtistDetailView` sheet
 
 ---
 
 ### LineupView — Full Timetable
-**One job:** Browse all artists and add sets to your schedule.
+Browse all artists by day; grid and list modes.
 
-- Day picker controls which day's sets appear in `TimetableGridView`
-- `TimetableGridView` is a `ScrollView([.horizontal, .vertical])` with a `ZStack` of absolutely positioned `SetBlockView` elements — NOT a `LazyVGrid`
-- Block position = offset from day start in 30-min increments (44pt per row)
-- Block height = duration in minutes / 30 × 44pt
-- Tapping a stage header in the grid → pushes `FestivalMapView` for that stage
-- Tapping a set block → presents `ArtistDetailView` as a sheet
+**Grid mode (default):** `TimetableGridView` with the full timetable. "Now" line auto-scrolls on appear.
+
+**List mode:** `ArtistCardView` rows filtered by `lineupStore.filteredSets` for the selected day. Search bar + tier filter chips appear in list mode.
+
+Toolbar button "Group Plan" → `GroupPlannerView` sheet.
+
+### TimetableGridView
+A `ScrollView([.horizontal, .vertical])` wrapping a `ZStack` with absolutely positioned elements.
+
+- 44pt per 30-min row, 110pt column width, 36pt time column
+- Horizontal grid stripes, vertical stage dividers
+- Stage name headers across top row
+- Hourly time labels on left
+- `SetBlockView` elements for each set; tapping → `ArtistDetailView` sheet
+- Walk-time gap pills between consecutive scheduled sets on different stages; tapping → `WalkTimeView` sheet
+- "Now" line (1.5pt `appCTA` rectangle + 7pt circle, `.id("now-line")`) auto-scrolled to on appear
+
+### SetBlockView
+Per-set block inside the grid.
+
+- Tier color fill + border
+- 2pt `appCTA` border when `isAdded`
+- Checkmark at `.topTrailing` when added
+- `CrewAvatarBubble` stack at `.bottomLeading` showing which crew members are going
+
+### GroupPlannerView
+Shows the crew's combined schedule for a selected day.
+
+- Day picker tabs
+- "My schedule only" toggle
+- Rows: artist info + crew avatar stack (You bubble + `CrewAvatarBubble`s); `appCTA`-tinted background when user has also scheduled the set
 
 ---
 
-### ArtistDetailView — Artist Detail
-**One job:** See full detail for an artist and decide whether to add them.
+### SeenTrackerView — Journal Tab Root
+- Stats strip: sets seen, festivals, avg rating
+- Festival filter chips
+- `LazyVStack` of `JournalEntryRowView` entries
+- "Log a Set" toolbar button → `SetJournalEntryView` sheet
 
-Presented as a sheet from both HomeView (schedule row tap) and LineupView (set block tap).
+### JournalEntryRowView
+- Green dot + artist name + festival + date + note preview + 5-star mini rating
+
+### SetJournalEntryView
+Two init overloads:
+- `init(entry: JournalEntry)` — edit existing entry
+- `init(festivalSet: FestivalSet?, existingEntry: JournalEntry?)` — create new entry
+
+Features: attendance toggle, 5-star tap rating with spring animation, highlight chips with `FlowLayout` (iOS 16 `Layout`), 2000-char `TextEditor` with counter, WouldSeeAgain 3-pill toggle, Delete with `confirmationDialog` in edit mode.
+
+### ArtistHistoryView
+- Artist tier badge + genres header
+- Stats: times seen, avg rating
+- `LazyVStack` grouped by festival with `JournalEntryRowView` entries
+
+---
+
+### ArtistDetailView — Artist Detail Sheet
+Presented as a sheet from any screen.
 
 Sections:
-- Hero: tier badge, genres, Spotify match or "sounds like" fallback
+- Hero: `LinearGradient` (tier color → `appBackground`), tier badge, genres, Spotify match or "sounds like"
 - Set Info: Stage / Day / Time (3-cell grid)
-- Your Crew: attendees from CrewStore (shown only if any)
-- Recent Setlist: 7 hardcoded placeholder songs (setlist.fm integration is Phase 1)
-- Bottom actions (safeAreaInset): "Add to My Schedule" / "Added to Schedule" + "Directions to [Stage]"
+- Your Crew: attendees from `CrewStore` (shown only if any)
+- Similar on Lineup: horizontal chip scroll of `soundsLike` artists that exist on the lineup
+- Recent Setlist: 7 hardcoded placeholder songs
+- Journal section: "View your notes →" if seen; "Log this set →" if past
+- Bottom actions (safeAreaInset): conflict warning banner + "Add to My Schedule" / "Added" + static stage row with `mappin.and.ellipse`
 
 ---
 
-### ArtistCardView — List Item
-**One job:** Compact artist card for list-based browse views (e.g. a future Discover tab or search results).
+### WalkTimeView — Walk Time Detail Sheet
+`.presentationDetents([.medium, .large])`.
 
-Not currently used in any screen — `DiscoverView` was removed in the redesign. The card exists for Phase 1 Discover/search use.
+- From/to stage header
+- 42pt walk time number in severity color
+- Severity status text (safe / close / tight / over)
+- `GeometryReader` timeline bar (gap block + walk block)
+- Leave-early suggestion chip when shortfall > 0
+- FROM/TO set info cards with end time label
+- Disclaimer footer
 
 ---
 
-### ConflictResolverView — Conflict Resolution
-**One job:** Help the user choose between two overlapping sets.
-
-Presented as `.sheet` with `.presentationDetents([.medium])`. Shows side-by-side cards for the two conflicting sets with Keep A / Keep B / Decide Later actions.
+### ConflictResolverView — Conflict Resolution Sheet
+`.presentationDetents([.medium])`. Side-by-side set cards, Keep A / Keep B / Decide Later.
 
 ---
 
-### FestivalMapView — Venue Map
-**One job:** Navigate to a stage or find amenities.
+### TravelDetailsView — Trip Logistics
+`NavigationView`-wrapped `List` with sections:
+- Trip Overview: DatePickers (arrival/departure), Pickers (transport, accommodation), campsite TextField
+- Packing List: toggleable items (strikethrough when packed), swipe-to-delete, inline add form, "Load Bonnaroo defaults"
+- Expenses: per-item rows with running total header, inline add form, swipe-to-delete
 
-Always pushed (never a sheet). Accepts `initialStage: String?` — on `onAppear`, finds the matching `StageAnnotation` and centers the map on it.
-
-- 5 stages: What, Which, This Tent, That Tent, Other Stage
-- 3 amenity types: Water, Medical, Charging (hidden by default, toggle in toolbar)
-- Stage info card slides up when a marker is tapped (shows current act, next act, walk time)
-- Location sharing toggle in toolbar (currently a stub)
+Reads/saves via `festivalStore.saveTravelDetails(_:for:)`.
 
 ---
 
 ### ProfileView — Settings
-**One job:** Account settings and preferences.
+Sections: Profile header | Account (Edit Profile) | Crew & Festival (My Crew, Travel Details) | Preferences (Theme, Notifications) | Legal & Support | Sign Out (with `confirmationDialog`)
 
-Sections: Profile header | Account (Edit Profile) | Preferences (Theme + Notifications) | Legal & Support | Sign Out
+Navigation: wrapped in `NavigationStack` from `RootView` (no inner `NavigationView`).
 
-Theme picker writes to `@AppStorage("appTheme")` which is read in `EncoreApp` and passed as `preferredColorScheme` to the root `WindowGroup`.
+### EditProfileView
+- Live avatar preview (circle + initials from draft name/color)
+- Display name TextField
+- 6×2 `LazyVGrid` color swatch picker
+- Spotify connect/disconnect card
+- Save → writes to `@AppStorage(StorageKey.displayName)` and `@AppStorage(StorageKey.avatarColorHex)`
+
+### NotificationsView
+`@AppStorage`-backed `Toggle`s for set reminder, reminder offset (`Picker` 15/30/60 min), conflicts, crew changes, walk time. Each toggle's `onChange` calls `UNUserNotificationCenter.requestAuthorization`.
+
+### CrewManageView
+- Crew name + monospaced invite code + copy button
+- Members list with `CrewAvatarBubble` + online dot + `lastSeenStage`
+- Leave Crew with `confirmationDialog`
+- Invite toolbar button → `CrewInviteView` sheet
+
+### CrewInviteView
+- Segmented create/join picker
+- Create: name TextField → `createCrew()` → success state with invite code + `ShareLink`
+- Join: 6-char monospaced TextField (auto-uppercase, max 6) → `joinCrew()` → dismiss or inline error
 
 ---
 
@@ -176,31 +357,22 @@ struct Artist {
     spotifyMatchScore: Int?         // 0–100; nil if Spotify not connected
     playCountLastSixMonths: Int?
     matchTier: MatchTier            // mustSee | worthChecking | explore | unknown
-    soundsLike: [String]            // fallback display when no Spotify data
-    stageName: String               // primary stage
+    soundsLike: [String]
+    stageName: String
     isHeadliner: Bool
-    var spotifyLabel: String?       // computed: "X% match · Y plays last 6 mo"
+    var spotifyLabel: String?       // computed
 }
 ```
 
 ### MatchTier
-```swift
-enum MatchTier: String {
-    case mustSee       = "Must-see"
-    case worthChecking = "Worth checking out"
-    case explore       = "Explore"
-    case unknown       = "Unknown"
-}
-```
-Color mapping:
-| Tier | `.color` | Usage |
-|------|----------|-------|
-| mustSee | `.appCTA` | Badges, set blocks, tier bars |
-| worthChecking | `.appAccent` | Same |
-| explore | `.appTeal` | Same |
-| unknown | `.appTextMuted` | Same |
+| Tier | `.color` |
+|------|----------|
+| `.mustSee` | `.appCTA` |
+| `.worthChecking` | `.appAccent` |
+| `.explore` | `.appTeal` |
+| `.unknown` | `.appTextMuted` |
 
-Additional computed colors: `.backgroundColor` = `color.opacity(0.18)`, `.blockFill` = `color.opacity(0.18)`, `.blockBorder` = `color.opacity(0.32)`.
+Additional computed: `.backgroundColor` = `color.opacity(0.18)`, `.blockFill`, `.blockBorder`.
 
 ### FestivalSet
 ```swift
@@ -211,146 +383,239 @@ struct FestivalSet {
     day: FestivalDay                // .thursday | .friday | .saturday | .sunday
     startTime: Date
     endTime: Date
-    var durationMinutes: Int        // computed
-    var timeRangeLabel: String      // "h:mm a – h:mm a"
-    func overlaps(with other: FestivalSet) -> Bool
+    var durationMinutes: Int
+    var timeRangeLabel: String
+    func overlaps(with:) -> Bool
 }
 ```
 
-### SetConflict
+### Festival
 ```swift
-struct SetConflict: Identifiable {
-    setA: FestivalSet
-    setB: FestivalSet
-    var overlapMinutes: Int         // computed from time intersection
+struct Festival: Identifiable, Codable {
+    id: UUID
+    name: String
+    location: String
+    startDate: Date
+    endDate: Date
+    status: FestivalStatus          // .upcoming | .active | .past
+    genres: [String]
+    imageColorHex: String
+    lineup: [Artist]
+    sets: [FestivalSet]
+}
+
+enum FestivalStatus: String, Codable { case upcoming, active, past }
+```
+
+### JournalEntry
+```swift
+struct JournalEntry: Identifiable, Codable {
+    id: UUID
+    artistID: UUID
+    festivalID: UUID
+    setID: UUID?
+    dateAttended: Date
+    rating: Int?                    // 1–5
+    notes: String
+    highlights: [String]
+    wouldSeeAgain: WouldSeeAgain?
+}
+
+enum WouldSeeAgain: String, Codable { case yes, maybe, no }
+```
+
+### TravelDetails / PackingItem / ExpenseItem
+```swift
+struct TravelDetails: Codable {
+    arrivalDate: Date?
+    departureDate: Date?
+    transportMode: String
+    accommodation: String
+    campsite: String
+    packingItems: [PackingItem]
+    expenses: [ExpenseItem]
+}
+struct PackingItem: Identifiable, Codable { id, name, isPacked }
+struct ExpenseItem: Identifiable, Codable { id, label, amount }
+```
+
+### WalkTimeWarning
+```swift
+struct WalkTimeWarning: Identifiable {
+    id: UUID
+    setA, setB: FestivalSet
+    gapMinutes, walkMinutes, shortfall: Int
 }
 ```
 
-### Crew / CrewMember / MeetupPin
+### Crew / CrewMember
 ```swift
 struct CrewMember {
-    id: UUID
-    name: String
-    colorHex: String                // personal avatar color
-    scheduledSetIDs: [UUID]         // which sets this member added
-    isOnline: Bool
-    lastSeenStage: String?          // "What Stage · 4 min ago"
-    var color: Color                // computed from colorHex
-    var initials: String            // max 2 chars
+    id: UUID; name: String; colorHex: String
+    scheduledSetIDs: [UUID]; isOnline: Bool; lastSeenStage: String?
+    var color: Color; var initials: String
 }
-
-struct Crew {
-    id: UUID
-    name: String
-    inviteCode: String              // 6-char alphanumeric
-    members: [CrewMember]
-}
-
-struct MeetupPin {
-    id: UUID
-    label: String
-    latitude, longitude: Double
-    createdBy: UUID                 // CrewMember.id
-}
+struct Crew { id, name, inviteCode, members }
+// MeetupPin retained in file for Phase 2 map feature
 ```
 
 ---
 
 ## Store Architecture
 
-All stores are `@ObservableObject` with `@Published` state. Instantiated in `EncoreApp` as `@StateObject` and injected via `.environmentObject()` at the root — available to any view without prop drilling.
+All stores are `@ObservableObject`, instantiated in `EncoreApp` as `@StateObject`, injected via `.environmentObject()`.
 
 ### ScheduleStore
-Owns the user's personal schedule.
 ```
-scheduledSets: [FestivalSet]          // in-memory only, no persistence yet
-add/remove/toggle(set:)
-isScheduled(set:) → Bool
-sets(for day:) → [FestivalSet]        // filtered + sorted by start time
-conflicts: [SetConflict]              // all overlapping pairs
+scheduledSets: [FestivalSet]           // persisted to UserDefaults on change
+add / remove / toggle / isScheduled
+sets(for day:) → [FestivalSet]
+conflicts: [SetConflict]
 hasConflicts: Bool
-resolveConflict(_:keep:)              // removes the non-kept set
+resolveConflict(_:keep:)
+walkTimeWarnings(for day:) → [WalkTimeWarning]
 ```
 
 ### LineupStore
-Owns the full festival lineup and filter state.
 ```
-allSets: [FestivalSet]                // initialized from FestivalSet.mockSets
+allSets: [FestivalSet]                 // from FestivalSet.mockSets
 selectedDay: FestivalDay?
 selectedTier: MatchTier?
 searchText: String
 isSpotifyConnected: Bool
-filteredSets: [FestivalSet]           // computed: apply filters, sort by Spotify score
-connectSpotify()                      // TODO: OAuth (Phase 1)
-disconnectSpotify()                   // clears scores, resets tiers to .unknown
+filteredSets: [FestivalSet]
+connectSpotify() / disconnectSpotify() // TODO stubs
 ```
 
 ### CrewStore
-Owns crew membership and meetup pins.
 ```
-crew: Crew?                           // nil until user creates or joins
-meetupPins: [MeetupPin]
-isLocationSharingEnabled: Bool
+crew: Crew?
 createCrew(name:)
-joinCrew(code:)                       // TODO: Supabase fetch (Phase 1)
+joinCrew(code:completion:)             // TODO Supabase
 leaveCrew()
-dropPin/removePin
-mergedSets(allSets:) → [FestivalSet]  // all sets across crew members, deduplicated
-attendees(for set:) → [CrewMember]    // which members are seeing this set
+mergedSets(allSets:) → [FestivalSet]
+attendees(for set:) → [CrewMember]
 ```
+
+### FestivalStore
+```
+festivals: [Festival]                  // seeded from Festival.mockFestivals on init
+selectedFestival: Festival?            // persisted as UUID string to UserDefaults
+travelDetails: [UUID: TravelDetails]   // persisted to UserDefaults on change
+festivals(for status:) → [Festival]
+selectFestival(_:)
+saveTravelDetails(_:for:)
+```
+
+### JournalStore
+```
+entries: [JournalEntry]                // persisted to UserDefaults on change
+entries(forArtist:) → [JournalEntry]
+entries(forFestival:) → [JournalEntry]
+upsert(_:) / delete(_:)
+hasSeenArtist(_:) → Bool
+averageRating(for:) → Double?
+```
+
+---
+
+## Utilities
+
+### StorageKey
+Typed `UserDefaults` key constants. Never use raw strings — always use `StorageKey.*`.
+
+| Key | Type | Used by |
+|-----|------|---------|
+| `.scheduledSets` | `Data` (JSON) | `ScheduleStore` |
+| `.journalEntries` | `Data` (JSON) | `JournalStore` |
+| `.travelDetails` | `Data` (JSON) | `FestivalStore` |
+| `.selectedFestivalID` | `String` (UUID) | `FestivalStore` |
+| `.displayName` | `String` | `@AppStorage`, `EditProfileView`, `OnboardingView` |
+| `.avatarColorHex` | `String` | `@AppStorage`, `EditProfileView`, `OnboardingView` |
+| `.hasCompletedOnboarding` | `Bool` | `EncoreApp`, `OnboardingView` |
+| `.appTheme` | `String` | `EncoreApp`, `ProfileView` |
+| `.notifSetReminder` | `Bool` | `NotificationsView` |
+| `.notifReminderOffset` | `Int` | `NotificationsView` |
+| `.notifConflicts` | `Bool` | `NotificationsView` |
+| `.notifCrewChanges` | `Bool` | `NotificationsView` |
+| `.notifWalkTime` | `Bool` | `NotificationsView` |
+
+### StageWalkTime
+Static lookup table for Bonnaroo stage pairs.
+```swift
+StageWalkTime.minutes(from: stageName, to: stageName) -> Int?
+```
+Returns `nil` if either stage is unknown. Bidirectional.
 
 ---
 
 ## Design System
 
-All values live in `DesignSystem.swift` under the `DS` namespace.
-
 ### Spacing
-| Token | Value | Usage |
-|-------|-------|-------|
-| `DS.Spacing.pageMargin` | 16pt | Horizontal edge padding on all screens |
-| `DS.Spacing.cardGap` | 12pt | Vertical gap between cards |
-| `DS.Spacing.cardPadding` | 16pt | Inner padding of surface cards |
-| `DS.Spacing.sectionGap` | 8pt | Gap between a section label and its content |
+| Token | Value |
+|-------|-------|
+| `DS.Spacing.pageMargin` | 16pt |
+| `DS.Spacing.cardGap` | 12pt |
+| `DS.Spacing.cardPadding` | 16pt |
+| `DS.Spacing.sectionGap` | 8pt |
+| `DS.Spacing.sectionHeaderGap` | 20pt |
+| `DS.Spacing.inlineGap` | 6pt |
 
 ### Row Heights
-| Token | Value | Usage |
-|-------|-------|-------|
-| `DS.RowHeight.schedule` | 60pt | minHeight on schedule rows in HomeView |
-| `DS.RowHeight.dayPicker` | 44pt | Height of day picker pill buttons |
+| Token | Value |
+|-------|-------|
+| `DS.RowHeight.schedule` | 60pt |
+| `DS.RowHeight.dayPicker` | 44pt |
 
 ### Corner Radii
-| Token | Value | Usage |
-|-------|-------|-------|
-| `DS.Radius.card` | 16pt | Surface cards, ArtistDetailView sections |
-| `DS.Radius.chip` | 10pt | Small pill buttons, schedule rows, conflict banner |
-| `DS.Radius.pill` | 99pt | Capsule/pill shapes (use `.clipShape(Capsule())` instead) |
+| Token | Value |
+|-------|-------|
+| `DS.Radius.card` | 16pt |
+| `DS.Radius.chip` | 10pt |
+| `DS.Radius.pill` | 99pt |
 
 ### Typography
 | Token | Size | Weight | Usage |
 |-------|------|--------|-------|
-| `DS.Font.hero` | 28pt | Black | Festival title in HomeView header |
-| `DS.Font.cardTitle` | 16pt | Bold | Card titles, section headers, action buttons |
-| `DS.Font.listItem` | 14pt | Semibold | Artist names, row labels, body text |
-| `DS.Font.metadata` | 12pt | Regular | Stage names, timestamps, secondary info |
-| `DS.Font.label` | 11pt | Bold | Caps labels, crew member names |
-| `DS.Font.caps` | 10pt | Bold | Section labels (e.g. "MY SCHEDULE", "FESTIVAL GROUP") |
+| `DS.Font.display` | 36pt | Black | Onboarding / display |
+| `DS.Font.hero` | 28pt | Black | Festival name hero title |
+| `DS.Font.stat` | 28pt | Black | Large stat numbers |
+| `DS.Font.rating` | 22pt | Bold | Star rating display |
+| `DS.Font.cardTitle` | 16pt | Bold | Card section titles |
+| `DS.Font.listItem` | 14pt | Semibold | List item primary text |
+| `DS.Font.metadata` | 12pt | Regular | Secondary info |
+| `DS.Font.label` | 11pt | Bold | Section caps labels |
+| `DS.Font.caps` | 10pt | Bold | Tight caps labels |
+
+### Walk Severity Colors
+| Token | Meaning |
+|-------|---------|
+| `DS.WalkSeverity.safe` | Enough time (`appCTA`) |
+| `DS.WalkSeverity.close` | Within 5 min of walk time (`appTeal`) |
+| `DS.WalkSeverity.tight` | Gap < walk time (`appWarn`) |
+| `DS.WalkSeverity.over` | No time at all (`appDanger`) |
+
+### Journal Colors
+| Token | Value |
+|-------|-------|
+| `DS.Journal.starFilled` | `appCTA` |
+| `DS.Journal.starEmpty` | `appAccent.opacity(0.3)` |
 
 ---
 
 ## Color Tokens
-
-Defined in `AppColors.swift` as `Color` extensions backed by adaptive `UIColor`.
 
 | Token | Dark | Light | Usage |
 |-------|------|-------|-------|
 | `.appBackground` | `#1C2522` | `#FAFDE6` | Screen backgrounds |
 | `.appSurface` | `#2A332F` | `#FFFFF0` | Card backgrounds, inputs |
 | `.appAccent` | `#A8BFB2` | `#A8BFB2` | Borders, icons, secondary elements |
-| `.appCTA` | `#E8F7D0` | `#E8F7D0` | Primary actions, mustSee tier, tab tint |
-| `.appTeal` | `#D4ECEC` | `#D4ECEC` | Explore tier, amenity markers |
+| `.appCTA` | `#E8F7D0` | `#E8F7D0` | Primary actions, tab tint, mustSee tier |
+| `.appTeal` | `#D4ECEC` | `#D4ECEC` | Explore tier, walk-time "close" |
 | `.appTextPrimary` | `#EAEAEF` | `#202030` | Main text |
 | `.appTextMuted` | `#A8BFB2` | `#A8BFB2` | Secondary text, placeholders |
+| `.appDanger` | `#E05555` | `#C03030` | Errors, "over" walk severity |
+| `.appWarn` | `#F0A840` | `#C07800` | Conflicts, "tight" walk severity |
 
 ---
 
@@ -358,14 +623,15 @@ Defined in `AppColors.swift` as `Color` extensions backed by adaptive `UIColor`.
 
 | Constraint | Detail |
 |------------|--------|
-| **iOS 16 target** | Use `@ObservableObject`/`@Published` (not iOS 17 `@Observable`). Use `Map(coordinateRegion:)` (not the iOS 17 Map API). Do not add iOS 17+ APIs without bumping deployment target in `project.yml`. |
-| **No persistence** | `scheduledSets` is in-memory only. Resets on app launch. UserDefaults or SQLite is Phase 1. |
-| **No backend** | `connectSpotify()` and `joinCrew(code:)` are stubs. Do not add real network calls without wiring up backend infrastructure first. |
-| **No SPM packages** | `project.yml` has Supabase commented out. Add packages via YAML, not Xcode's UI. |
-| **XcodeGen managed** | `.xcodeproj` is generated. Never edit it directly. Run `xcodegen generate` after any change to `project.yml` or the source file tree. |
-| **Theme, not forced dark** | `EncoreApp` reads `@AppStorage("appTheme")` (system/light/dark) and passes the result as `preferredColorScheme` to the root `WindowGroup`. All colors must use adaptive tokens — do not hardcode dark-only values. |
-| **SF Symbols only** | No emoji in UI per `UI-UX.txt`. Use SF Symbols for all icons. |
-| **44pt tap targets** | All interactive elements must meet the minimum 44×44pt tap target. |
+| **iOS 16 target** | Use `@ObservableObject`/`@Published` (not `@Observable`). Use `Map(coordinateRegion:)` (not iOS 17 API). Do not use iOS 17+ APIs without bumping deployment target in `project.yml`. |
+| **Persistence** | `UserDefaults` only — `scheduledSets`, `journalEntries`, `travelDetails`, `selectedFestivalID`. No SQLite or Supabase yet. |
+| **No backend** | `connectSpotify()` and `joinCrew(code:)` are stubs. Do not add real network calls without backend infrastructure. |
+| **No SPM packages** | `project.yml` has Supabase commented out. Add packages via YAML, not Xcode UI. |
+| **XcodeGen managed** | `.xcodeproj` is generated. Never edit directly. Run `xcodegen generate` after changes to the file tree. |
+| **Adaptive theming** | `@AppStorage(StorageKey.appTheme)` drives `preferredColorScheme` in `EncoreApp`. All colors must use token extensions — no hardcoded hex or system colors. |
+| **SF Symbols only** | No emoji in UI. All icons via SF Symbols. |
+| **44pt tap targets** | All interactive elements must meet minimum 44×44pt. |
+| **StorageKey** | All `UserDefaults` access must use `StorageKey.*` constants — never raw string literals. |
 
 ---
 
@@ -374,49 +640,35 @@ Defined in `AppColors.swift` as `Color` extensions backed by adaptive `UIColor`.
 | Feature | Current State |
 |---------|--------------|
 | Lineup data | `MockData.swift` — 12 artists, 10 sets |
-| Crew members | `MockData.swift` — 4 members ("Bonnaroo Squad") |
-| Stage map | Hardcoded `StageAnnotation` array in `FestivalMapView.swift` |
+| Festival data | `MockData.swift` — 3 festivals (Bonnaroo 2023/2025/2026) |
+| Crew members | `MockData.swift` — 4 members |
+| Journal entries | `MockData.swift` — 3 entries (all Bonnaroo 2023) |
+| Stage walk times | `StageWalkTime.swift` — hardcoded 10 Bonnaroo stage pairings |
 | Recent setlist | 7 hardcoded songs in `ArtistDetailView.swift` |
-| Walk time to stage | Hardcoded "~8 min walk" in `FestivalMapView` |
-| Spotify match scores | Hardcoded on artists in `MockData.swift` |
-| Trip details (Travel/Packing/Expenses) | UI-only stubs; tapping opens nothing |
-| Crew invite | "+ Invite" button is a stub (no action) |
-| Edit Profile | Button stub (no action) |
-| Notifications setting | Label only, no action |
-| Location sharing | Toggle wired to `CrewStore.isLocationSharingEnabled` but no CoreLocation |
-| Schedule persistence | In-memory only; cleared on launch |
+| Spotify | `connectSpotify()` is a stub; no OAuth |
+| Crew invite | `joinCrew()` is a stub; no Supabase |
+| Schedule persistence | UserDefaults JSON encoding |
+| Journal persistence | UserDefaults JSON encoding |
+| Travel details persistence | UserDefaults JSON encoding |
 
 ---
 
 ## Phase Roadmap
 
-### Phase 1 — Real Data (local device)
-- Spotify OAuth via `ASWebAuthenticationSession` → populate `spotifyMatchScore` and `playCountLastSixMonths` on artists
-- Real Bonnaroo lineup via Supabase or scraping → replace `MockData.mockSets`
-- Persist `scheduledSets` to UserDefaults or SQLite
-- Real setlist.fm API integration → replace hardcoded songs in `ArtistDetailView`
-- Offline map tile caching (MapKit tile overlay or custom)
-- Trip detail sheets (Travel, Packing, Expenses) with local storage
+### Phase 1 — Real Data
+- Spotify OAuth via `ASWebAuthenticationSession` → real match scores
+- Real Bonnaroo lineup via Supabase → replace mock sets
+- Real setlist.fm API in `ArtistDetailView`
+- Offline map tile caching (MapKit overlay)
 
 ### Phase 2 — Realtime & Social
-- `CrewStore` → Supabase Realtime: live schedule sync across crew members
-- CoreLocation + Supabase presence: live location sharing on map
+- `CrewStore` → Supabase Realtime for live schedule sync
+- CoreLocation + Supabase presence for location sharing
+- Restore `FestivalMapView` with walk-time navigation context
 - QR code crew invite flow
 - Group chat via Supabase Realtime channels
-- Push notifications for upcoming set reminders
+- Push notifications for set reminders and crew changes
 
 ### Phase 3 — Personalization
-- Recommendation engine based on Spotify listening history
-- Cross-festival support (multi-festival data model)
-- Social discovery (see what friends outside your crew are watching)
-
----
-
-## Key Design Principles (from UI-UX.txt)
-
-- **One job per screen** — each screen has a single dominant purpose
-- **One dominant action** — the primary CTA is always clear
-- **Content over chrome** — minimize structural UI; maximize content density
-- **No emojis** — SF Symbols only
-- **44pt minimum tap targets** on all interactive elements
-- **Dark mode first** — all colors use adaptive tokens; the app looks right in dark mode by default
+- Recommendation engine based on Spotify history
+- Social discovery (see what friends outside crew are watching)

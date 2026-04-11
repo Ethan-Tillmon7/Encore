@@ -4,11 +4,12 @@ import SwiftUI
 @main
 struct EncoreApp: App {
 
-    @StateObject private var scheduleStore = ScheduleStore()
-    @StateObject private var lineupStore   = LineupStore()
-    @StateObject private var crewStore     = CrewStore()
-    @StateObject private var festivalStore = FestivalStore()
-    @StateObject private var journalStore  = JournalStore()
+    @StateObject private var scheduleStore        = ScheduleStore()
+    @StateObject private var lineupStore          = LineupStore()
+    @StateObject private var crewStore            = CrewStore()
+    @StateObject private var festivalStore        = FestivalStore()
+    @StateObject private var journalStore         = JournalStore()
+    @StateObject private var discoveryStore       = FestivalDiscoveryStore()
 
     @AppStorage(StorageKey.appTheme)               private var appTheme: String = "system"
     @AppStorage(StorageKey.hasCompletedOnboarding) private var hasCompletedOnboarding = false
@@ -29,6 +30,7 @@ struct EncoreApp: App {
                 .environmentObject(crewStore)
                 .environmentObject(festivalStore)
                 .environmentObject(journalStore)
+                .environmentObject(discoveryStore)
                 .preferredColorScheme(preferredColorScheme)
                 .fullScreenCover(isPresented: .constant(!hasCompletedOnboarding)) {
                     OnboardingView()

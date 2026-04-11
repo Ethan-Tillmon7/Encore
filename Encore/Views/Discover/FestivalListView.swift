@@ -3,24 +3,17 @@ import SwiftUI
 
 struct FestivalListView: View {
 
-    @EnvironmentObject var festivalStore: FestivalStore
-    @EnvironmentObject var journalStore:  JournalStore
-    @EnvironmentObject var scheduleStore: ScheduleStore
-    @EnvironmentObject var crewStore:     CrewStore
+    @EnvironmentObject var discoveryStore: FestivalDiscoveryStore
+    @EnvironmentObject var festivalStore:  FestivalStore
+    @EnvironmentObject var journalStore:   JournalStore
+    @EnvironmentObject var scheduleStore:  ScheduleStore
+    @EnvironmentObject var crewStore:      CrewStore
 
-    @State private var selectedStatus: FestivalStatus? = nil
     @State private var showArtistSearch = false
-
-    private var filteredFestivals: [Festival] {
-        if let status = selectedStatus {
-            return festivalStore.festivals.filter { $0.status == status }
-        }
-        return festivalStore.festivals
-    }
+    @State private var showFilters = false
 
     var body: some View {
         VStack(spacing: 0) {
-            // Status filter pills
             statusFilterRow
                 .padding(.horizontal, DS.Spacing.pageMargin)
                 .padding(.vertical, 10)
@@ -28,12 +21,12 @@ struct FestivalListView: View {
 
             Divider()
 
-            if filteredFestivals.isEmpty {
+            if discoveryStore.filteredFestivals.isEmpty {
                 emptyState
             } else {
                 ScrollView {
                     LazyVStack(spacing: DS.Spacing.cardGap) {
-                        ForEach(filteredFestivals) { festival in
+                        ForEach(discoveryStore.filteredFestivals) { festival in
                             NavigationLink(destination: festivalDetail(festival)) {
                                 FestivalCardView(festival: festival)
                             }
@@ -50,24 +43,41 @@ struct FestivalListView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showArtistSearch = true }) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.appCTA)
+                HStack(spacing: 16) {
+                    // Filter button with active-count badge
+                    Button(action: { showFilters = true }) {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .foregroundColor(discoveryStore.activeFilterCount > 0 ? .appCTA : .appTextMuted)
+                            .overlay(alignment: .topTrailing) {
+                                if discoveryStore.activeFilterCount > 0 {
+                                    Text("\(discoveryStore.activeFilterCount)")
+                                        .font(.system(size: 9, weight: .bold))
+                                        .foregroundColor(Color.appBackground)
+                                        .padding(3)
+                                        .background(Color.appCTA)
+                                        .clipShape(Circle())
+                                        .offset(x: 8, y: -8)
+                                }
+                            }
+                    }
+                    Button(action: { showArtistSearch = true }) {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.appCTA)
+                    }
                 }
             }
         }
+        .sheet(isPresented: $showFilters) {
+            DiscoveryFilterSheet()
+                .environmentObject(discoveryStore)
+        }
         .sheet(isPresented: $showArtistSearch) {
             ArtistSearchView()
+                .environmentObject(discoveryStore)
                 .environmentObject(festivalStore)
                 .environmentObject(journalStore)
                 .environmentObject(scheduleStore)
                 .environmentObject(crewStore)
-        }
-        .onAppear {
-            // Seed mock data if empty
-            if festivalStore.festivals.isEmpty {
-                festivalStore.festivals = Festival.mockFestivals
-            }
         }
     }
 
@@ -83,17 +93,17 @@ struct FestivalListView: View {
     private var statusFilterRow: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                filterPill(label: "All", status: nil)
+                filterPill(label: "All",      status: nil)
                 filterPill(label: "Upcoming", status: .upcoming)
-                filterPill(label: "Active", status: .active)
-                filterPill(label: "Past", status: .past)
+                filterPill(label: "Active",   status: .active)
+                filterPill(label: "Past",     status: .past)
             }
         }
     }
 
     private func filterPill(label: String, status: FestivalStatus?) -> some View {
-        let isSelected = selectedStatus == status
-        return Button(action: { selectedStatus = status }) {
+        let isSelected = discoveryStore.selectedStatus == status
+        return Button(action: { discoveryStore.selectedStatus = status }) {
             Text(label)
                 .font(DS.Font.label)
                 .foregroundColor(isSelected ? Color.appBackground : .appTextMuted)
@@ -110,7 +120,7 @@ struct FestivalListView: View {
                 .font(.system(size: 40))
                 .foregroundColor(Color.appTextMuted.opacity(0.3))
                 .padding(.top, 60)
-            Text("No \(selectedStatus?.rawValue ?? "") festivals yet.")
+            Text("No \(discoveryStore.selectedStatus?.rawValue ?? "") festivals found.")
                 .font(DS.Font.listItem)
                 .foregroundColor(.appTextMuted)
         }
@@ -119,11 +129,10 @@ struct FestivalListView: View {
 }
 
 #Preview {
-    let festivals = FestivalStore()
-    festivals.festivals = Festival.mockFestivals
-    return NavigationStack {
+    NavigationStack {
         FestivalListView()
-            .environmentObject(festivals)
+            .environmentObject(FestivalDiscoveryStore())
+            .environmentObject(FestivalStore())
             .environmentObject(JournalStore())
             .environmentObject(ScheduleStore())
             .environmentObject(CrewStore())

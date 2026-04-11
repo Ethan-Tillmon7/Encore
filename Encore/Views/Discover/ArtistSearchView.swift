@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ArtistSearchView: View {
 
+    @EnvironmentObject var discoveryStore: FestivalDiscoveryStore
     @EnvironmentObject var festivalStore:  FestivalStore
     @EnvironmentObject var journalStore:   JournalStore
     @EnvironmentObject var scheduleStore:  ScheduleStore
@@ -16,15 +17,15 @@ struct ArtistSearchView: View {
 
     private var allArtists: [(artist: Artist, festival: Festival, set: FestivalSet?)] {
         var result: [(Artist, Festival, FestivalSet?)] = []
-        for festival in festivalStore.festivals {
+        for festival in discoveryStore.allFestivals {
             for artist in festival.lineup {
                 let set = festival.sets.first(where: { $0.artist.id == artist.id })
                 result.append((artist, festival, set))
             }
         }
-        // Remove duplicates by artist ID
-        var seen = Set<UUID>()
-        return result.filter { seen.insert($0.0.id).inserted }
+        // Remove duplicates by artist name (same artist appears at multiple festivals)
+        var seen = Set<String>()
+        return result.filter { seen.insert($0.0.name.lowercased()).inserted }
     }
 
     private var filteredArtists: [(artist: Artist, festival: Festival, set: FestivalSet?)] {
@@ -160,12 +161,11 @@ struct ArtistSearchView: View {
 }
 
 #Preview {
-    let festivals = FestivalStore()
-    festivals.festivals = Festival.mockFestivals
     let journal = JournalStore()
     journal.entries = JournalEntry.mockEntries
     return ArtistSearchView()
-        .environmentObject(festivals)
+        .environmentObject(FestivalDiscoveryStore())
+        .environmentObject(FestivalStore())
         .environmentObject(journal)
         .environmentObject(ScheduleStore())
         .environmentObject(CrewStore())

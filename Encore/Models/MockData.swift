@@ -71,14 +71,74 @@ extension Festival {
         return Calendar.current.date(from: c) ?? Date()
     }
 
+    // MARK: - Coachella 2025 lineup (Indio, CA)
+    private static let coachellaLineup: [Artist] = [
+        Artist(id: UUID(), name: "Lady Gaga",     genres: ["Pop", "Dance Pop", "Electronic"],      spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                        stageName: "Coachella Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Green Day",     genres: ["Rock", "Punk Rock", "Alternative"],    spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                        stageName: "Coachella Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Post Malone",   genres: ["Hip-Hop", "Trap", "Pop"],              spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                        stageName: "Coachella Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Charli XCX",    genres: ["Pop", "Synth-pop", "Dance Pop"],       spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Rina Sawayama", "MUNA"], stageName: "Outdoor Theatre", isHeadliner: false),
+        Artist(id: UUID(), name: "Rüfüs Du Sol",  genres: ["Electronic", "House", "Indie Electronic"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Lane 8", "ODESZA"], stageName: "Sahara Stage",    isHeadliner: false),
+        Artist(id: UUID(), name: "The Marías",    genres: ["Indie Pop", "Dream Pop", "R&B"],       spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Clairo", "Snail Mail"],  stageName: "Mojave Stage",    isHeadliner: false),
+    ]
+
+    // MARK: - Lollapalooza 2025 lineup (Chicago, IL)
+    private static let lollaLineup: [Artist] = [
+        Artist(id: UUID(), name: "SZA",           genres: ["R&B", "Soul", "Pop"],                  spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                           stageName: "Grant Park Main Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Tyler, the Creator", genres: ["Hip-Hop", "Rap", "Alternative"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                           stageName: "Grant Park Main Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Sabrina Carpenter", genres: ["Pop", "Dance Pop"],               spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Olivia Rodrigo", "Dua Lipa"], stageName: "Grant Park Main Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Fisher",        genres: ["Electronic", "House", "Techno"],       spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Chris Lake", "Skrillex"],   stageName: "Perry Stage",           isHeadliner: false),
+        Artist(id: UUID(), name: "Dominic Fike",  genres: ["Indie Pop", "R&B", "Alternative"],    spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Rex Orange County"],        stageName: "Lake Stage",            isHeadliner: false),
+    ]
+
+    // MARK: - Outside Lands 2025 lineup (San Francisco, CA)
+    private static let outsideLandsLineup: [Artist] = [
+        Artist(id: UUID(), name: "Chappell Roan",    genres: ["Pop", "Synth-pop", "Art Pop"],          spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Carly Rae Jepsen", "Robyn"], stageName: "Lands End Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Vampire Weekend",  genres: ["Indie Rock", "Alternative", "Indie Pop"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["MGMT", "Rostam"],          stageName: "Sutro Stage",     isHeadliner: false),
+        Artist(id: UUID(), name: "Tame Impala",      genres: ["Psychedelic Rock", "Indie Rock", "Electronic"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Unknown Mortal Orchestra"], stageName: "Lands End Stage", isHeadliner: true),
+        Artist(id: UUID(), name: "Parcels",          genres: ["Funk", "Indie Pop", "Disco"],            spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Daft Punk", "Jungle"],      stageName: "Twin Peaks Stage", isHeadliner: false),
+        Artist(id: UUID(), name: "Wet Leg",          genres: ["Indie Rock", "Post-Punk"],               spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Snail Mail", "Soccer Mommy"], stageName: "Panhandle Stage", isHeadliner: false),
+    ]
+
+    // MARK: - Electric Forest 2025 lineup (Rothbury, MI)
+    private static let electricForestLineup: [Artist] = [
+        Artist(id: UUID(), name: "Pretty Lights",   genres: ["Electronic", "Dubstep", "Drum & Bass"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Bassnectar", "Gramatik"],   stageName: "Forest Stage",   isHeadliner: true),
+        Artist(id: UUID(), name: "Griz",            genres: ["Electronic", "Funk", "Soul"],            spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Lettuce", "STS9"],          stageName: "Ranch Arena",    isHeadliner: false),
+        Artist(id: UUID(), name: "Twiddle",         genres: ["Jam Band", "Folk", "Rock"],              spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Phish", "Umphrey's McGee"], stageName: "Sherwood Court", isHeadliner: false),
+        Artist(id: UUID(), name: "Vulfpeck",        genres: ["Funk", "Soul", "R&B"],                   spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Snarky Puppy", "Kaytranada"], stageName: "Ranch Arena",  isHeadliner: false),
+        Artist(id: UUID(), name: "Goose",           genres: ["Jam Band", "Psychedelic Rock", "Electronic"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Phish", "Dead & Co."], stageName: "Forest Stage",  isHeadliner: true),
+    ]
+
+    // MARK: - Glastonbury 2025 lineup (Somerset, UK)
+    private static let glastonburyLineup: [Artist] = [
+        Artist(id: UUID(), name: "Coldplay",     genres: ["Rock", "Alternative", "Indie Rock"],      spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                            stageName: "Pyramid Stage",    isHeadliner: true),
+        Artist(id: UUID(), name: "Dua Lipa",     genres: ["Pop", "Dance Pop", "Electronic"],          spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                            stageName: "Pyramid Stage",    isHeadliner: true),
+        Artist(id: UUID(), name: "Burna Boy",    genres: ["Afrobeats", "Reggae", "Hip-Hop"],          spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Wizkid", "Davido"],           stageName: "West Holts Stage", isHeadliner: false),
+        Artist(id: UUID(), name: "Four Tet",     genres: ["Electronic", "Ambient", "House"],          spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Caribou", "Floating Points"], stageName: "Park Stage",       isHeadliner: false),
+        Artist(id: UUID(), name: "Nick Cave & the Bad Seeds", genres: ["Rock", "Post-Punk", "Art Rock"], spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["The National", "PJ Harvey"], stageName: "Pyramid Stage", isHeadliner: false),
+    ]
+
+    // MARK: - ACL 2025 lineup (Austin, TX)
+    private static let aclLineup: [Artist] = [
+        Artist(id: UUID(), name: "Billie Eilish",  genres: ["Pop", "Indie Pop", "Alternative"],      spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                                stageName: "Samsung Stage",  isHeadliner: true),
+        Artist(id: UUID(), name: "Sturgill Simpson", genres: ["Country", "Americana", "Rock"],       spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Waylon Jennings", "Kris Kristofferson"], stageName: "Google Stage", isHeadliner: false),
+        Artist(id: UUID(), name: "Khruangbin",     genres: ["Funk", "Soul", "World"],                 spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Cymande", "Lee Fields"],          stageName: "Austin Ventures Stage", isHeadliner: false),
+        Artist(id: UUID(), name: "Omar Apollo",    genres: ["R&B", "Indie Pop", "Soul"],              spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: ["Frank Ocean", "Daniel Caesar"],   stageName: "Honda Stage",    isHeadliner: false),
+        Artist(id: UUID(), name: "Hozier",         genres: ["Folk", "Soul", "Alternative"],           spotifyMatchScore: nil, playCountLastSixMonths: nil, matchTier: .unknown, soundsLike: [],                                stageName: "Samsung Stage",  isHeadliner: true),
+    ]
+
+    // MARK: - All mock festivals
+
     static let mockFestivals: [Festival] = [
+        // ── Bonnaroo (indices 0–2, preserved for JournalEntry mock refs) ──
         Festival(
             id: UUID(),
             name: "Bonnaroo 2023",
             location: "Manchester, TN",
+            latitude: 35.4868, longitude: -86.0506,
             startDate: date(year: 2023, month: 6, day: 15),
             endDate:   date(year: 2023, month: 6, day: 18),
             status: .past,
+            isCamping: true,
             genres: ["Rock", "Electronic", "Folk", "Hip-Hop"],
             imageColorHex: "FF6B35",
             lineup: [],
@@ -88,9 +148,11 @@ extension Festival {
             id: UUID(),
             name: "Bonnaroo 2025",
             location: "Manchester, TN",
+            latitude: 35.4868, longitude: -86.0506,
             startDate: date(year: 2025, month: 6, day: 12),
             endDate:   date(year: 2025, month: 6, day: 15),
             status: .active,
+            isCamping: true,
             genres: ["Rock", "Electronic", "Folk", "Soul"],
             imageColorHex: "8B5CF6",
             lineup: Artist.mockLineup,
@@ -100,14 +162,102 @@ extension Festival {
             id: UUID(),
             name: "Bonnaroo 2026",
             location: "Manchester, TN",
+            latitude: 35.4868, longitude: -86.0506,
             startDate: date(year: 2026, month: 6, day: 11),
             endDate:   date(year: 2026, month: 6, day: 14),
             status: .upcoming,
+            isCamping: true,
             genres: ["Rock", "Electronic", "Pop", "Indie"],
             imageColorHex: "10B981",
             lineup: [],
             sets: []
-        )
+        ),
+
+        // ── Additional festivals for discovery ──
+        Festival(
+            id: UUID(),
+            name: "Coachella 2025",
+            location: "Indio, CA",
+            latitude: 33.6823, longitude: -116.2381,
+            startDate: date(year: 2025, month: 4, day: 11),
+            endDate:   date(year: 2025, month: 4, day: 20),
+            status: .past,
+            isCamping: false,
+            genres: ["Pop", "Electronic", "Rock", "Hip-Hop"],
+            imageColorHex: "F59E0B",
+            lineup: coachellaLineup,
+            sets: []
+        ),
+        Festival(
+            id: UUID(),
+            name: "Lollapalooza 2025",
+            location: "Chicago, IL",
+            latitude: 41.8719, longitude: -87.6215,
+            startDate: date(year: 2025, month: 8, day: 1),
+            endDate:   date(year: 2025, month: 8, day: 4),
+            status: .past,
+            isCamping: false,
+            genres: ["Rock", "Electronic", "Hip-Hop", "Pop"],
+            imageColorHex: "EF4444",
+            lineup: lollaLineup,
+            sets: []
+        ),
+        Festival(
+            id: UUID(),
+            name: "Outside Lands 2025",
+            location: "San Francisco, CA",
+            latitude: 37.7694, longitude: -122.5107,
+            startDate: date(year: 2025, month: 8, day: 8),
+            endDate:   date(year: 2025, month: 8, day: 10),
+            status: .past,
+            isCamping: false,
+            genres: ["Indie Rock", "Electronic", "Pop", "Folk"],
+            imageColorHex: "06B6D4",
+            lineup: outsideLandsLineup,
+            sets: []
+        ),
+        Festival(
+            id: UUID(),
+            name: "Electric Forest 2025",
+            location: "Rothbury, MI",
+            latitude: 43.5039, longitude: -86.3443,
+            startDate: date(year: 2025, month: 6, day: 26),
+            endDate:   date(year: 2025, month: 6, day: 29),
+            status: .past,
+            isCamping: true,
+            genres: ["Electronic", "Jam Band", "Folk", "Funk"],
+            imageColorHex: "84CC16",
+            lineup: electricForestLineup,
+            sets: []
+        ),
+        Festival(
+            id: UUID(),
+            name: "Glastonbury 2025",
+            location: "Pilton, Somerset, UK",
+            latitude: 51.1527, longitude: -2.7213,
+            startDate: date(year: 2025, month: 6, day: 25),
+            endDate:   date(year: 2025, month: 6, day: 29),
+            status: .past,
+            isCamping: true,
+            genres: ["Rock", "Pop", "Electronic", "World"],
+            imageColorHex: "A78BFA",
+            lineup: glastonburyLineup,
+            sets: []
+        ),
+        Festival(
+            id: UUID(),
+            name: "ACL Fest 2025",
+            location: "Austin, TX",
+            latitude: 30.2500, longitude: -97.7469,
+            startDate: date(year: 2025, month: 10, day: 3),
+            endDate:   date(year: 2025, month: 10, day: 12),
+            status: .upcoming,
+            isCamping: false,
+            genres: ["Rock", "Country", "Folk", "R&B", "Electronic"],
+            imageColorHex: "FB923C",
+            lineup: aclLineup,
+            sets: []
+        ),
     ]
 }
 
