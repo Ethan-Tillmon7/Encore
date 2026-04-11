@@ -51,17 +51,32 @@ extension FestivalSet {
 }
 
 extension Crew {
-    static let mockCrew = Crew(
-        id: UUID(),
-        name: "Bonnaroo Squad",
-        inviteCode: "BONROO",
-        members: [
-            CrewMember(id: UUID(), name: "You", colorHex: "8B5CF6", scheduledSetIDs: [], isOnline: true, lastSeenStage: nil),
-            CrewMember(id: UUID(), name: "Alex", colorHex: "10B981", scheduledSetIDs: [], isOnline: true, lastSeenStage: "What Stage · 4 min ago"),
-            CrewMember(id: UUID(), name: "Jordan", colorHex: "F59E0B", scheduledSetIDs: [], isOnline: false, lastSeenStage: "This Tent · 12 min ago"),
-            CrewMember(id: UUID(), name: "Casey", colorHex: "EF4444", scheduledSetIDs: [], isOnline: true, lastSeenStage: "Which Stage · 1 min ago"),
-        ]
-    )
+    static let mockCrew: Crew = {
+        // Reference mockSets by index so IDs stay in sync:
+        //  [2] Japanese Breakfast · Fri  [4] Hozier · Fri
+        //  [5] LCD Soundsystem · Sat     [6] ODESZA · Sat
+        //  [8] Wet Leg · Sun             [9] Ethel Cain · Sun
+        let sets = FestivalSet.mockSets
+        return Crew(
+            id: UUID(),
+            name: "Bonnaroo Squad",
+            inviteCode: "BONROO",
+            members: [
+                CrewMember(id: UUID(), name: "You",    colorHex: "8B5CF6",
+                           scheduledSetIDs: [],
+                           isOnline: true,  lastSeenStage: nil),
+                CrewMember(id: UUID(), name: "Alex",   colorHex: "10B981",
+                           scheduledSetIDs: [sets[5].id, sets[2].id],  // LCD, Japanese Breakfast
+                           isOnline: true,  lastSeenStage: "Which Stage · 4 min ago"),
+                CrewMember(id: UUID(), name: "Jordan", colorHex: "F59E0B",
+                           scheduledSetIDs: [sets[5].id, sets[9].id],  // LCD, Ethel Cain
+                           isOnline: false, lastSeenStage: "This Tent · 12 min ago"),
+                CrewMember(id: UUID(), name: "Casey",  colorHex: "EF4444",
+                           scheduledSetIDs: [sets[6].id, sets[8].id],  // ODESZA, Wet Leg
+                           isOnline: true,  lastSeenStage: "Which Stage · 1 min ago"),
+            ]
+        )
+    }()
 }
 
 extension Festival {

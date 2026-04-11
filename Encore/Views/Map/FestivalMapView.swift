@@ -71,6 +71,7 @@ private struct MapPin: Identifiable {
         case stage(Stage)
         case amenity(FestivalAmenity)
         case meetup(MeetupPin)
+        case crewMember(CrewMember)
     }
     let id: String
     let coordinate: CLLocationCoordinate2D
@@ -150,6 +151,28 @@ struct FestivalMapView: View {
                 coordinate: CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude),
                 kind: .meetup(pin)
             ))
+        }
+
+        // Crew member location stubs — derived from lastSeenStage
+        if let crew = crewStore.crew {
+            for (i, member) in crew.members.enumerated() {
+                guard let lastSeen = member.lastSeenStage,
+                      let stageName = lastSeen.components(separatedBy: " · ").first,
+                      let stage = stages.first(where: { $0.name == stageName })
+                else { continue }
+                // Small per-member offset so avatars don't perfectly stack
+                let angle = Double(i) * (.pi / 2)
+                let r = 0.00015
+                let coord = CLLocationCoordinate2D(
+                    latitude:  stage.coordinate.latitude  + r * sin(angle),
+                    longitude: stage.coordinate.longitude + r * cos(angle)
+                )
+                pins.append(MapPin(
+                    id: "crew-\(member.id)",
+                    coordinate: coord,
+                    kind: .crewMember(member)
+                ))
+            }
         }
 
         return pins
@@ -253,6 +276,8 @@ struct FestivalMapView: View {
             amenityDot(amenity: amenity)
         case .meetup(let meetup):
             meetupDot(meetup: meetup)
+        case .crewMember(let member):
+            crewMemberDot(member: member)
         }
     }
 
@@ -310,6 +335,28 @@ struct FestivalMapView: View {
                 .padding(.horizontal, 6).padding(.vertical, 2)
                 .background(Color.appBackground.opacity(0.92))
                 .clipShape(Capsule())
+        }
+    }
+
+    private func crewMemberDot(member: CrewMember) -> some View {
+        VStack(spacing: 2) {
+            ZStack {
+                Circle()
+                    .fill(member.color)
+                    .frame(width: 28, height: 28)
+                    .overlay(Circle().stroke(Color.appBackground, lineWidth: 2))
+                Text(member.initials)
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(Color.appBackground)
+            }
+            // Online indicator
+            if member.isOnline {
+                Circle()
+                    .fill(Color.appCTA)
+                    .frame(width: 6, height: 6)
+                    .overlay(Circle().stroke(Color.appBackground, lineWidth: 1))
+                    .offset(y: -4)
+            }
         }
     }
 
@@ -477,6 +524,7 @@ struct FestivalMapView: View {
     private func dropPin() {
         let trimmed = newPinLabel.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         let pin = MeetupPin(
             id: UUID(),
             label: trimmed,

@@ -205,7 +205,10 @@ struct ArtistDetailView: View {
                 .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
             }
 
-            Button(action: { scheduleStore.toggle(festivalSet) }) {
+            Button(action: {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                scheduleStore.toggle(festivalSet)
+            }) {
                 HStack {
                     Image(systemName: isScheduled ? "checkmark" : "plus")
                     Text(isScheduled ? "Added to Schedule" : "Add to My Schedule")

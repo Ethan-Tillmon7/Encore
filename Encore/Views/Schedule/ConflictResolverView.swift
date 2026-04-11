@@ -4,7 +4,19 @@ struct ConflictResolverView: View {
 
     let conflict: SetConflict
     @EnvironmentObject var scheduleStore: ScheduleStore
+    @EnvironmentObject var crewStore:     CrewStore
     @Environment(\.dismiss) private var dismiss
+
+    // MARK: - Queue position (nil when only one conflict)
+
+    private var queuePosition: (index: Int, total: Int)? {
+        let all = scheduleStore.conflicts
+        guard all.count > 1 else { return nil }
+        guard let idx = all.firstIndex(where: {
+            $0.setA.id == conflict.setA.id && $0.setB.id == conflict.setB.id
+        }) else { return nil }
+        return (idx + 1, all.count)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -21,6 +33,14 @@ struct ConflictResolverView: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 28))
                     .foregroundColor(.orange)
+
+                if let pos = queuePosition {
+                    Text("Conflict \(pos.index) of \(pos.total)")
+                        .font(DS.Font.caps)
+                        .foregroundColor(.appTextMuted)
+                        .tracking(0.6)
+                }
+
                 Text("Schedule Conflict")
                     .font(DS.Font.cardTitle)
                     .foregroundColor(.appTextPrimary)
@@ -43,6 +63,7 @@ struct ConflictResolverView: View {
             // Actions
             VStack(spacing: 10) {
                 Button(action: {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     scheduleStore.resolveConflict(conflict, keep: conflict.setA)
                     dismiss()
                 }) {
@@ -53,6 +74,7 @@ struct ConflictResolverView: View {
                 }
 
                 Button(action: {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     scheduleStore.resolveConflict(conflict, keep: conflict.setB)
                     dismiss()
                 }) {
@@ -76,6 +98,8 @@ struct ConflictResolverView: View {
 
     private func conflictCard(set: FestivalSet) -> some View {
         let artist = set.artist
+        let attendees = crewStore.attendees(for: set)
+
         return VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             // Tier indicator
             Text(artist.matchTier.rawValue)
@@ -103,7 +127,24 @@ struct ConflictResolverView: View {
                 Text(label)
                     .font(DS.Font.label)
                     .foregroundColor(artist.matchTier.color)
-                    .padding(.top, 2)
+            }
+
+            // Crew attendance
+            if !attendees.isEmpty {
+                HStack(spacing: 4) {
+                    HStack(spacing: -5) {
+                        ForEach(attendees.prefix(3)) { member in
+                            CrewAvatarBubble(member: member, size: 20)
+                                .overlay(Circle().stroke(Color.appSurface, lineWidth: 1))
+                        }
+                    }
+                    Text(attendees.count == 1
+                         ? "\(attendees[0].name) going"
+                         : "\(attendees.count) crew going")
+                        .font(DS.Font.caps)
+                        .foregroundColor(.appTextMuted)
+                }
+                .padding(.top, 2)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -140,5 +181,6 @@ struct ConflictResolverView: View {
     let conflict = SetConflict(setA: sets[5], setB: sets[6]) // LCD vs ODESZA
     return ConflictResolverView(conflict: conflict)
         .environmentObject(ScheduleStore())
+        .environmentObject(CrewStore())
         .preferredColorScheme(.dark)
 }

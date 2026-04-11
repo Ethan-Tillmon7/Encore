@@ -325,12 +325,12 @@ RootView (5 tabs)
 - [x] Empty states with action CTAs (HomeView crew + schedule empty states)
 
 **Design polish:**
-- [ ] Festival header → live countdown
-- [ ] Haptic feedback at key moments (add to schedule, resolve conflict, drop pin)
-- [ ] Conflict queue indicator ("1 of 3") in `ConflictResolverView`
-- [ ] Crew context in conflict resolver
+- [x] Festival header → live countdown (days until / Day N of 4 / post-festival)
+- [x] Haptic feedback at key moments (add to schedule, resolve conflict, drop pin, remove set)
+- [x] Conflict queue indicator ("1 of 3") in `ConflictResolverView`
+- [x] Crew context in conflict resolver (avatar bubbles + count under each card)
 - [x] Meetup pin UI on map (drop via toolbar button + management sheet)
-- [ ] Crew location placeholder layer on map
+- [x] Crew location placeholder layer on map (avatar bubbles at last-seen stage)
 
 ---
 

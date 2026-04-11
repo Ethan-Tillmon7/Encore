@@ -54,6 +54,7 @@ struct HomeView: View {
             .sheet(item: $activeConflict) { conflict in
                 ConflictResolverView(conflict: conflict)
                     .environmentObject(scheduleStore)
+                    .environmentObject(crewStore)
                     .presentationDetents([.medium])
             }
             .sheet(isPresented: $showCrewInvite) {
@@ -76,11 +77,37 @@ struct HomeView: View {
             Text("Bonnaroo '25")
                 .font(DS.Font.hero)
                 .foregroundColor(.appCTA)
-            Text("June 12–15  ·  Manchester, TN")
+            Text(festivalContextLine)
                 .font(DS.Font.metadata)
                 .foregroundColor(.appTextMuted)
         }
         .padding(.top, 4)
+    }
+
+    private var festivalContextLine: String {
+        let sets = lineupStore.allSets
+        guard let festivalStart = sets.map(\.startTime).min(),
+              let festivalEnd   = sets.map(\.endTime).max()
+        else { return "June 12–15  ·  Manchester, TN" }
+
+        let now = Date()
+        let calendar = Calendar.current
+        let startDay = calendar.startOfDay(for: festivalStart)
+        let todayStart = calendar.startOfDay(for: now)
+
+        if now < festivalStart {
+            let days = calendar.dateComponents([.day], from: todayStart, to: startDay).day ?? 0
+            switch days {
+            case 0:  return "Gates open today!  ·  Manchester, TN"
+            case 1:  return "1 day until gates open  ·  Manchester, TN"
+            default: return "\(days) days until Bonnaroo  ·  Manchester, TN"
+            }
+        } else if now <= festivalEnd {
+            let dayNum = (calendar.dateComponents([.day], from: startDay, to: todayStart).day ?? 0) + 1
+            return "Day \(dayNum) of 4  ·  Manchester, TN"
+        } else {
+            return "See you next year  ·  Manchester, TN"
+        }
     }
 
     // MARK: - Group Card
@@ -372,7 +399,10 @@ struct HomeView: View {
                         .font(.system(size: 15))
                 }
 
-                Button(action: { scheduleStore.remove(set) }) {
+                Button(action: {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    scheduleStore.remove(set)
+                }) {
                     Image(systemName: "minus.circle")
                         .font(.system(size: 20))
                         .foregroundColor(Color.appTextMuted.opacity(0.5))
