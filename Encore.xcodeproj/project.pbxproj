@@ -11,6 +11,7 @@
 		108F85A9A37FAE8F0DF10563 /* TravelDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4007CA11A5BE65614267C5 /* TravelDetails.swift */; };
 		10FC12EDCF8E6B2A463B2383 /* JournalEntryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232FAF520AA84B8B9D3DE482 /* JournalEntryRowView.swift */; };
 		1DA82E73E85651B894CDCF8D /* FestivalSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7B85AD9AC81797A21BC46D /* FestivalSet.swift */; };
+		1EC57D039FABE0A202B10D74 /* DiscoveryFilterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EC3B16F5FD96FB56C41CA9 /* DiscoveryFilterSheet.swift */; };
 		24AC6F0C2B35775B3203A3F2 /* ConflictResolverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E7F1D2F59F53DC1957CEC7 /* ConflictResolverView.swift */; };
 		25A642309D54F9DE79455923 /* JournalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA46B93C1BF99E93FDBFF509 /* JournalStore.swift */; };
 		2B0667FA66FAA93D80B5139C /* Festival.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732DEC59A1F0450E87FF7750 /* Festival.swift */; };
@@ -34,6 +35,7 @@
 		A009E9218797F01B697603F2 /* FestivalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2839101A1003CA13CBD92E /* FestivalStore.swift */; };
 		A4CCD3B9ED812D8AACE0093D /* TravelDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70B1553B69710898C3F432F /* TravelDetailsView.swift */; };
 		A5FF727B17B000303881082D /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D99DA89BA43991D704F062 /* NotificationsView.swift */; };
+		AE7145041D190271EF8E2586 /* FestivalDiscoveryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F523D1E0996415B29F93BEB5 /* FestivalDiscoveryStore.swift */; };
 		AFED0403E09311B69FDEE767 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F35748E753CDB484FBB93F /* RootView.swift */; };
 		B12529B436AE7B5C1A843FAC /* SetBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48FFC90C22476AB2AAA8035 /* SetBlockView.swift */; };
 		B3C4724F0853566CB9172989 /* GroupPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9E4B6A5CA43F193C62BAEE /* GroupPlannerView.swift */; };
@@ -47,6 +49,7 @@
 		D4316FF49FF93A8986FB0551 /* WalkTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037CBF21861AB19A30A1D0C4 /* WalkTimeView.swift */; };
 		D8B6E159C13A434E6FF3633D /* CrewAvatarBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEC8ABBA04682E43D11CAC9 /* CrewAvatarBubble.swift */; };
 		D92B3BC5487D851AE73AE345 /* CrewManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A13105E2AB596656C4406D /* CrewManageView.swift */; };
+		DF7E741711E64B80D79C3547 /* GenreTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48531BB4AC1C87907B74D789 /* GenreTaxonomy.swift */; };
 		E6F2044B3694ABD7AE7F9CAE /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9F1ADB1F5E205566D56FB0 /* Artist.swift */; };
 		E7E7DB8E29B6C6B855F42B7F /* ArtistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C25767EF337709F0250441 /* ArtistDetailView.swift */; };
 		ED1B99252DA9CC959356D14A /* SeenTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A003AD9221CD6627DA1465F5 /* SeenTrackerView.swift */; };
@@ -63,6 +66,7 @@
 		36C25767EF337709F0250441 /* ArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistDetailView.swift; sourceTree = "<group>"; };
 		36F35748E753CDB484FBB93F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		473A11AAB366257A509A83A2 /* CrewInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewInviteView.swift; sourceTree = "<group>"; };
+		48531BB4AC1C87907B74D789 /* GenreTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTaxonomy.swift; sourceTree = "<group>"; };
 		4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleStore.swift; sourceTree = "<group>"; };
 		548D6EC7D1035067273C270B /* FestivalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalListView.swift; sourceTree = "<group>"; };
 		5927E9C20447F9C5CE60F510 /* JournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntry.swift; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 		A99993988A35F6B326D762B5 /* FestivalCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalCardView.swift; sourceTree = "<group>"; };
 		B03DF5C06A9D22178BA6976E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		B2CB2DB23E52493D1141533C /* Crew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crew.swift; sourceTree = "<group>"; };
+		B2EC3B16F5FD96FB56C41CA9 /* DiscoveryFilterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryFilterSheet.swift; sourceTree = "<group>"; };
 		B4AEAFBCB3C648C68000AC4E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BB4C4272B65E46E90693FABA /* LineupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineupStore.swift; sourceTree = "<group>"; };
 		C6C29F4363C48499F67EBF82 /* FestivalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalDetailView.swift; sourceTree = "<group>"; };
@@ -98,6 +103,7 @@
 		E2D99DA89BA43991D704F062 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		EAEC8ABBA04682E43D11CAC9 /* CrewAvatarBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewAvatarBubble.swift; sourceTree = "<group>"; };
 		EDF89FE7D1A434AEAA021AC2 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		F523D1E0996415B29F93BEB5 /* FestivalDiscoveryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalDiscoveryStore.swift; sourceTree = "<group>"; };
 		FA46B93C1BF99E93FDBFF509 /* JournalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalStore.swift; sourceTree = "<group>"; };
 		FBCCD87DEE127867B1280AD9 /* ArtistSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistSearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,6 +116,7 @@
 				B2CB2DB23E52493D1141533C /* Crew.swift */,
 				732DEC59A1F0450E87FF7750 /* Festival.swift */,
 				5A7B85AD9AC81797A21BC46D /* FestivalSet.swift */,
+				48531BB4AC1C87907B74D789 /* GenreTaxonomy.swift */,
 				5927E9C20447F9C5CE60F510 /* JournalEntry.swift */,
 				096FAA414233C8D5C2F3494E /* MockData.swift */,
 				A8C2010D48C2966C1FEEB214 /* StageWalkTime.swift */,
@@ -122,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				FBCCD87DEE127867B1280AD9 /* ArtistSearchView.swift */,
+				B2EC3B16F5FD96FB56C41CA9 /* DiscoveryFilterSheet.swift */,
 				A99993988A35F6B326D762B5 /* FestivalCardView.swift */,
 				C6C29F4363C48499F67EBF82 /* FestivalDetailView.swift */,
 				548D6EC7D1035067273C270B /* FestivalListView.swift */,
@@ -291,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				87734C51392AA5C1FD01E4EB /* CrewStore.swift */,
+				F523D1E0996415B29F93BEB5 /* FestivalDiscoveryStore.swift */,
 				7F2839101A1003CA13CBD92E /* FestivalStore.swift */,
 				FA46B93C1BF99E93FDBFF509 /* JournalStore.swift */,
 				BB4C4272B65E46E90693FABA /* LineupStore.swift */,
@@ -382,14 +391,17 @@
 				D92B3BC5487D851AE73AE345 /* CrewManageView.swift in Sources */,
 				B7CB3FD62E466E8E29327265 /* CrewStore.swift in Sources */,
 				8879C303B70311A4D5F8EE61 /* DesignSystem.swift in Sources */,
+				1EC57D039FABE0A202B10D74 /* DiscoveryFilterSheet.swift in Sources */,
 				592BB7C86BF76375B1D98A35 /* EditProfileView.swift in Sources */,
 				F98169FA8FA1094319AB9D6A /* EncoreApp.swift in Sources */,
 				2B0667FA66FAA93D80B5139C /* Festival.swift in Sources */,
 				5056C05E9FD9AA69AA873399 /* FestivalCardView.swift in Sources */,
 				7D2E31FCA3772567B5481F9D /* FestivalDetailView.swift in Sources */,
+				AE7145041D190271EF8E2586 /* FestivalDiscoveryStore.swift in Sources */,
 				910449AB643895D1BA6F9047 /* FestivalListView.swift in Sources */,
 				1DA82E73E85651B894CDCF8D /* FestivalSet.swift in Sources */,
 				A009E9218797F01B697603F2 /* FestivalStore.swift in Sources */,
+				DF7E741711E64B80D79C3547 /* GenreTaxonomy.swift in Sources */,
 				B3C4724F0853566CB9172989 /* GroupPlannerView.swift in Sources */,
 				87E16F269859CA5CD75D1661 /* HomeView.swift in Sources */,
 				9A76F24C66588961EDC38042 /* JournalEntry.swift in Sources */,
