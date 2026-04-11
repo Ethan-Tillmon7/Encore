@@ -84,8 +84,16 @@ struct FestivalDetailView: View {
 
     private var festivalHero: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
-            HStack {
+            HStack(spacing: 8) {
                 statusPill
+                if festival.isCamping {
+                    Label("Camping", systemImage: "tent.fill")
+                        .font(DS.Font.caps)
+                        .foregroundColor(.appTextMuted)
+                        .padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Color.appSurface)
+                        .clipShape(Capsule())
+                }
                 Spacer()
             }
             Text("\(dateRangeLabel)  ·  \(festival.location)")

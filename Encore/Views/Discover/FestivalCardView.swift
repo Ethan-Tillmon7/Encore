@@ -23,6 +23,11 @@ struct FestivalCardView: View {
                         .font(DS.Font.cardTitle)
                         .foregroundColor(.appTextPrimary)
                     Spacer()
+                    if festival.isCamping {
+                        Image(systemName: "tent.fill")
+                            .font(.system(size: 11))
+                            .foregroundColor(accentColor.opacity(0.7))
+                    }
                     statusBadge
                 }
 

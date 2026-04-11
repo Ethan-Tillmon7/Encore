@@ -1,6 +1,8 @@
 # Encore — App Context & Design Reference
 
 > This document is the canonical reference for understanding Encore's current state, architecture, and design language. Use it when planning new features, views, or systems.
+>
+> **See also:** `docs/ux-roadmap.md` — living to-do list of UX gaps, new views to build, nav architecture decisions, and phased roadmap.
 
 ---
 

@@ -12,6 +12,18 @@ enum CampingFilter: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+enum RegionFilter: String, CaseIterable, Identifiable {
+    case any           = "Any"
+    case west          = "West"
+    case southwest     = "Southwest"
+    case midwest       = "Midwest"
+    case southeast     = "Southeast"
+    case northeast     = "Northeast"
+    case international = "International"
+
+    var id: String { rawValue }
+}
+
 // MARK: - FestivalDiscoveryStore
 
 /// Owns the full catalog of discoverable festivals and all browse/search filter state.
@@ -29,6 +41,7 @@ class FestivalDiscoveryStore: ObservableObject {
     /// or any of its artists' genres contains one of the selected values.
     @Published var selectedGenres: Set<String> = []
     @Published var campingFilter: CampingFilter = .any
+    @Published var regionFilter: RegionFilter = .any
     @Published var selectedStatus: FestivalStatus? = nil
 
     // MARK: - Init
@@ -89,6 +102,11 @@ class FestivalDiscoveryStore: ObservableObject {
         case .any:         break
         }
 
+        // 6. Region filter
+        if regionFilter != .any {
+            results = results.filter { $0.region == regionFilter }
+        }
+
         return results
     }
 
@@ -105,6 +123,7 @@ class FestivalDiscoveryStore: ObservableObject {
         if !artistNameFilter.trimmingCharacters(in: .whitespaces).isEmpty { n += 1 }
         n += selectedGenres.count
         if campingFilter != .any { n += 1 }
+        if regionFilter  != .any { n += 1 }
         return n
     }
 
@@ -113,6 +132,7 @@ class FestivalDiscoveryStore: ObservableObject {
         artistNameFilter  = ""
         selectedGenres    = []
         campingFilter     = .any
+        regionFilter      = .any
         // intentionally leave selectedStatus — it's the primary nav filter
     }
 

@@ -23,6 +23,7 @@
 		55528231C66434E06378605A /* ArtistCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D379FBFDC5B1FF49B414FB46 /* ArtistCardView.swift */; };
 		592BB7C86BF76375B1D98A35 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9812ACE2B95E30C9E0C9AE1 /* EditProfileView.swift */; };
 		5E5C4E127E1C0B0C4A110980 /* StageWalkTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2010D48C2966C1FEEB214 /* StageWalkTime.swift */; };
+		727069C6B9E2C67F94EF0DB9 /* ArtistProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6125588260F9F5DF2AAAEC4E /* ArtistProfileView.swift */; };
 		78BBA8B29C668B07C4958122 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B03DF5C06A9D22178BA6976E /* ProfileView.swift */; };
 		7D2E31FCA3772567B5481F9D /* FestivalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C29F4363C48499F67EBF82 /* FestivalDetailView.swift */; };
 		87E16F269859CA5CD75D1661 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A11CDD29394920DB746CB1 /* HomeView.swift */; };
@@ -47,6 +48,7 @@
 		C705410C69BCB39C11D47216 /* ScheduleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */; };
 		C83EBDF58C3576A6C1D8A77A /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096FAA414233C8D5C2F3494E /* MockData.swift */; };
 		D4316FF49FF93A8986FB0551 /* WalkTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037CBF21861AB19A30A1D0C4 /* WalkTimeView.swift */; };
+		D7EA413FF7683E09A774C5D4 /* FestivalMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357C7622F999A235F840F034 /* FestivalMapView.swift */; };
 		D8B6E159C13A434E6FF3633D /* CrewAvatarBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEC8ABBA04682E43D11CAC9 /* CrewAvatarBubble.swift */; };
 		D92B3BC5487D851AE73AE345 /* CrewManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A13105E2AB596656C4406D /* CrewManageView.swift */; };
 		DF7E741711E64B80D79C3547 /* GenreTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48531BB4AC1C87907B74D789 /* GenreTaxonomy.swift */; };
@@ -63,6 +65,7 @@
 		0CFADA0032C34118FBF0FA12 /* Encore.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Encore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		104C8F8D267B7C8DBF48B2C4 /* TimetableGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableGridView.swift; sourceTree = "<group>"; };
 		232FAF520AA84B8B9D3DE482 /* JournalEntryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryRowView.swift; sourceTree = "<group>"; };
+		357C7622F999A235F840F034 /* FestivalMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalMapView.swift; sourceTree = "<group>"; };
 		36C25767EF337709F0250441 /* ArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistDetailView.swift; sourceTree = "<group>"; };
 		36F35748E753CDB484FBB93F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		473A11AAB366257A509A83A2 /* CrewInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewInviteView.swift; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 		5927E9C20447F9C5CE60F510 /* JournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntry.swift; sourceTree = "<group>"; };
 		5A7B85AD9AC81797A21BC46D /* FestivalSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalSet.swift; sourceTree = "<group>"; };
 		5B4007CA11A5BE65614267C5 /* TravelDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelDetails.swift; sourceTree = "<group>"; };
+		6125588260F9F5DF2AAAEC4E /* ArtistProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfileView.swift; sourceTree = "<group>"; };
 		6EA90E983A71D5A2E63EF2AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		732DEC59A1F0450E87FF7750 /* Festival.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Festival.swift; sourceTree = "<group>"; };
 		7F2839101A1003CA13CBD92E /* FestivalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalStore.swift; sourceTree = "<group>"; };
@@ -192,6 +196,7 @@
 				462B7D1E1AE8F46876DC6FCA /* Home */,
 				32F58346C9B046204B816F81 /* Journal */,
 				35D6C906490EC5D0AD6A063D /* Lineup */,
+				D767B2707623A2792AC34A8B /* Map */,
 				1E1216D25B652EC6293868E1 /* Onboarding */,
 				ADEA3A5665D46035D7F5AF0D /* Profile */,
 				52D404C44D1DBBFB7681AB34 /* Schedule */,
@@ -268,6 +273,7 @@
 			children = (
 				D379FBFDC5B1FF49B414FB46 /* ArtistCardView.swift */,
 				36C25767EF337709F0250441 /* ArtistDetailView.swift */,
+				6125588260F9F5DF2AAAEC4E /* ArtistProfileView.swift */,
 			);
 			path = Artist;
 			sourceTree = "<group>";
@@ -293,6 +299,14 @@
 				0CFADA0032C34118FBF0FA12 /* Encore.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D767B2707623A2792AC34A8B /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				357C7622F999A235F840F034 /* FestivalMapView.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		EE5E6EDC2D0009A98EEE7379 /* Stores */ = {
@@ -383,6 +397,7 @@
 				55528231C66434E06378605A /* ArtistCardView.swift in Sources */,
 				E7E7DB8E29B6C6B855F42B7F /* ArtistDetailView.swift in Sources */,
 				352E85D7976D6BC294615027 /* ArtistHistoryView.swift in Sources */,
+				727069C6B9E2C67F94EF0DB9 /* ArtistProfileView.swift in Sources */,
 				492991EBFD27A4AB945E6897 /* ArtistSearchView.swift in Sources */,
 				24AC6F0C2B35775B3203A3F2 /* ConflictResolverView.swift in Sources */,
 				BE0C2651DB583E0D773E641E /* Crew.swift in Sources */,
@@ -399,6 +414,7 @@
 				7D2E31FCA3772567B5481F9D /* FestivalDetailView.swift in Sources */,
 				AE7145041D190271EF8E2586 /* FestivalDiscoveryStore.swift in Sources */,
 				910449AB643895D1BA6F9047 /* FestivalListView.swift in Sources */,
+				D7EA413FF7683E09A774C5D4 /* FestivalMapView.swift in Sources */,
 				1DA82E73E85651B894CDCF8D /* FestivalSet.swift in Sources */,
 				A009E9218797F01B697603F2 /* FestivalStore.swift in Sources */,
 				DF7E741711E64B80D79C3547 /* GenreTaxonomy.swift in Sources */,

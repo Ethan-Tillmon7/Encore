@@ -41,6 +41,7 @@ struct FestivalListView: View {
         .background(Color.appBackground)
         .navigationTitle("Discover")
         .navigationBarTitleDisplayMode(.large)
+        .searchable(text: $discoveryStore.searchText, prompt: "Festival or city…")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 16) {

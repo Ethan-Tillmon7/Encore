@@ -4,6 +4,7 @@ import Combine
 class CrewStore: ObservableObject {
 
     @Published var crew: Crew? = Crew.mockCrew  // nil until user creates/joins
+    @Published var meetupPins: [MeetupPin] = []
 
     // MARK: - Crew management
 
@@ -27,6 +28,12 @@ class CrewStore: ObservableObject {
 
     func leaveCrew() {
         crew = nil
+    }
+
+    // MARK: - Meetup pins
+
+    func removePin(_ pin: MeetupPin) {
+        meetupPins.removeAll { $0.id == pin.id }
     }
 
     // MARK: - Merged timeline helpers

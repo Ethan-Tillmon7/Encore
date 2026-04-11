@@ -17,6 +17,8 @@ struct DiscoveryFilterSheet: View {
                     sectionDivider
                     campingSection
                     sectionDivider
+                    regionSection
+                    sectionDivider
                     genreSection
                 }
                 .padding(.bottom, DS.Spacing.pageMargin)
@@ -107,6 +109,37 @@ struct DiscoveryFilterSheet: View {
             .padding(.horizontal, 14).padding(.vertical, 8)
             .background(isSelected ? Color.appCTA : Color.appSurface)
             .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Section: Region
+
+    private var regionSection: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
+            sectionHeader("Region")
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(RegionFilter.allCases) { option in
+                        regionPill(option)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.top, DS.Spacing.sectionHeaderGap)
+        .padding(.bottom, DS.Spacing.cardPadding)
+    }
+
+    private func regionPill(_ option: RegionFilter) -> some View {
+        let isSelected = discoveryStore.regionFilter == option
+        return Button(action: { discoveryStore.regionFilter = option }) {
+            Text(option.rawValue)
+                .font(DS.Font.label)
+                .foregroundColor(isSelected ? Color.appBackground : .appTextMuted)
+                .padding(.horizontal, 14).padding(.vertical, 8)
+                .background(isSelected ? Color.appCTA : Color.appSurface)
+                .clipShape(Capsule())
         }
         .buttonStyle(.plain)
     }

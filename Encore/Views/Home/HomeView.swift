@@ -7,6 +7,8 @@ struct HomeView: View {
     @EnvironmentObject var lineupStore:    LineupStore
     @EnvironmentObject var crewStore:      CrewStore
     @EnvironmentObject var festivalStore:  FestivalStore
+    @EnvironmentObject var discoveryStore: FestivalDiscoveryStore
+    @EnvironmentObject var journalStore:   JournalStore
 
     @State private var selectedDay:    FestivalDay  = .thursday
     @State private var activeConflict: SetConflict? = nil
@@ -23,6 +25,7 @@ struct HomeView: View {
                     groupCard
                     tripCard
                     lineupButton
+                    discoverButton
                     scheduleSection
                 }
                 .padding(.horizontal, DS.Spacing.pageMargin)
@@ -36,12 +39,17 @@ struct HomeView: View {
                         .environmentObject(lineupStore)
                         .environmentObject(scheduleStore)
                         .environmentObject(crewStore)
+                } else if destination == "discover" {
+                    FestivalListView()
+                        .environmentObject(discoveryStore)
                 }
             }
             .sheet(item: $selectedSet) { set in
                 ArtistDetailView(festivalSet: set)
                     .environmentObject(scheduleStore)
                     .environmentObject(crewStore)
+                    .environmentObject(lineupStore)
+                    .environmentObject(journalStore)
             }
             .sheet(item: $activeConflict) { conflict in
                 ConflictResolverView(conflict: conflict)
@@ -235,6 +243,33 @@ struct HomeView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Discover Button
+
+    private var discoverButton: some View {
+        Button(action: { navigationPath.append("discover") }) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Discover Festivals")
+                        .font(DS.Font.listItem)
+                        .foregroundColor(.appTextPrimary)
+                    Text("\(discoveryStore.allFestivals.count) festivals worldwide")
+                        .font(DS.Font.metadata)
+                        .foregroundColor(.appTextMuted)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(.appTextMuted)
+            }
+            .padding(DS.Spacing.cardPadding)
+            .background(Color.appSurface)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
+                .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+
     // MARK: - Schedule Section
 
     private var scheduleSection: some View {
@@ -383,10 +418,14 @@ struct HomeView: View {
     let schedule = ScheduleStore()
     schedule.add(FestivalSet.mockSets[4])
     schedule.add(FestivalSet.mockSets[5])
-    return HomeView()
-        .environmentObject(schedule)
-        .environmentObject(LineupStore())
-        .environmentObject(CrewStore())
-        .environmentObject(FestivalStore())
-        .preferredColorScheme(.dark)
+    return NavigationStack {
+        HomeView()
+    }
+    .environmentObject(schedule)
+    .environmentObject(LineupStore())
+    .environmentObject(CrewStore())
+    .environmentObject(FestivalStore())
+    .environmentObject(JournalStore())
+    .environmentObject(FestivalDiscoveryStore())
+    .preferredColorScheme(.dark)
 }

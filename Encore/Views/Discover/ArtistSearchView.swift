@@ -9,26 +9,32 @@ struct ArtistSearchView: View {
     @EnvironmentObject var scheduleStore:  ScheduleStore
     @EnvironmentObject var crewStore:      CrewStore
 
-    @State private var searchText  = ""
-    @State private var tierFilter:  MatchTier? = nil
-    @State private var selectedSet: FestivalSet? = nil
+    @State private var searchText = ""
+    @State private var tierFilter: MatchTier? = nil
+    @State private var selection: ArtistSelection? = nil
 
     @Environment(\.dismiss) private var dismiss
 
-    private var allArtists: [(artist: Artist, festival: Festival, set: FestivalSet?)] {
-        var result: [(Artist, Festival, FestivalSet?)] = []
+    /// All artists grouped by name, each with the full list of festivals they appear at.
+    private var allArtists: [(artist: Artist, festivals: [Festival], set: FestivalSet?)] {
+        var grouped: [String: (artist: Artist, festivals: [Festival], set: FestivalSet?)] = [:]
         for festival in discoveryStore.allFestivals {
             for artist in festival.lineup {
+                let key = artist.name.lowercased()
                 let set = festival.sets.first(where: { $0.artist.id == artist.id })
-                result.append((artist, festival, set))
+                if var existing = grouped[key] {
+                    existing.festivals.append(festival)
+                    if existing.set == nil, let s = set { existing.set = s }
+                    grouped[key] = existing
+                } else {
+                    grouped[key] = (artist, [festival], set)
+                }
             }
         }
-        // Remove duplicates by artist name (same artist appears at multiple festivals)
-        var seen = Set<String>()
-        return result.filter { seen.insert($0.0.name.lowercased()).inserted }
+        return grouped.values.sorted { $0.artist.name.lowercased() < $1.artist.name.lowercased() }
     }
 
-    private var filteredArtists: [(artist: Artist, festival: Festival, set: FestivalSet?)] {
+    private var filteredArtists: [(artist: Artist, festivals: [Festival], set: FestivalSet?)] {
         allArtists.filter { item in
             let matchesSearch = searchText.isEmpty ||
                 item.artist.name.localizedCaseInsensitiveContains(searchText) ||
@@ -60,9 +66,9 @@ struct ArtistSearchView: View {
                     emptyState
                 } else {
                     List {
-                        ForEach(filteredArtists, id: \.artist.id) { item in
+                        ForEach(filteredArtists, id: \.artist.name) { item in
                             Button(action: {
-                                if let set = item.set { selectedSet = set }
+                                selection = ArtistSelection(item: item)
                             }) {
                                 artistRow(item: item)
                             }
@@ -86,17 +92,21 @@ struct ArtistSearchView: View {
                         .foregroundColor(.appCTA)
                 }
             }
-            .sheet(item: $selectedSet) { set in
-                ArtistDetailView(festivalSet: set)
-                    .environmentObject(scheduleStore)
-                    .environmentObject(crewStore)
-                    .environmentObject(LineupStore())
-                    .environmentObject(journalStore)
+            .sheet(item: $selection) { sel in
+                if let set = sel.set {
+                    ArtistDetailView(festivalSet: set)
+                        .environmentObject(scheduleStore)
+                        .environmentObject(crewStore)
+                        .environmentObject(LineupStore())
+                        .environmentObject(journalStore)
+                } else {
+                    ArtistProfileView(artist: sel.artist, festivals: sel.festivals)
+                }
             }
         }
     }
 
-    private func artistRow(item: (artist: Artist, festival: Festival, set: FestivalSet?)) -> some View {
+    private func artistRow(item: (artist: Artist, festivals: [Festival], set: FestivalSet?)) -> some View {
         HStack(spacing: 12) {
             // Tier color dot
             Circle()
@@ -120,15 +130,18 @@ struct ArtistSearchView: View {
                 Text(item.artist.genres.prefix(2).joined(separator: "  ·  "))
                     .font(DS.Font.metadata)
                     .foregroundColor(.appTextMuted)
+                // Festival appearances
+                Text(item.festivals.map(\.name).joined(separator: ", "))
+                    .font(DS.Font.caps)
+                    .foregroundColor(.appAccent.opacity(0.8))
+                    .lineLimit(1)
             }
 
             Spacer()
 
-            if item.set != nil {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 11))
-                    .foregroundColor(.appTextMuted)
-            }
+            Image(systemName: "chevron.right")
+                .font(.system(size: 11))
+                .foregroundColor(.appTextMuted)
         }
         .padding(.vertical, 6)
     }
@@ -157,6 +170,21 @@ struct ArtistSearchView: View {
                 .foregroundColor(.appTextMuted)
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+/// Identifiable wrapper used to drive the artist detail sheet from ArtistSearchView.
+struct ArtistSelection: Identifiable {
+    let id: String  // artist name — unique per grouped entry
+    let artist: Artist
+    let festivals: [Festival]
+    let set: FestivalSet?
+
+    init(item: (artist: Artist, festivals: [Festival], set: FestivalSet?)) {
+        self.id       = item.artist.name
+        self.artist   = item.artist
+        self.festivals = item.festivals
+        self.set      = item.set
     }
 }
 

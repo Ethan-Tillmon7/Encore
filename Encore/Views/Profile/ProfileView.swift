@@ -4,7 +4,9 @@ import SwiftUI
 struct ProfileView: View {
 
     @AppStorage("appTheme") private var appTheme: String = "system"
-    @EnvironmentObject var festivalStore: FestivalStore
+    @EnvironmentObject var festivalStore:  FestivalStore
+    @EnvironmentObject var journalStore:   JournalStore
+    @EnvironmentObject var scheduleStore:  ScheduleStore
 
     @State private var showEditProfile:    Bool = false
     @State private var showNotifications:  Bool = false
@@ -41,6 +43,16 @@ struct ProfileView: View {
                     .foregroundColor(.appAccent)
                 Button(action: { showNotifications = true }) {
                     Label("Notifications", systemImage: "bell")
+                        .foregroundColor(.appTextPrimary)
+                }
+            }
+            .listRowBackground(Color.appSurface)
+
+            Section("Activity") {
+                NavigationLink(destination: SeenTrackerView()
+                    .environmentObject(journalStore)
+                    .environmentObject(scheduleStore)) {
+                    Label("Sets I've Seen", systemImage: "book")
                         .foregroundColor(.appTextPrimary)
                 }
             }
@@ -124,7 +136,11 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
-        .environmentObject(FestivalStore())
-        .preferredColorScheme(.dark)
+    NavigationStack {
+        ProfileView()
+    }
+    .environmentObject(FestivalStore())
+    .environmentObject(JournalStore())
+    .environmentObject(ScheduleStore())
+    .preferredColorScheme(.dark)
 }
