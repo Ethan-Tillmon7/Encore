@@ -6,14 +6,10 @@ struct ProfileView: View {
     @AppStorage("appTheme") private var appTheme: String = "system"
     @EnvironmentObject var festivalStore:  FestivalStore
     @EnvironmentObject var journalStore:   JournalStore
-    @EnvironmentObject var scheduleStore:  ScheduleStore
 
     @State private var showEditProfile:    Bool = false
     @State private var showNotifications:  Bool = false
     @State private var showSignOutConfirm: Bool = false
-    @State private var showCrewManage:     Bool = false
-    @State private var showTravelDetails:  Bool = false
-    @State private var showCrewInvite:     Bool = false
 
     var body: some View {
         List {
@@ -43,28 +39,6 @@ struct ProfileView: View {
                     .foregroundColor(.appAccent)
                 Button(action: { showNotifications = true }) {
                     Label("Notifications", systemImage: "bell")
-                        .foregroundColor(.appTextPrimary)
-                }
-            }
-            .listRowBackground(Color.appSurface)
-
-            Section("Activity") {
-                NavigationLink(destination: SeenTrackerView()
-                    .environmentObject(journalStore)
-                    .environmentObject(scheduleStore)) {
-                    Label("Sets I've Seen", systemImage: "book")
-                        .foregroundColor(.appTextPrimary)
-                }
-            }
-            .listRowBackground(Color.appSurface)
-
-            Section("Crew & Festival") {
-                Button(action: { showCrewManage = true }) {
-                    Label("My Crew", systemImage: "person.2")
-                        .foregroundColor(.appTextPrimary)
-                }
-                Button(action: { showTravelDetails = true }) {
-                    Label("Travel Details", systemImage: "suitcase")
                         .foregroundColor(.appTextPrimary)
                 }
             }
@@ -123,15 +97,6 @@ struct ProfileView: View {
             }
             .sheet(isPresented: $showEditProfile) { EditProfileView() }
             .sheet(isPresented: $showNotifications) { NotificationsView() }
-            .sheet(isPresented: $showCrewManage) { CrewManageView() }
-            .sheet(isPresented: $showCrewInvite) { CrewInviteView() }
-            .sheet(isPresented: $showTravelDetails) {
-                if let festivalID = festivalStore.selectedFestival?.id {
-                    TravelDetailsView(festivalID: festivalID)
-                } else {
-                    TravelDetailsView(festivalID: UUID())
-                }
-            }
     }
 }
 
@@ -141,6 +106,5 @@ struct ProfileView: View {
     }
     .environmentObject(FestivalStore())
     .environmentObject(JournalStore())
-    .environmentObject(ScheduleStore())
     .preferredColorScheme(.dark)
 }
