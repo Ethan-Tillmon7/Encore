@@ -4,6 +4,8 @@ import UserNotifications
 
 struct NotificationsView: View {
 
+    @EnvironmentObject var scheduleStore: ScheduleStore
+
     @Environment(\.dismiss) private var dismiss
 
     @AppStorage(StorageKey.notifSetReminder)     private var setReminderOn   = false
@@ -22,7 +24,16 @@ struct NotificationsView: View {
                         .tint(.appCTA)
                         .foregroundColor(.appTextPrimary)
                         .onChange(of: setReminderOn) { on in
-                            if on { requestPermission() }
+                            if on {
+                                requestPermission()
+                                let offset = UserDefaults.standard.integer(forKey: StorageKey.notifReminderOffset)
+                                NotificationScheduler.rescheduleAll(
+                                    scheduleStore.scheduledSets,
+                                    offset: offset == 0 ? 30 : offset
+                                )
+                            } else {
+                                NotificationScheduler.cancelAll()
+                            }
                         }
                     if setReminderOn {
                         Picker("How early", selection: $reminderOffset) {
@@ -31,6 +42,9 @@ struct NotificationsView: View {
                             }
                         }
                         .foregroundColor(.appTextPrimary)
+                        .onChange(of: reminderOffset) { offset in
+                            NotificationScheduler.rescheduleAll(scheduleStore.scheduledSets, offset: offset)
+                        }
                     }
                 }
                 .listRowBackground(Color.appSurface)
@@ -79,5 +93,6 @@ struct NotificationsView: View {
 
 #Preview {
     NotificationsView()
+        .environmentObject(ScheduleStore())
         .preferredColorScheme(.dark)
 }
