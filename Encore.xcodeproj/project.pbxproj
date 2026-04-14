@@ -25,6 +25,7 @@
 		5E5C4E127E1C0B0C4A110980 /* StageWalkTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2010D48C2966C1FEEB214 /* StageWalkTime.swift */; };
 		727069C6B9E2C67F94EF0DB9 /* ArtistProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6125588260F9F5DF2AAAEC4E /* ArtistProfileView.swift */; };
 		78BBA8B29C668B07C4958122 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B03DF5C06A9D22178BA6976E /* ProfileView.swift */; };
+		7D236DBA24BC7C395A75C34A /* CrewTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F16BF0D6D8A61F00C35B6 /* CrewTabView.swift */; };
 		7D2E31FCA3772567B5481F9D /* FestivalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C29F4363C48499F67EBF82 /* FestivalDetailView.swift */; };
 		87E16F269859CA5CD75D1661 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A11CDD29394920DB746CB1 /* HomeView.swift */; };
 		8879C303B70311A4D5F8EE61 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA249A9C590117F9B68E0EE3 /* DesignSystem.swift */; };
@@ -68,6 +69,7 @@
 		357C7622F999A235F840F034 /* FestivalMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalMapView.swift; sourceTree = "<group>"; };
 		36C25767EF337709F0250441 /* ArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistDetailView.swift; sourceTree = "<group>"; };
 		36F35748E753CDB484FBB93F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		392F16BF0D6D8A61F00C35B6 /* CrewTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewTabView.swift; sourceTree = "<group>"; };
 		473A11AAB366257A509A83A2 /* CrewInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewInviteView.swift; sourceTree = "<group>"; };
 		48531BB4AC1C87907B74D789 /* GenreTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTaxonomy.swift; sourceTree = "<group>"; };
 		4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleStore.swift; sourceTree = "<group>"; };
@@ -149,6 +151,14 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
+		2E10B027368569F5D504564D /* Crew */ = {
+			isa = PBXGroup;
+			children = (
+				392F16BF0D6D8A61F00C35B6 /* CrewTabView.swift */,
+			);
+			path = Crew;
+			sourceTree = "<group>";
+		};
 		32F58346C9B046204B816F81 /* Journal */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +202,7 @@
 			children = (
 				B707219A94459DC8E797A4F4 /* Artist */,
 				5AEA4BE06D40253C0DA40B1F /* Components */,
+				2E10B027368569F5D504564D /* Crew */,
 				1253FEF1DFC1D16E6D3A5919 /* Discover */,
 				462B7D1E1AE8F46876DC6FCA /* Home */,
 				32F58346C9B046204B816F81 /* Journal */,
@@ -405,6 +416,7 @@
 				9517BA6C5F17ADC6CFA6EAF7 /* CrewInviteView.swift in Sources */,
 				D92B3BC5487D851AE73AE345 /* CrewManageView.swift in Sources */,
 				B7CB3FD62E466E8E29327265 /* CrewStore.swift in Sources */,
+				7D236DBA24BC7C395A75C34A /* CrewTabView.swift in Sources */,
 				8879C303B70311A4D5F8EE61 /* DesignSystem.swift in Sources */,
 				1EC57D039FABE0A202B10D74 /* DiscoveryFilterSheet.swift in Sources */,
 				592BB7C86BF76375B1D98A35 /* EditProfileView.swift in Sources */,
