@@ -14,10 +14,19 @@ struct ArtistDetailView: View {
 
     var artist: Artist { festivalSet.artist }
 
-    private let recentSetlist: [String] = [
-        "Someone Great", "All My Friends", "Dance Yrself Clean",
-        "Drunk Girls", "I Can Change", "New York I Love You", "Home"
-    ]
+    private func loadSetlist() async {
+        setlistLoading = true
+        do {
+            setlist = try await SetlistService.shared.fetchRecentSetlist(for: artist.name)
+        } catch {
+            setlistError = true
+        }
+        setlistLoading = false
+    }
+
+    @State private var setlist:        [String] = []
+    @State private var setlistLoading: Bool     = false
+    @State private var setlistError:   Bool     = false
 
     var body: some View {
         NavigationView {
@@ -44,6 +53,7 @@ struct ArtistDetailView: View {
                 .padding(.top, 24)
             }
             .background(Color.appBackground)
+            .task { await loadSetlist() }
             .navigationTitle(artist.name)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
@@ -164,19 +174,35 @@ struct ArtistDetailView: View {
 
     private var setlistView: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(recentSetlist.enumerated()), id: \.offset) { index, song in
-                HStack {
-                    Text("\(index + 1)")
-                        .font(DS.Font.metadata)
-                        .foregroundColor(.appTextMuted)
-                        .frame(width: 24, alignment: .trailing)
-                    Text(song)
-                        .font(DS.Font.listItem)
-                        .foregroundColor(.appTextPrimary)
-                    Spacer()
+            if setlistLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 16)
+            } else if setlistError {
+                Text("Couldn't load setlist")
+                    .font(DS.Font.metadata)
+                    .foregroundColor(.appTextMuted)
+                    .padding(.vertical, 8)
+            } else if setlist.isEmpty {
+                Text("No recent setlist found")
+                    .font(DS.Font.metadata)
+                    .foregroundColor(.appTextMuted)
+                    .padding(.vertical, 8)
+            } else {
+                ForEach(Array(setlist.enumerated()), id: \.offset) { index, song in
+                    HStack {
+                        Text("\(index + 1)")
+                            .font(DS.Font.metadata)
+                            .foregroundColor(.appTextMuted)
+                            .frame(width: 24, alignment: .trailing)
+                        Text(song)
+                            .font(DS.Font.listItem)
+                            .foregroundColor(.appTextPrimary)
+                        Spacer()
+                    }
+                    .padding(.vertical, 10)
+                    if index < setlist.count - 1 { Divider() }
                 }
-                .padding(.vertical, 10)
-                if index < recentSetlist.count - 1 { Divider() }
             }
         }
     }

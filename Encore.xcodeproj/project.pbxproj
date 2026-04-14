@@ -26,6 +26,7 @@
 		592BB7C86BF76375B1D98A35 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9812ACE2B95E30C9E0C9AE1 /* EditProfileView.swift */; };
 		5E5C4E127E1C0B0C4A110980 /* StageWalkTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2010D48C2966C1FEEB214 /* StageWalkTime.swift */; };
 		727069C6B9E2C67F94EF0DB9 /* ArtistProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6125588260F9F5DF2AAAEC4E /* ArtistProfileView.swift */; };
+		750606614D9DF8158F0E3CD4 /* SetlistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1DC36538EC243C689F477D /* SetlistService.swift */; };
 		78BBA8B29C668B07C4958122 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B03DF5C06A9D22178BA6976E /* ProfileView.swift */; };
 		7D236DBA24BC7C395A75C34A /* CrewTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F16BF0D6D8A61F00C35B6 /* CrewTabView.swift */; };
 		7D2E31FCA3772567B5481F9D /* FestivalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C29F4363C48499F67EBF82 /* FestivalDetailView.swift */; };
@@ -106,6 +107,7 @@
 		C6C29F4363C48499F67EBF82 /* FestivalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalDetailView.swift; sourceTree = "<group>"; };
 		CA97C90921224D9FE85340A4 /* SetJournalEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetJournalEntryView.swift; sourceTree = "<group>"; };
 		CB17FAC1272BE5FA11F7D2EE /* LineupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineupView.swift; sourceTree = "<group>"; };
+		CF1DC36538EC243C689F477D /* SetlistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistService.swift; sourceTree = "<group>"; };
 		D379FBFDC5B1FF49B414FB46 /* ArtistCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistCardView.swift; sourceTree = "<group>"; };
 		D70B1553B69710898C3F432F /* TravelDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelDetailsView.swift; sourceTree = "<group>"; };
 		D9812ACE2B95E30C9E0C9AE1 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				8A920EFB6D50257105E21C6A /* APIKeys.swift */,
+				CF1DC36538EC243C689F477D /* SetlistService.swift */,
 				042423A15ADEAFA899C9A04E /* StorageKey.swift */,
 			);
 			path = Utilities;
@@ -458,6 +461,7 @@
 				ED1B99252DA9CC959356D14A /* SeenTrackerView.swift in Sources */,
 				B12529B436AE7B5C1A843FAC /* SetBlockView.swift in Sources */,
 				42BD2FBEA4BBFF5BFC9CC621 /* SetJournalEntryView.swift in Sources */,
+				750606614D9DF8158F0E3CD4 /* SetlistService.swift in Sources */,
 				5E5C4E127E1C0B0C4A110980 /* StageWalkTime.swift in Sources */,
 				3B1A71C27157B66C3FBDC5AE /* StorageKey.swift in Sources */,
 				0EA88D7E443B53F5B51DFF3D /* TimetableGridView.swift in Sources */,
