@@ -10,6 +10,7 @@ struct SeenTrackerView: View {
     @State private var showLogEntry = false
     @State private var selectedEntry: JournalEntry? = nil
     @State private var pushArtistHistory: UUID? = nil         // artist ID to push history for
+    @State private var showRatePastSets = false
 
     private var filteredEntries: [JournalEntry] {
         let all = journalStore.entries.sorted { $0.dateAttended > $1.dateAttended }
@@ -29,6 +30,51 @@ struct SeenTrackerView: View {
         return Double(rated.reduce(0, +)) / Double(rated.count)
     }
 
+    private var unratedCount: Int {
+        festivalStore.festivals
+            .filter { $0.status == .past && !$0.lineup.isEmpty }
+            .flatMap { festival in
+                festival.lineup.filter { artist in
+                    !journalStore.entries.contains {
+                        $0.artistID == artist.id &&
+                        $0.festivalID == festival.id &&
+                        $0.rating != nil
+                    }
+                }
+            }
+            .count
+    }
+
+    private var rateBanner: some View {
+        Button(action: { showRatePastSets = true }) {
+            HStack(spacing: 10) {
+                Image(systemName: "star.leadinghalf.filled")
+                    .font(.system(size: 16))
+                    .foregroundColor(.appCTA)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Rate your history")
+                        .font(DS.Font.listItem)
+                        .foregroundColor(.appTextPrimary)
+                    Text("\(unratedCount) set\(unratedCount == 1 ? "" : "s") unrated")
+                        .font(DS.Font.metadata)
+                        .foregroundColor(.appTextMuted)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.appTextMuted)
+            }
+            .padding(DS.Spacing.cardPadding)
+            .background(Color.appSurface)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
+            .overlay(RoundedRectangle(cornerRadius: DS.Radius.chip)
+                .stroke(Color.appCTA.opacity(0.2), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, DS.Spacing.pageMargin)
+        .padding(.bottom, 4)
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Stats strip
@@ -36,6 +82,13 @@ struct SeenTrackerView: View {
                 .padding(.horizontal, DS.Spacing.pageMargin)
                 .padding(.vertical, 14)
                 .background(Color.appBackground)
+
+            // Rate Past Sets banner
+            if unratedCount > 0 {
+                rateBanner
+                    .padding(.top, 4)
+                    .background(Color.appBackground)
+            }
 
             // Festival filter
             if !festivalStore.festivals.isEmpty {
@@ -77,6 +130,11 @@ struct SeenTrackerView: View {
         .sheet(item: $selectedEntry) { entry in
             SetJournalEntryView(entry: entry)
                 .environmentObject(journalStore)
+        }
+        .sheet(isPresented: $showRatePastSets) {
+            RatePastSetsView()
+                .environmentObject(journalStore)
+                .environmentObject(festivalStore)
         }
         .sheet(isPresented: $showLogEntry) {
             // TODO: show artist picker first; for now show create mode with first artist
