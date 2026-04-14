@@ -47,6 +47,7 @@
 		B7CB3FD62E466E8E29327265 /* CrewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87734C51392AA5C1FD01E4EB /* CrewStore.swift */; };
 		BA9D6D7CBBE8F440E7CFD7BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EA90E983A71D5A2E63EF2AF /* Assets.xcassets */; };
 		BE0C2651DB583E0D773E641E /* Crew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB2DB23E52493D1141533C /* Crew.swift */; };
+		C032F3FB4E715D572E4CF5A7 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A920EFB6D50257105E21C6A /* APIKeys.swift */; };
 		C33F910655984D814014E0C1 /* LineupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB17FAC1272BE5FA11F7D2EE /* LineupView.swift */; };
 		C705410C69BCB39C11D47216 /* ScheduleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DECE0E5D18D519FAE08BAD6 /* ScheduleStore.swift */; };
 		C83EBDF58C3576A6C1D8A77A /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096FAA414233C8D5C2F3494E /* MockData.swift */; };
@@ -87,6 +88,7 @@
 		7F9F1ADB1F5E205566D56FB0 /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		7FA01B1207F67F10F2F9B2CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		87734C51392AA5C1FD01E4EB /* CrewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStore.swift; sourceTree = "<group>"; };
+		8A920EFB6D50257105E21C6A /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		8B17A25CA0297C42746F98AF /* EncoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncoreApp.swift; sourceTree = "<group>"; };
 		8BB90EC7B2CE3970016FDEF4 /* RatePastSetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatePastSetsView.swift; sourceTree = "<group>"; };
 		95A13105E2AB596656C4406D /* CrewManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewManageView.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 		4C6ADA152838F73947023822 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				8A920EFB6D50257105E21C6A /* APIKeys.swift */,
 				042423A15ADEAFA899C9A04E /* StorageKey.swift */,
 			);
 			path = Utilities;
@@ -409,6 +412,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C032F3FB4E715D572E4CF5A7 /* APIKeys.swift in Sources */,
 				B6D120D29BD9EF2B96E50DC6 /* AppColors.swift in Sources */,
 				E6F2044B3694ABD7AE7F9CAE /* Artist.swift in Sources */,
 				55528231C66434E06378605A /* ArtistCardView.swift in Sources */,

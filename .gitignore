@@ -1,0 +1,9 @@
+# Xcode
+*.xcuserstate
+xcuserdata/
+
+# API Keys — never commit
+Encore/Utilities/APIKeys.swift
+
+# macOS
+.DS_Store
