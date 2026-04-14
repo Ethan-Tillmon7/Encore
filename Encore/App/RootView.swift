@@ -5,33 +5,33 @@ struct RootView: View {
 
     @State private var selectedTab: Tab = .home
 
-    enum Tab: Int { case home, lineup, map, crew, profile }
+    enum Tab: Int { case journal, crew, home, fests, profile }
 
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
+                SeenTrackerView()
+            }
+            .tabItem { Label("Journal", systemImage: "book.fill") }
+            .tag(Tab.journal)
+
+            NavigationStack {
+                CrewTabView()
+            }
+            .tabItem { Label("Crew", systemImage: "person.2.fill") }
+            .tag(Tab.crew)
+
+            NavigationStack {
                 HomeView()
             }
-            .tabItem { Label("Home",    systemImage: "house.fill") }
+            .tabItem { Label("Home", systemImage: "house.fill") }
             .tag(Tab.home)
 
             NavigationStack {
-                LineupView()
+                FestivalListView()
             }
-            .tabItem { Label("Lineup",  systemImage: "calendar") }
-            .tag(Tab.lineup)
-
-            NavigationStack {
-                FestivalMapView()
-            }
-            .tabItem { Label("Map",     systemImage: "map.fill") }
-            .tag(Tab.map)
-
-            NavigationStack {
-                CrewManageView()
-            }
-            .tabItem { Label("Crew",    systemImage: "person.2.fill") }
-            .tag(Tab.crew)
+            .tabItem { Label("Fests", systemImage: "sparkles") }
+            .tag(Tab.fests)
 
             NavigationStack {
                 ProfileView()
