@@ -35,9 +35,13 @@ class ScheduleStore: ObservableObject {
     func add(_ set: FestivalSet) {
         guard !isScheduled(set) else { return }
         scheduledSets.append(set)
+        let on     = UserDefaults.standard.bool(forKey: StorageKey.notifSetReminder)
+        let offset = UserDefaults.standard.integer(forKey: StorageKey.notifReminderOffset)
+        if on { NotificationScheduler.schedule(for: set, offset: offset == 0 ? 30 : offset) }
     }
 
     func remove(_ set: FestivalSet) {
+        NotificationScheduler.cancel(for: set)
         scheduledSets.removeAll { $0.id == set.id }
     }
 
