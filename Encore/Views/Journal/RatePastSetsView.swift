@@ -108,7 +108,7 @@ struct RatePastSetsView: View {
                 id: UUID(),
                 artistID: artist.id,
                 festivalID: festival.id,
-                setID: UUID(),
+                setID: UUID(), // no specific set selected; artist-level rating only
                 dateAttended: festival.endDate,
                 rating: rating,
                 notes: "",
