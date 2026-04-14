@@ -14,8 +14,8 @@ struct HomeView: View {
     @State private var activeConflict: SetConflict? = nil
     @State private var selectedSet:    FestivalSet? = nil
     @State private var navigationPath = NavigationPath()
-    @State private var showCrewInvite:    Bool = false
-    @State private var showTravelDetails: Bool = false
+    @State private var showCrewInvite: Bool = false
+    @State private var showCrewSheet:  Bool = false
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -23,9 +23,7 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: DS.Spacing.cardGap) {
                     festivalHeader
                     groupCard
-                    tripCard
                     lineupButton
-                    discoverButton
                     scheduleSection
                 }
                 .padding(.horizontal, DS.Spacing.pageMargin)
@@ -60,11 +58,10 @@ struct HomeView: View {
             .sheet(isPresented: $showCrewInvite) {
                 CrewInviteView()
             }
-            .sheet(isPresented: $showTravelDetails) {
-                if let festivalID = festivalStore.selectedFestival?.id {
-                    TravelDetailsView(festivalID: festivalID)
-                } else {
-                    TravelDetailsView(festivalID: UUID())
+            .sheet(isPresented: $showCrewSheet) {
+                if let crew = crewStore.crew {
+                    CrewQuickView(crew: crew)
+                        .environmentObject(festivalStore)
                 }
             }
         }
@@ -115,7 +112,10 @@ struct HomeView: View {
     @ViewBuilder
     private var groupCard: some View {
         if let crew = crewStore.crew {
-            crewCardView(crew: crew)
+            Button(action: { showCrewSheet = true }) {
+                crewCardView(crew: crew)
+            }
+            .buttonStyle(.plain)
         } else {
             noCrewCardView
         }
@@ -213,36 +213,6 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Trip Card
-
-    private var tripCard: some View {
-        Button(action: { showTravelDetails = true }) {
-            HStack(spacing: 12) {
-                Image(systemName: "suitcase")
-                    .font(.system(size: 18))
-                    .foregroundColor(.appAccent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Travel Details")
-                        .font(DS.Font.listItem)
-                        .foregroundColor(.appTextPrimary)
-                    Text("Fri arrival · Tent camping")
-                        .font(DS.Font.metadata)
-                        .foregroundColor(.appTextMuted)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.appTextMuted)
-            }
-            .padding(DS.Spacing.cardPadding)
-            .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
-            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
-                .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
-        }
-        .buttonStyle(.plain)
-    }
-
     // MARK: - Lineup Button
 
     private var lineupButton: some View {
@@ -266,33 +236,6 @@ struct HomeView: View {
             .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
             .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
                 .stroke(Color.appCTA.opacity(0.2), lineWidth: 1))
-        }
-        .buttonStyle(.plain)
-    }
-
-    // MARK: - Discover Button
-
-    private var discoverButton: some View {
-        Button(action: { navigationPath.append("discover") }) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Discover Festivals")
-                        .font(DS.Font.listItem)
-                        .foregroundColor(.appTextPrimary)
-                    Text("\(discoveryStore.allFestivals.count) festivals worldwide")
-                        .font(DS.Font.metadata)
-                        .foregroundColor(.appTextMuted)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.appTextMuted)
-            }
-            .padding(DS.Spacing.cardPadding)
-            .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
-            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
-                .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
@@ -441,6 +384,113 @@ struct HomeView: View {
         let f = DateFormatter()
         f.dateFormat = "h:mm"
         return f.string(from: date)
+    }
+}
+
+// MARK: - Crew Quick Sheet
+
+private struct CrewQuickView: View {
+    let crew: Crew
+    @EnvironmentObject var festivalStore: FestivalStore
+    @Environment(\.dismiss) private var dismiss
+    @State private var showTravelDetails = false
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DS.Spacing.cardGap) {
+                    // Member bubbles
+                    VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
+                        Text("MEMBERS")
+                            .font(DS.Font.caps)
+                            .foregroundColor(.appTextMuted)
+                            .tracking(0.6)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 14) {
+                                ForEach(crew.members) { member in
+                                    memberBubble(member: member)
+                                }
+                            }
+                        }
+                    }
+                    .padding(DS.Spacing.cardPadding)
+                    .background(Color.appSurface)
+                    .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+                    .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
+                        .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
+
+                    // Travel Details row
+                    Button(action: { showTravelDetails = true }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "suitcase")
+                                .font(.system(size: 18))
+                                .foregroundColor(.appAccent)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Travel Details")
+                                    .font(DS.Font.listItem)
+                                    .foregroundColor(.appTextPrimary)
+                                Text("Arrival · Accommodation · Campsite")
+                                    .font(DS.Font.metadata)
+                                    .foregroundColor(.appTextMuted)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.appTextMuted)
+                        }
+                        .padding(DS.Spacing.cardPadding)
+                        .background(Color.appSurface)
+                        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+                        .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
+                            .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, DS.Spacing.pageMargin)
+                .padding(.top, 8)
+                .padding(.bottom, 40)
+            }
+            .background(Color.appBackground)
+            .navigationTitle(crew.name)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") { dismiss() }
+                        .foregroundColor(.appCTA)
+                }
+            }
+            .sheet(isPresented: $showTravelDetails) {
+                if let id = festivalStore.selectedFestival?.id {
+                    TravelDetailsView(festivalID: id)
+                        .environmentObject(festivalStore)
+                } else {
+                    TravelDetailsView(festivalID: UUID())
+                        .environmentObject(festivalStore)
+                }
+            }
+        }
+    }
+
+    private func memberBubble(member: CrewMember) -> some View {
+        VStack(spacing: 4) {
+            ZStack(alignment: .bottomTrailing) {
+                Circle()
+                    .fill(member.color)
+                    .frame(width: 38, height: 38)
+                    .overlay(
+                        Text(member.initials)
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(Color.appBackground)
+                    )
+                Circle()
+                    .fill(member.isOnline ? Color.appCTA : Color.appSurface)
+                    .frame(width: 10, height: 10)
+                    .overlay(Circle().stroke(Color.appSurface, lineWidth: 1.5))
+            }
+            Text(member.name)
+                .font(DS.Font.caps)
+                .foregroundColor(.appTextMuted)
+        }
     }
 }
 
