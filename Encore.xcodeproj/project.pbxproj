@@ -17,6 +17,7 @@
 		2B0667FA66FAA93D80B5139C /* Festival.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732DEC59A1F0450E87FF7750 /* Festival.swift */; };
 		352E85D7976D6BC294615027 /* ArtistHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E73A1470AFBEE1FA4D1729 /* ArtistHistoryView.swift */; };
 		3B1A71C27157B66C3FBDC5AE /* StorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042423A15ADEAFA899C9A04E /* StorageKey.swift */; };
+		40C650F0CE0261F4D24EDDC5 /* RatePastSetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB90EC7B2CE3970016FDEF4 /* RatePastSetsView.swift */; };
 		42BD2FBEA4BBFF5BFC9CC621 /* SetJournalEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA97C90921224D9FE85340A4 /* SetJournalEntryView.swift */; };
 		492991EBFD27A4AB945E6897 /* ArtistSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCCD87DEE127867B1280AD9 /* ArtistSearchView.swift */; };
 		5056C05E9FD9AA69AA873399 /* FestivalCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99993988A35F6B326D762B5 /* FestivalCardView.swift */; };
@@ -85,6 +86,7 @@
 		7FA01B1207F67F10F2F9B2CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		87734C51392AA5C1FD01E4EB /* CrewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStore.swift; sourceTree = "<group>"; };
 		8B17A25CA0297C42746F98AF /* EncoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncoreApp.swift; sourceTree = "<group>"; };
+		8BB90EC7B2CE3970016FDEF4 /* RatePastSetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatePastSetsView.swift; sourceTree = "<group>"; };
 		95A13105E2AB596656C4406D /* CrewManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewManageView.swift; sourceTree = "<group>"; };
 		95E73A1470AFBEE1FA4D1729 /* ArtistHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistHistoryView.swift; sourceTree = "<group>"; };
 		98E7F1D2F59F53DC1957CEC7 /* ConflictResolverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConflictResolverView.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			children = (
 				95E73A1470AFBEE1FA4D1729 /* ArtistHistoryView.swift */,
 				232FAF520AA84B8B9D3DE482 /* JournalEntryRowView.swift */,
+				8BB90EC7B2CE3970016FDEF4 /* RatePastSetsView.swift */,
 				A003AD9221CD6627DA1465F5 /* SeenTrackerView.swift */,
 				CA97C90921224D9FE85340A4 /* SetJournalEntryView.swift */,
 			);
@@ -441,6 +444,7 @@
 				A5FF727B17B000303881082D /* NotificationsView.swift in Sources */,
 				98322A3C5682F2DBC0C6B1DB /* OnboardingView.swift in Sources */,
 				78BBA8B29C668B07C4958122 /* ProfileView.swift in Sources */,
+				40C650F0CE0261F4D24EDDC5 /* RatePastSetsView.swift in Sources */,
 				AFED0403E09311B69FDEE767 /* RootView.swift in Sources */,
 				C705410C69BCB39C11D47216 /* ScheduleStore.swift in Sources */,
 				ED1B99252DA9CC959356D14A /* SeenTrackerView.swift in Sources */,
