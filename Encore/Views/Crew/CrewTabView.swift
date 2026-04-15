@@ -7,7 +7,6 @@ struct CrewTabView: View {
     @EnvironmentObject var festivalStore: FestivalStore
 
     @State private var showInvite         = false
-    @State private var showTravelDetails  = false
     @State private var showLeaveConfirm   = false
 
     var body: some View {
@@ -15,7 +14,7 @@ struct CrewTabView: View {
             VStack(alignment: .leading, spacing: DS.Spacing.cardGap) {
                 if let crew = crewStore.crew {
                     membersCard(crew: crew)
-                    travelRow
+                    travelSection
                     packingSection
                     expensesPlaceholder
                     playlistPlaceholder
@@ -44,15 +43,6 @@ struct CrewTabView: View {
         .sheet(isPresented: $showInvite) {
             CrewInviteView()
                 .environmentObject(crewStore)
-        }
-        .sheet(isPresented: $showTravelDetails) {
-            if let id = festivalStore.selectedFestival?.id {
-                TravelDetailsView(festivalID: id)
-                    .environmentObject(festivalStore)
-            } else {
-                TravelDetailsView(festivalID: UUID())
-                    .environmentObject(festivalStore)
-            }
         }
         .confirmationDialog(
             "Leave \(crewStore.crew?.name ?? "crew")?",
@@ -117,32 +107,46 @@ struct CrewTabView: View {
 
     // MARK: - Travel
 
-    private var travelRow: some View {
-        Button(action: { showTravelDetails = true }) {
-            HStack(spacing: 12) {
-                Image(systemName: "suitcase")
-                    .font(.system(size: 18))
-                    .foregroundColor(.appAccent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Travel Details")
-                        .font(DS.Font.listItem)
-                        .foregroundColor(.appTextPrimary)
-                    Text("Arrival · Accommodation · Campsite")
-                        .font(DS.Font.metadata)
-                        .foregroundColor(.appTextMuted)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.appTextMuted)
-            }
-            .padding(DS.Spacing.cardPadding)
-            .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
-            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
-                .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
+    private var travelSection: some View {
+        let details = festivalStore.selectedFestival.flatMap { festivalStore.travelDetails[$0.id] }
+        return VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
+            Text("TRAVEL")
+                .font(DS.Font.caps)
+                .foregroundColor(.appTextMuted)
+                .tracking(0.6)
+            travelRow(icon: "airplane.departure", label: "Arrival",       value: details?.arrivalDate.map { shortDate($0) })
+            travelRow(icon: "airplane.arrival",   label: "Departure",     value: details?.departureDate.map { shortDate($0) })
+            travelRow(icon: "car",                label: "Transport",     value: details?.transportMode)
+            travelRow(icon: "house",              label: "Accommodation", value: details?.accommodationType)
+            travelRow(icon: "tent",               label: "Campsite",      value: details?.campsite)
         }
-        .buttonStyle(.plain)
+        .padding(DS.Spacing.cardPadding)
+        .background(Color.appSurface)
+        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+        .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
+            .stroke(Color.appAccent.opacity(0.18), lineWidth: 1))
+    }
+
+    private func travelRow(icon: String, label: String, value: String?) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 14))
+                .foregroundColor(.appAccent)
+                .frame(width: 20)
+            Text(label)
+                .font(DS.Font.metadata)
+                .foregroundColor(.appTextMuted)
+            Spacer()
+            Text(value ?? "—")
+                .font(DS.Font.metadata)
+                .foregroundColor(value != nil ? .appTextPrimary : Color.appTextMuted.opacity(0.4))
+        }
+    }
+
+    private func shortDate(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "MMM d"
+        return f.string(from: date)
     }
 
     // MARK: - Packing
