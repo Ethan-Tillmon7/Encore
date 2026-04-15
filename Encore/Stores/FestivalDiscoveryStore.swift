@@ -31,7 +31,8 @@ enum RegionFilter: String, CaseIterable, Identifiable {
 class FestivalDiscoveryStore: ObservableObject {
 
     // MARK: - Source data
-    @Published var allFestivals: [Festival]
+    @Published var allFestivals: [Festival] = []
+    @Published var isLoading: Bool = false
 
     // MARK: - Filters
     @Published var searchText: String = ""
@@ -46,8 +47,20 @@ class FestivalDiscoveryStore: ObservableObject {
 
     // MARK: - Init
 
-    init(festivals: [Festival] = Festival.mockFestivals) {
-        allFestivals = festivals
+    init() {
+        Task { await loadFestivals() }
+    }
+
+    @MainActor
+    func loadFestivals() async {
+        isLoading = true
+        do {
+            allFestivals = try await LineupService.shared.fetchAllFestivals()
+        } catch {
+            print("FestivalDiscoveryStore: fetch failed — \(error)")
+            allFestivals = Festival.mockFestivals
+        }
+        isLoading = false
     }
 
     // MARK: - Computed: filtered list
