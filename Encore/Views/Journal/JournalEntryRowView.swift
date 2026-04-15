@@ -5,27 +5,18 @@ struct JournalEntryRowView: View {
 
     let entry: JournalEntry
 
-    // Resolved from mock data — in real app would come from a store lookup
-    private var artistName: String {
-        Artist.mockLineup.first(where: { $0.id == entry.artistID })?.name ?? "Unknown Artist"
-    }
-    private var festivalName: String {
-        Festival.mockFestivals.first(where: { $0.id == entry.festivalID })?.name ?? "Unknown Festival"
-    }
-
     var body: some View {
         HStack(spacing: 12) {
-            // Seen indicator
             Circle()
                 .fill(Color.appCTA)
                 .frame(width: 8, height: 8)
                 .padding(.leading, 4)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(artistName)
+                Text(entry.artistName.isEmpty ? "Unknown Artist" : entry.artistName)
                     .font(DS.Font.listItem)
                     .foregroundColor(.appTextPrimary)
-                Text("\(festivalName)  ·  \(formattedDate)")
+                Text("\(entry.festivalName.isEmpty ? "Unknown Festival" : entry.festivalName)  ·  \(formattedDate)")
                     .font(DS.Font.metadata)
                     .foregroundColor(.appTextMuted)
                 if !entry.notes.isEmpty {
@@ -38,7 +29,6 @@ struct JournalEntryRowView: View {
 
             Spacer()
 
-            // Star rating
             if let rating = entry.rating {
                 starRow(rating: rating)
             }
