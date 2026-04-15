@@ -148,6 +148,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Bonnaroo 2023",
+            slug: "bonnaroo-2023",
             location: "Manchester, TN",
             latitude: 35.4868, longitude: -86.0506,
             startDate: date(year: 2023, month: 6, day: 15),
@@ -162,6 +163,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Bonnaroo 2025",
+            slug: "bonnaroo-2025",
             location: "Manchester, TN",
             latitude: 35.4868, longitude: -86.0506,
             startDate: date(year: 2025, month: 6, day: 12),
@@ -176,6 +178,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Bonnaroo 2026",
+            slug: "bonnaroo-2026",
             location: "Manchester, TN",
             latitude: 35.4868, longitude: -86.0506,
             startDate: date(year: 2026, month: 6, day: 11),
@@ -192,6 +195,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Coachella 2025",
+            slug: "coachella-2025",
             location: "Indio, CA",
             latitude: 33.6823, longitude: -116.2381,
             startDate: date(year: 2025, month: 4, day: 11),
@@ -206,6 +210,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Lollapalooza 2025",
+            slug: "lollapalooza-2025",
             location: "Chicago, IL",
             latitude: 41.8719, longitude: -87.6215,
             startDate: date(year: 2025, month: 8, day: 1),
@@ -220,6 +225,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Outside Lands 2025",
+            slug: "outside-lands-2025",
             location: "San Francisco, CA",
             latitude: 37.7694, longitude: -122.5107,
             startDate: date(year: 2025, month: 8, day: 8),
@@ -234,6 +240,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Electric Forest 2025",
+            slug: "electric-forest-2025",
             location: "Rothbury, MI",
             latitude: 43.5039, longitude: -86.3443,
             startDate: date(year: 2025, month: 6, day: 26),
@@ -248,6 +255,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "Glastonbury 2025",
+            slug: "glastonbury-2025",
             location: "Pilton, Somerset, UK",
             latitude: 51.1527, longitude: -2.7213,
             startDate: date(year: 2025, month: 6, day: 25),
@@ -262,6 +270,7 @@ extension Festival {
         Festival(
             id: UUID(),
             name: "ACL Fest 2025",
+            slug: "acl-fest-2025",
             location: "Austin, TX",
             latitude: 30.2500, longitude: -97.7469,
             startDate: date(year: 2025, month: 10, day: 3),
@@ -293,7 +302,9 @@ extension JournalEntry {
             rating: 5,
             notes: "Absolutely transcendent. The crowd was electric from the first note of Work Song. Cherry Wine as an encore had people in tears.",
             highlights: ["Best energy", "Emotional moment", "Perfect setlist"],
-            wouldSeeAgain: .yes
+            wouldSeeAgain: .yes,
+            artistName: "Hozier",
+            festivalName: "Bonnaroo 2023"
         ),
         JournalEntry(
             id: UUID(),
@@ -304,7 +315,9 @@ extension JournalEntry {
             rating: 4,
             notes: "Michelle Zauner was in peak form. Loved the Soft Sounds era material. Crowd was smaller but super attentive.",
             highlights: ["Great crowd", "Discovered a new fave"],
-            wouldSeeAgain: .yes
+            wouldSeeAgain: .yes,
+            artistName: "Japanese Breakfast",
+            festivalName: "Bonnaroo 2023"
         ),
         JournalEntry(
             id: UUID(),
@@ -315,7 +328,9 @@ extension JournalEntry {
             rating: 5,
             notes: "Dance Yrself Clean opening was a religious experience. Set went for almost 2 hours. Daft Punk Is Playing At My House had the whole field losing it.",
             highlights: ["Best energy", "Surprise guest", "Perfect setlist"],
-            wouldSeeAgain: .yes
+            wouldSeeAgain: .yes,
+            artistName: "LCD Soundsystem",
+            festivalName: "Bonnaroo 2023"
         )
     ]
 }
