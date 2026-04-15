@@ -6,18 +6,19 @@ struct SetJournalEntryView: View {
     @EnvironmentObject var journalStore: JournalStore
     @Environment(\.dismiss) private var dismiss
 
-    // If editing an existing entry
+    // Context
     let existingEntry: JournalEntry?
-    // Set context (optional — may not be known in "create from journal" flow)
     let festivalSet: FestivalSet?
+    let artist: Artist?
+    let festival: Festival?
 
     @State private var rating: Int = 0
     @State private var notes: String = ""
+    @State private var showNotes: Bool = false
     @State private var selectedHighlights: Set<String> = []
     @State private var customHighlight: String = ""
     @State private var showCustomHighlightField = false
     @State private var wouldSeeAgain: WouldSeeAgain? = nil
-    @State private var attended: Bool = true
     @State private var showDeleteConfirm = false
 
     private let presetHighlights = [
@@ -25,60 +26,84 @@ struct SetJournalEntryView: View {
         "Emotional moment", "Technical issues", "Too crowded", "Discovered a new fave"
     ]
 
-    // Convenience init for editing
+    // MARK: - Inits
+
+    /// Edit an existing journal entry.
     init(entry: JournalEntry) {
         self.existingEntry = entry
         self.festivalSet = nil
+        self.artist = nil
+        self.festival = nil
         self._rating = State(initialValue: entry.rating ?? 0)
         self._notes = State(initialValue: entry.notes)
+        self._showNotes = State(initialValue: !entry.notes.isEmpty)
         self._selectedHighlights = State(initialValue: Set(entry.highlights))
         self._wouldSeeAgain = State(initialValue: entry.wouldSeeAgain)
-        self._attended = State(initialValue: true)
     }
 
-    // Convenience init for creating
-    init(festivalSet: FestivalSet?, existingEntry: JournalEntry?) {
-        self.festivalSet = festivalSet
-        self.existingEntry = existingEntry
-        if let e = existingEntry {
-            self._rating = State(initialValue: e.rating ?? 0)
-            self._notes = State(initialValue: e.notes)
-            self._selectedHighlights = State(initialValue: Set(e.highlights))
-            self._wouldSeeAgain = State(initialValue: e.wouldSeeAgain)
-        }
+    /// Create a new entry from the quick-log flow (festival → artist picker).
+    init(artist: Artist, festival: Festival) {
+        self.existingEntry = nil
+        self.festivalSet = nil
+        self.artist = artist
+        self.festival = festival
     }
+
+    /// Create a new entry from an artist detail page that has a specific FestivalSet.
+    init(festivalSet: FestivalSet, festival: Festival? = nil) {
+        self.existingEntry = nil
+        self.festivalSet = festivalSet
+        self.artist = nil
+        self.festival = festival
+    }
+
+    // MARK: - Derived display helpers
+
+    private var displayArtistName: String {
+        if let n = existingEntry?.artistName, !n.isEmpty { return n }
+        if let n = festivalSet?.artist.name { return n }
+        if let n = artist?.name { return n }
+        return "Unknown Artist"
+    }
+
+    private var displayFestivalName: String {
+        if let n = existingEntry?.festivalName, !n.isEmpty { return n }
+        if let n = festival?.name { return n }
+        return "Unknown Festival"
+    }
+
+    private var entryArtistID: UUID {
+        existingEntry?.artistID ?? festivalSet?.artist.id ?? artist?.id ?? UUID()
+    }
+
+    private var entryFestivalID: UUID {
+        existingEntry?.festivalID ?? festival?.id ?? UUID()
+    }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // Artist + Set header
-                    if let set = festivalSet {
-                        artistHeader(set: set)
-                    } else if let entry = existingEntry {
-                        existingEntryHeader(entry: entry)
-                    }
+                    // Header
+                    entryHeader
 
                     Divider()
 
-                    // Attendance toggle
-                    attendanceToggle
+                    // Rating
+                    ratingSection
 
-                    if attended {
-                        // Rating
-                        ratingSection
+                    // Highlights
+                    highlightSection
 
-                        // Highlights
-                        highlightSection
+                    // Would see again
+                    wouldSeeAgainSection
 
-                        // Notes
-                        notesSection
+                    // Notes (collapsible)
+                    notesSection
 
-                        // Would see again
-                        wouldSeeAgainSection
-                    }
-
-                    // Delete button (edit mode only)
+                    // Delete (edit mode only)
                     if existingEntry != nil {
                         Button(action: { showDeleteConfirm = true }) {
                             Text("Delete Entry")
@@ -94,7 +119,6 @@ struct SetJournalEntryView: View {
                     }
                 }
                 .padding(DS.Spacing.pageMargin)
-                .opacity(attended ? 1 : 0.5)
             }
             .background(Color.appBackground)
             .navigationTitle(existingEntry != nil ? "Edit Entry" : "Log This Set")
@@ -122,49 +146,21 @@ struct SetJournalEntryView: View {
 
     // MARK: - Subviews
 
-    private func artistHeader(set: FestivalSet) -> some View {
+    private var entryHeader: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(set.artist.name)
+            Text(displayArtistName)
                 .font(DS.Font.cardTitle)
                 .foregroundColor(.appTextPrimary)
-            Text("\(set.stageName)  ·  \(set.day.fullName)")
-                .font(DS.Font.metadata)
-                .foregroundColor(.appTextMuted)
-        }
-    }
-
-    private func existingEntryHeader(entry: JournalEntry) -> some View {
-        let name = Artist.mockLineup.first(where: { $0.id == entry.artistID })?.name ?? "Unknown"
-        return VStack(alignment: .leading, spacing: 4) {
-            Text(name)
-                .font(DS.Font.cardTitle)
-                .foregroundColor(.appTextPrimary)
-            Text(formattedDate(entry.dateAttended))
-                .font(DS.Font.metadata)
-                .foregroundColor(.appTextMuted)
-        }
-    }
-
-    private var attendanceToggle: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Did you see this set?")
-                    .font(DS.Font.listItem)
-                    .foregroundColor(.appTextPrimary)
-                if !attended {
-                    Text("Entry will be saved as missed.")
-                        .font(DS.Font.metadata)
-                        .foregroundColor(.appTextMuted)
-                }
+            if let set = festivalSet {
+                Text("\(set.stageName)  ·  \(set.day.fullName)")
+                    .font(DS.Font.metadata)
+                    .foregroundColor(.appTextMuted)
+            } else {
+                Text(displayFestivalName)
+                    .font(DS.Font.metadata)
+                    .foregroundColor(.appTextMuted)
             }
-            Spacer()
-            Toggle("", isOn: $attended)
-                .tint(.appCTA)
-                .labelsHidden()
         }
-        .padding(DS.Spacing.cardPadding)
-        .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
     }
 
     private var ratingSection: some View {
@@ -250,34 +246,6 @@ struct SetJournalEntryView: View {
         .buttonStyle(.plain)
     }
 
-    private var notesSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Notes")
-                .font(DS.Font.label)
-                .foregroundColor(.appTextMuted)
-                .textCase(.uppercase)
-                .tracking(0.8)
-            ZStack(alignment: .bottomTrailing) {
-                TextEditor(text: $notes)
-                    .font(DS.Font.listItem)
-                    .foregroundColor(.appTextPrimary)
-                    .frame(minHeight: 100, maxHeight: 200)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.appSurface)
-                    .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
-                    .onChange(of: notes) { newValue in
-                        if newValue.count > 2000 {
-                            notes = String(newValue.prefix(2000))
-                        }
-                    }
-                Text("\(notes.count)/2000")
-                    .font(.system(size: 10))
-                    .foregroundColor(Color.appTextMuted.opacity(0.5))
-                    .padding(6)
-            }
-        }
-    }
-
     private var wouldSeeAgainSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Would see again?")
@@ -303,28 +271,68 @@ struct SetJournalEntryView: View {
         }
     }
 
+    private var notesSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.2)) { showNotes.toggle() }
+            }) {
+                HStack {
+                    Text(showNotes ? "Notes" : "+ Add notes")
+                        .font(DS.Font.label)
+                        .foregroundColor(showNotes ? .appTextMuted : .appAccent)
+                        .textCase(showNotes ? .uppercase : .none)
+                        .tracking(showNotes ? 0.8 : 0)
+                    Spacer()
+                    if showNotes {
+                        Image(systemName: "chevron.up")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.appTextMuted)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+
+            if showNotes {
+                ZStack(alignment: .bottomTrailing) {
+                    TextEditor(text: $notes)
+                        .font(DS.Font.listItem)
+                        .foregroundColor(.appTextPrimary)
+                        .frame(minHeight: 100, maxHeight: 200)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.appSurface)
+                        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
+                        .onChange(of: notes) { newValue in
+                            if newValue.count > 2000 {
+                                notes = String(newValue.prefix(2000))
+                            }
+                        }
+                    Text("\(notes.count)/2000")
+                        .font(.system(size: 10))
+                        .foregroundColor(Color.appTextMuted.opacity(0.5))
+                        .padding(6)
+                }
+            }
+        }
+    }
+
     // MARK: - Save
 
     private func saveEntry() {
         let entry = JournalEntry(
             id: existingEntry?.id ?? UUID(),
-            artistID: existingEntry?.artistID ?? (festivalSet?.artist.id ?? UUID()),
-            festivalID: existingEntry?.festivalID ?? UUID(),
+            artistID: entryArtistID,
+            festivalID: entryFestivalID,
             setID: existingEntry?.setID ?? (festivalSet?.id ?? UUID()),
             dateAttended: existingEntry?.dateAttended ?? Date(),
-            rating: attended && rating > 0 ? rating : nil,
-            notes: attended ? notes : "",
-            highlights: attended ? Array(selectedHighlights) : [],
-            wouldSeeAgain: attended ? wouldSeeAgain : nil
+            rating: rating > 0 ? rating : nil,
+            notes: showNotes ? notes : "",
+            highlights: Array(selectedHighlights),
+            wouldSeeAgain: wouldSeeAgain,
+            artistName: displayArtistName,
+            festivalName: displayFestivalName
         )
         journalStore.upsert(entry)
         dismiss()
-    }
-
-    private func formattedDate(_ date: Date) -> String {
-        let f = DateFormatter()
-        f.dateFormat = "MMM d, yyyy"
-        return f.string(from: date)
     }
 }
 
