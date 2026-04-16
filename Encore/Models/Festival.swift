@@ -1,6 +1,11 @@
 // Encore/Models/Festival.swift
 import Foundation
 
+enum FestivalSource: String, Codable {
+    case supabase
+    case edmTrain
+}
+
 enum FestivalStatus: String, Codable {
     case upcoming, active, past
 }
@@ -8,6 +13,7 @@ enum FestivalStatus: String, Codable {
 struct Festival: Identifiable, Codable {
     var id: UUID
     var name: String
+    var slug: String
     var location: String
     var latitude: Double
     var longitude: Double
@@ -19,6 +25,8 @@ struct Festival: Identifiable, Codable {
     var imageColorHex: String
     var lineup: [Artist]
     var sets: [FestivalSet]
+    var source: FestivalSource = .supabase
+    var eventURL: URL?
 
     /// Classifies the festival into a broad geographic region using its coordinates.
     var region: RegionFilter {
