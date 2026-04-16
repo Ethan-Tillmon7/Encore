@@ -23,6 +23,14 @@ struct FestivalCardView: View {
                         .font(DS.Font.cardTitle)
                         .foregroundColor(.appTextPrimary)
                     Spacer()
+                    if festival.source == .edmTrain {
+                        Text("EDM Train")
+                            .font(DS.Font.caps)
+                            .foregroundColor(.appBackground)
+                            .padding(.horizontal, 8).padding(.vertical, 3)
+                            .background(Color.appTeal)
+                            .clipShape(Capsule())
+                    }
                     if festival.isCamping {
                         Image(systemName: "tent.fill")
                             .font(.system(size: 11))
@@ -98,10 +106,28 @@ struct FestivalCardView: View {
 }
 
 #Preview {
-    VStack(spacing: 12) {
+    let edmEvent = Festival(
+        id: UUID(),
+        name: "Disclosure",
+        slug: "edmtrain-99999",
+        location: "Los Angeles, CA",
+        latitude: 34.0522,
+        longitude: -118.2437,
+        startDate: Date().addingTimeInterval(86400 * 7),
+        endDate: Date().addingTimeInterval(86400 * 7),
+        status: .upcoming,
+        isCamping: false,
+        genres: ["Electronic"],
+        imageColorHex: "4ECDC4",
+        lineup: [],
+        sets: [],
+        source: .edmTrain,
+        eventURL: URL(string: "https://edmtrain.com")
+    )
+    return VStack(spacing: 12) {
         FestivalCardView(festival: Festival.mockFestivals[0])
         FestivalCardView(festival: Festival.mockFestivals[1])
-        FestivalCardView(festival: Festival.mockFestivals[2])
+        FestivalCardView(festival: edmEvent)
     }
     .padding()
     .background(Color.appBackground)
