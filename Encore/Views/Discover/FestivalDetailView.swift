@@ -9,11 +9,10 @@ struct FestivalDetailView: View {
     @EnvironmentObject var journalStore:   JournalStore
     @EnvironmentObject var scheduleStore:  ScheduleStore
     @EnvironmentObject var crewStore:      CrewStore
+    @Environment(\.openURL) private var openURL
 
     @State private var selectedArtistSet: FestivalSet? = nil
     @State private var showTravelDetails = false
-
-    @Environment(\.openURL) private var openURL
 
     private var accentColor: Color {
         Color(hex: festival.imageColorHex) ?? .appCTA
