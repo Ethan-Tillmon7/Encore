@@ -80,6 +80,14 @@ struct FestivalListView: View {
                 .environmentObject(scheduleStore)
                 .environmentObject(crewStore)
         }
+        .task(id: festivalStore.selectedFestival?.id) {
+            guard let festival = festivalStore.selectedFestival,
+                  festival.latitude != 0 || festival.longitude != 0 else { return }
+            await discoveryStore.loadEDMTrainEvents(
+                latitude: festival.latitude,
+                longitude: festival.longitude
+            )
+        }
     }
 
     @ViewBuilder
