@@ -13,6 +13,8 @@ struct FestivalDetailView: View {
     @State private var selectedArtistSet: FestivalSet? = nil
     @State private var showTravelDetails = false
 
+    @Environment(\.openURL) private var openURL
+
     private var accentColor: Color {
         Color(hex: festival.imageColorHex) ?? .appCTA
     }
@@ -27,8 +29,12 @@ struct FestivalDetailView: View {
                 // Hero
                 festivalHero
 
-                // "Set as active" CTA
-                if festival.status == .active || festival.status == .upcoming {
+                // CTA: EDM Train events get an external link; Supabase festivals get "Set as my festival"
+                if festival.source == .edmTrain {
+                    if let url = festival.eventURL {
+                        edmTrainCTA(url: url)
+                    }
+                } else if festival.status == .active || festival.status == .upcoming {
                     setActiveCTA
                 }
 
@@ -45,21 +51,23 @@ struct FestivalDetailView: View {
                 Divider()
 
                 // Travel details row
-                Button(action: { showTravelDetails = true }) {
-                    HStack {
-                        Label("Travel Details", systemImage: "suitcase")
-                            .font(DS.Font.listItem)
-                            .foregroundColor(.appTextPrimary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(DS.Font.metadata)
-                            .foregroundColor(.appTextMuted)
+                if festival.source == .supabase {
+                    Button(action: { showTravelDetails = true }) {
+                        HStack {
+                            Label("Travel Details", systemImage: "suitcase")
+                                .font(DS.Font.listItem)
+                                .foregroundColor(.appTextPrimary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(DS.Font.metadata)
+                                .foregroundColor(.appTextMuted)
+                        }
+                        .padding(DS.Spacing.cardPadding)
+                        .background(Color.appSurface)
+                        .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
                     }
-                    .padding(DS.Spacing.cardPadding)
-                    .background(Color.appSurface)
-                    .clipShape(RoundedRectangle(cornerRadius: DS.Radius.chip))
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
             .padding(.horizontal, DS.Spacing.pageMargin)
             .padding(.vertical, DS.Spacing.cardGap)
@@ -86,6 +94,14 @@ struct FestivalDetailView: View {
         VStack(alignment: .leading, spacing: DS.Spacing.sectionGap) {
             HStack(spacing: 8) {
                 statusPill
+                if festival.source == .edmTrain {
+                    Text("EDM Train")
+                        .font(DS.Font.caps)
+                        .foregroundColor(.appBackground)
+                        .padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Color.appTeal)
+                        .clipShape(Capsule())
+                }
                 if festival.isCamping {
                     Label("Camping", systemImage: "tent.fill")
                         .font(DS.Font.caps)
@@ -158,6 +174,24 @@ struct FestivalDetailView: View {
             .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
             .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
                 .stroke(accentColor.opacity(0.3), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func edmTrainCTA(url: URL) -> some View {
+        Button(action: { openURL(url) }) {
+            HStack {
+                Image(systemName: "arrow.up.right.square")
+                Text("View on EDM Train")
+                    .fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Color.appTeal.opacity(0.15))
+            .foregroundColor(Color.appTeal)
+            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+            .overlay(RoundedRectangle(cornerRadius: DS.Radius.card)
+                .stroke(Color.appTeal.opacity(0.3), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
@@ -287,8 +321,28 @@ struct FestivalDetailView: View {
     festivals.selectedFestival = Festival.mockFestivals[1]
     let journal = JournalStore()
     journal.entries = JournalEntry.mockEntries
+
+    let edmEvent = Festival(
+        id: UUID(),
+        name: "Disclosure",
+        slug: "edmtrain-99999",
+        location: "Los Angeles, CA",
+        latitude: 34.0522,
+        longitude: -118.2437,
+        startDate: Date().addingTimeInterval(86400 * 7),
+        endDate: Date().addingTimeInterval(86400 * 7),
+        status: .upcoming,
+        isCamping: false,
+        genres: ["Electronic"],
+        imageColorHex: "4ECDC4",
+        lineup: [],
+        sets: [],
+        source: .edmTrain,
+        eventURL: URL(string: "https://edmtrain.com/events/99999")
+    )
+
     return NavigationStack {
-        FestivalDetailView(festival: Festival.mockFestivals[1])
+        FestivalDetailView(festival: edmEvent)
             .environmentObject(festivals)
             .environmentObject(journal)
             .environmentObject(ScheduleStore())
