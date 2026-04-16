@@ -42,7 +42,8 @@ Encore/
 │   └── MockData.swift           — 9 mock festivals (3 Bonnaroo + 6 real), 12 artists, 10 sets, 4 crew, 3 journal entries
 │
 ├── Services/
-│   └── LineupService.swift      — Supabase actor; fetchFestivals, fetchAllFestivals, fetchLineup, scheduleSet stubs
+│   ├── LineupService.swift      — Supabase actor; fetchFestivals, fetchAllFestivals, fetchLineup, scheduleSet stubs
+│   └── EDMTrainService.swift    — EDM Train actor; nearestLocationId (Haversine), fetchEvents, maps events to Festival
 │
 ├── Stores/
 │   ├── ScheduleStore.swift      — User schedule, conflict detection, walk-time warnings, UserDefaults persistence
@@ -102,7 +103,7 @@ Encore/
         └── CrewAvatarBubble.swift
 ```
 
-**Build system:** XcodeGen (`project.yml` → `Encore.xcodeproj`). Run `xcodegen generate` after any structural change to `project.yml` or the file tree.
+**Build system:** XcodeGen (`project.yml` → `Encore.xcodeproj`). Run `xcodegen generate` after any structural change to `project.yml` or the file tree. The sources entry excludes `supabase/**` and `*.ts` so Supabase Edge Function files in `Encore/supabase/` are not bundled into the iOS app.
 
 ---
 
@@ -274,6 +275,8 @@ Shows the crew's combined schedule for a selected day.
 - "Rate your history" banner (shown when unrated past-festival sets exist)
 - Festival filter chips
 - 2-column `LazyVGrid` of `ArtistGridCell` — one cell per unique artist seen (deduped by `artistID`), sorted alphabetically; shows artist name + small star badge (or "—" if unrated)
+- Artist name resolution: `seenArtists` reads `entry.artistName`; if empty (legacy entries saved before the field was added), falls back to matching `artist.id` in `festivalStore.festivals.flatMap(\.lineup)`
+- Outer `VStack` uses `.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)` to prevent vertical centering when the empty state is shown
 - Tap cell → `SetJournalEntryView` in edit mode (most recent entry for that artist)
 - "Log a Set" toolbar button → `QuickLogView` sheet
 
@@ -281,9 +284,10 @@ Shows the crew's combined schedule for a selected day.
 
 Two-step state-driven sheet (no NavigationStack). Local `Step` enum: `.festival` / `.artist(Festival)`.
 
-- Step 1: scrollable list of all festivals with a non-empty lineup, sorted by start date descending
-- Step 2: alphabetical artist list for the selected festival; tapping an artist dismisses QuickLogView and triggers `onSelect(Artist, Festival)` callback
-- `SeenTrackerView` receives the callback, stores the artist + festival, then presents `SetJournalEntryView(artist:festival:)` after a 0.6s delay (required for iOS sheet sequencing)
+- Step 1: scrollable list of **all** festivals from `FestivalStore`, sorted by start date descending (no lineup-empty filter — festivals from Supabase arrive with `lineup: []`)
+- Step 2: alphabetical artist list for the selected festival. Uses local `@State` (`loadedArtists`, `isLoadingArtists`) — does **not** touch `LineupStore`. If `festival.lineup` is non-empty, artists populate instantly; otherwise calls `LineupService.shared.fetchLineup(for: festival.slug)` directly, deduplicates by `artist.id`, and shows a `ProgressView` while loading. Errors silently leave the list empty.
+- Back button resets `loadedArtists` and `isLoadingArtists` before returning to the festival step.
+- `SeenTrackerView` receives the `onSelect(Artist, Festival)` callback, stores the artist + festival, then presents `SetJournalEntryView(artist:festival:)` after a 0.6s delay (required for iOS sheet sequencing)
 
 ### JournalEntryRowView
 - Green dot + artist name + festival + date + note preview + 5-star mini rating
@@ -436,6 +440,8 @@ struct Festival: Identifiable, Codable {
     imageColorHex: String
     lineup: [Artist]
     sets: [FestivalSet]
+    source: FestivalSource          // .supabase | .edmTrain
+    eventURL: URL?                  // non-nil for EDM Train events; ToS link
     var region: RegionFilter        // computed from lat/lon
 }
 
@@ -519,14 +525,14 @@ walkTimeWarnings(for day:) → [WalkTimeWarning]
 
 ### LineupStore
 ```
-allSets: [FestivalSet]                 // loaded via LineupService.fetchLineup(for: slug)
+allSets: [FestivalSet]                 // loaded via LineupService.fetchLineup(for: slug); falls back to FestivalSet.mockSets on error
 isLoading: Bool
 selectedDay: FestivalDay?
 selectedTier: MatchTier?
 searchText: String
 isSpotifyConnected: Bool
 filteredSets: [FestivalSet]
-loadLineup(festivalSlug:) async        // called by LineupView .task on festival change
+loadLineup(festivalSlug:) async        // called by LineupView .task on festival change; mock fallback on Supabase error
 connectSpotify() / disconnectSpotify() // TODO stubs
 ```
 
@@ -699,7 +705,7 @@ Returns `nil` if either stage is unknown. Bidirectional.
 | **iOS 16 target** | Use `@ObservableObject`/`@Published` (not `@Observable`). Use `Map(coordinateRegion:)` (not iOS 17 API). Do not use iOS 17+ APIs without bumping deployment target in `project.yml`. |
 | **Persistence** | `UserDefaults` only — `scheduledSets`, `journalEntries`, `travelDetails`, `selectedFestivalID`. No SQLite or Supabase yet. |
 | **No backend** | `connectSpotify()` and `joinCrew(code:)` are stubs. Do not add real network calls without backend infrastructure. |
-| **No SPM packages** | `project.yml` has Supabase commented out. Add packages via YAML, not Xcode UI. |
+| **SPM packages** | Supabase Swift (`supabase-swift 2.0.0`) is active. Add packages via `project.yml` only — never via Xcode UI. |
 | **XcodeGen managed** | `.xcodeproj` is generated. Never edit directly. Run `xcodegen generate` after changes to the file tree. |
 | **Adaptive theming** | `@AppStorage(StorageKey.appTheme)` drives `preferredColorScheme` in `EncoreApp`. All colors must use token extensions — no hardcoded hex or system colors. |
 | **SF Symbols only** | No emoji in UI. All icons via SF Symbols. |
@@ -714,8 +720,9 @@ Returns `nil` if either stage is unknown. Bidirectional.
 |---------|--------------|
 | Festival catalog | **Live** — `LineupService.fetchAllFestivals()` from Supabase; mock fallback |
 | Active festival | **Live** — `LineupService.fetchFestivals()` from Supabase; mock fallback |
-| Lineup data | **Live** — `LineupService.fetchLineup(for:)` from `v_festival_sets_full`; mock in `MockData.swift` as fallback |
+| Lineup data | **Live** — `LineupService.fetchLineup(for:)` from `v_festival_sets_full`; `LineupStore` falls back to `FestivalSet.mockSets` on error |
 | Recent setlist | **Live** — `SetlistService` (MusicBrainz + setlist.fm API); empty array on miss |
+| EDM Train events | **Live** — `EDMTrainService.fetchEvents(locationId:)` fetched via active festival location; empty array on failure |
 | Set reminders / notifications | **Live** — `NotificationScheduler` wraps `UNUserNotificationCenter` |
 | Schedule persistence | **Local** — UserDefaults JSON encoding |
 | Journal persistence | **Local** — UserDefaults JSON encoding |
