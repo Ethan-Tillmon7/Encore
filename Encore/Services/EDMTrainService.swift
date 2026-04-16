@@ -119,7 +119,7 @@ actor EDMTrainService {
             status:        festivalStatus(for: date),
             isCamping:     false,
             genres:        ["Electronic"],
-            imageColorHex: "4ECDC4",    // .appTeal default
+            imageColorHex: "4ECDC4",    // teal default for EDM events
             lineup:        [],
             sets:          [],
             source:        .edmTrain,
