@@ -64,7 +64,6 @@ actor EDMTrainService {
     static func nearestLocationId(latitude: Double, longitude: Double) -> Int {
         // (0, 0) is the Festival default when Supabase omits coordinates
         guard latitude != 0 || longitude != 0 else { return defaultLocationId }
-        guard !metroLocations.isEmpty else { return defaultLocationId }
 
         var closest = metroLocations[0]
         var minDist = haversineKm(lat1: latitude, lon1: longitude,
@@ -83,8 +82,6 @@ actor EDMTrainService {
     // ── Event fetch ──────────────────────────────────────────────────────────
 
     func fetchEvents(locationId: Int) async throws -> [Festival] {
-        guard locationId != 0 else { return [] }   // guard against unfilled placeholder IDs
-
         var components = URLComponents(string: "https://edmtrain.com/api/events")!
         components.queryItems = [
             URLQueryItem(name: "locationIds", value: "\(locationId)"),
@@ -101,11 +98,11 @@ actor EDMTrainService {
         guard let dateStr = row.date, let date = parseDate(dateStr) else { return nil }
 
         let artistNames = (row.artists ?? []).map(\.name)
-        let eventName   = row.name?.isEmpty == false ? row.name! :
-                          artistNames.isEmpty ? "Electronic Event" :
-                          artistNames.prefix(3).joined(separator: " & ")
+        let eventName   = row.name.flatMap { $0.isEmpty ? nil : $0 }
+                          ?? (artistNames.isEmpty ? "Electronic Event"
+                                                  : artistNames.prefix(3).joined(separator: " & "))
 
-        // Deterministic UUID: version-4 shaped UUID where the last 12 hex chars encode the EDM Train event ID.
+        // Deterministic UUID: fixed prefix + EDM Train event ID in last 12 hex chars — guaranteed unique within EDM Train events
         let paddedHex  = String(format: "%012x", row.id)
         let uuidString = "00000000-0000-4000-8000-\(paddedHex)"
         let eventId    = UUID(uuidString: uuidString) ?? UUID()
@@ -113,7 +110,7 @@ actor EDMTrainService {
         return Festival(
             id:            eventId,
             name:          eventName,
-            slug:          "edmtrain-\(row.id)",
+            slug:          "edmtrain-\(row.id)",   // "edmtrain-" prefix avoids collision with Supabase slugs; not used as a store lookup key
             location:      row.venue?.location ?? "",
             latitude:      row.venue?.latitude  ?? 0,
             longitude:     row.venue?.longitude ?? 0,
@@ -144,10 +141,14 @@ actor EDMTrainService {
     }
 
     private func festivalStatus(for date: Date) -> FestivalStatus {
-        let now = Date()
-        let cal = Calendar.current
-        if cal.isDateInToday(date) { return .active }
-        return date > now ? .upcoming : .past
+        let now  = Date()
+        let cal  = Calendar(identifier: .gregorian)
+        // Use start-of-day comparison so events on today's date show as .active
+        let startOfToday    = cal.startOfDay(for: now)
+        let startOfTomorrow = cal.date(byAdding: .day, value: 1, to: startOfToday)!
+        let startOfDate     = cal.startOfDay(for: date)
+        if startOfDate >= startOfToday && startOfDate < startOfTomorrow { return .active }
+        return startOfDate > startOfToday ? .upcoming : .past
     }
 
     private static func haversineKm(lat1: Double, lon1: Double,
