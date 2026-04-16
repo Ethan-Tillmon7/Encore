@@ -63,6 +63,15 @@ class FestivalDiscoveryStore: ObservableObject {
         isLoading = false
     }
 
+    /// Fetches EDM Train events near the given coordinates and merges them into allFestivals.
+    /// Replaces any previously-loaded EDM Train events to avoid duplicates on refresh.
+    @MainActor
+    func loadEDMTrainEvents(latitude: Double, longitude: Double) async {
+        let locationId = EDMTrainService.nearestLocationId(latitude: latitude, longitude: longitude)
+        let events = (try? await EDMTrainService.shared.fetchEvents(locationId: locationId)) ?? []
+        allFestivals = allFestivals.filter { $0.source == .supabase } + events
+    }
+
     // MARK: - Computed: filtered list
 
     var filteredFestivals: [Festival] {
